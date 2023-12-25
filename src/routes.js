@@ -31,7 +31,7 @@ export const routes = [
             {
                 icon: <UserCircleIcon {...icon} />,
                 name: "Formularios",
-                path: "/profile",
+                path: "/Formularios",
                 //element: <Profile />,
             },
             {

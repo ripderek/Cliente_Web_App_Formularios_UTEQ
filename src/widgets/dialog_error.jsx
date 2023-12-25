@@ -11,12 +11,14 @@ import anim from "../../public/anim/error.json";
 export function Dialog_Error({ mensaje, titulo, cerrar }) {
   return (
     <>
-      <Dialog open={true} size="xs">
+      <Dialog open={true} size="sm">
         <DialogHeader>{titulo}</DialogHeader>
         <DialogBody className="font-semibold">
           {mensaje}
-          <div className="mx-auto">
-            <Lottie animationData={anim} className=" h-20 mx-auto" />
+          <div className="mx-auto h-12">
+            {/* 
+            <Lottie animationData={anim} className="h-auto" />
+            */}
           </div>
         </DialogBody>
         <DialogFooter>

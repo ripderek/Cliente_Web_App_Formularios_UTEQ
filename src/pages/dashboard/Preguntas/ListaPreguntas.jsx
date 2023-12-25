@@ -4,6 +4,7 @@ import {
   UserPlusIcon,
   PlusCircleIcon,
   XCircleIcon,
+  CheckCircleIcon,
 } from "@heroicons/react/24/solid";
 import {
   Card,
@@ -52,6 +53,7 @@ const TABLE_HEAD = [
   "Estado",
   "Fecha Creacion",
   "",
+  "Obs",
 ];
 //para ver las opciones de edicion de las preguntas ya sea para los datos o la respuesta
 const TABLE_HEAD_1 = ["", "Tipo"];
@@ -401,6 +403,8 @@ export default function ListaPreguntas({
                     r_estado,
                     r_id_pregunta,
                     r_id_p,
+                    r_error,
+                    r_error_detalle,
                   },
                   index
                 ) => {
@@ -491,6 +495,24 @@ export default function ListaPreguntas({
                           </IconButton>
                         </Tooltip>
                       </td>
+                      {r_error ? (
+                        <td className={classes}>
+                          <Tooltip content={r_error_detalle}>
+                            <IconButton variant="outlined">
+                              <XCircleIcon color="red" className="h-4 w-4" />
+                            </IconButton>
+                          </Tooltip>
+                        </td>
+                      ) : (
+                        <td className={classes}>
+                          <IconButton variant="outlined">
+                            <CheckCircleIcon
+                              color="green"
+                              className="h-4 w-4"
+                            />
+                          </IconButton>
+                        </td>
+                      )}
                     </tr>
                   );
                 }

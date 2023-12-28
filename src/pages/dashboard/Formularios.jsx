@@ -18,7 +18,11 @@ import React from "react";
 import Cookies from "universal-cookie";
 import axios from "axios";
 import { Fragment, useState, useEffect } from "react";
-import { Lista } from "@/pages/dashboard/FormulariosC";
+import {
+  Lista,
+  Participantes,
+  SeleccionarSecciones,
+} from "@/pages/dashboard/FormulariosC";
 
 //export function BarraNavegacion2
 export default function Formularios() {
@@ -65,145 +69,42 @@ export default function Formularios() {
     }
   };
   const [openSeccion, setOpenSecciones] = useState(true);
-  /*
-  //funcion para cambiar de pestanas entre lista de secciones y lista de niveles de una seccion
-  const [openNiveles, setOpenNiveles] = useState(false);
-  const [IDSeccion, setIdSeccion] = useState("");
-  const [tituloSeccion, setTituloSeccion] = useState("");
-  const AbrirNiveles = (value, id_seccion, titulo) => {
-    setOpenNiveles(value);
-    setIdSeccion(id_seccion);
-    setTituloSeccion(titulo);
+  //funcion para abrir los participantes de un test
+  const [idTest, setIDtest] = useState(0);
+  const [openParticipantes, setOpenParticiapntes] = useState(false);
+  const AbrirParticipantes = (idT) => {
+    setOpenParticiapntes(true);
+    setIDtest(idT);
     setOpenSecciones(false);
-    setOpenPreguntas(false);
-    setOpenPlantilla(false);
-    setMEMRZAR(false);
-    setOpenEditMEMRZAR(false);
+    setSeleccionarSeccion(false);
   };
-  //funcion para abrir secciones
-  const AbrirSecciones = (value) => {
-    setOpenSecciones(value);
-    setOpenNiveles(false);
-    setOpenPreguntas(false);
-    setOpenPlantilla(false);
-    setMEMRZAR(false);
-    setOpenEditMEMRZAR(false);
+  const Regresar = () => {
+    setOpenParticiapntes(false);
+    setOpenSecciones(true);
+    setSeleccionarSeccion(false);
   };
-  //funcion para abrir lista de preguntas
-  const [IDNivel, setIDNivel] = useState("");
-  const [openPreguntas, setOpenPreguntas] = useState(false);
-  const [nombre_nivel, setNombreNivel] = useState("");
-  const AbrirPreguntas = (value, id_nv, nivel) => {
-    setIDNivel(id_nv);
-    setOpenPreguntas(value);
-    setNombreNivel(nivel);
-    setOpenNiveles(false);
+  //funcion para abrir el selector de secciones
+  const [openSeleccionarSeccion, setSeleccionarSeccion] = useState(false);
+  const AbrirSecciones = (idT) => {
+    setSeleccionarSeccion(true);
     setOpenSecciones(false);
-    setOpenPlantilla(false);
-    setMEMRZAR(false);
-    setOpenEditMEMRZAR(false);
+    setOpenParticiapntes(false);
+    setIDtest(idT);
   };
-  //funcion para abrir el menu de seleccionar plantilla para crear una pregunta dependiendo del tipo maestro de pregunta
-  //necesito el id del tipo de pregunta, el titulo y el id del nivel.
-  const [idTipoPregunta, setIdTipoPregunta] = useState("");
-  const [tituloTipo, setTituloTipo] = useState("");
-  const [openPlantilla, setOpenPlantilla] = useState(false);
-  const AbrirPlantilla = (value, tip, tit, idn) => {
-    setOpenPlantilla(value);
-    setIdTipoPregunta(tip);
-    setTituloTipo(tit);
-    setIDNivel(idn);
-    setOpenPreguntas(false);
-    setOpenNiveles(false);
-    setOpenSecciones(false);
-    setMEMRZAR(false);
-    setOpenEditMEMRZAR(false);
-  };
-  //funcion para abrir la creacion de una pregunta xd
-  //para la plantilla MEMRZAR --> Memorizar opcion uninca
-  const [openMEMRZAR, setMEMRZAR] = useState(false);
-  const [IDTIPOPRE, setIDTIPO] = useState(0);
-  const [r_icono, setr_icono] = useState("");
-  const AbrirMEMRZAR = (r_codigo, iconoP) => {
-    setMEMRZAR(true);
-    setIDTIPO(r_codigo);
-    setOpenPreguntas(false);
-    setOpenNiveles(false);
-    setOpenSecciones(false);
-    setOpenPlantilla(false);
-    setr_icono(iconoP);
-    setOpenEditMEMRZAR(false);
-  };
-  //funcion para crear o editar las imagenes respuestas de MEMRZAR
-  const [idPregunta, setIDPregunta] = useState(0);
-  const [openEditMEMRZAR, setOpenEditMEMRZAR] = useState(false);
-  const [buscarEditMEMRZAR, setbuscarEditMEMRZAR] = useState(true);
-  const AbrirEditarMEMRZAR = (id_pr, busqueda) => {
-    setIDPregunta(id_pr);
-    setbuscarEditMEMRZAR(busqueda);
-    setOpenEditMEMRZAR(true);
-    setOpenPreguntas(false);
-    setOpenNiveles(false);
-    setOpenSecciones(false);
-    setOpenPlantilla(false);
-    setMEMRZAR(false);
-  };
-  //funcion para abrir la edicion de las repuestas de una pregunta de tipo MEMRZAR
-  */
   //funcion para renderizar los componentes segun un switch
   const renderComponent = () => {
     switch (true) {
       case openSeccion:
-        return <Lista />;
-      /*
-      case openNiveles:
         return (
-          <ListaNiveles
-            id_seccion={IDSeccion}
+          <Lista
+            AbrirParticipantes={AbrirParticipantes}
             AbrirSecciones={AbrirSecciones}
-            Titulo={tituloSeccion}
-            AbrirPreguntas={AbrirPreguntas}
           />
         );
-      case openPreguntas:
-        return (
-          <ListaPreguntas
-            id_nivel={IDNivel}
-            nivel={nombre_nivel}
-            seccion={tituloSeccion}
-            id_seccion={IDSeccion}
-            AbrirNiveles={AbrirNiveles}
-            AbrirPlantilla={AbrirPlantilla}
-            AbrirEditarMEMRZAR={AbrirEditarMEMRZAR}
-          />
-        );
-      case openPlantilla:
-        return (
-          <PlantillasPreguntas
-            id_tipo={idTipoPregunta}
-            titulo_tipo={tituloTipo}
-            id_niv={IDNivel}
-            AbrirMEMRZAR={AbrirMEMRZAR}
-          />
-        );
-      case openMEMRZAR:
-        return (
-          <MEMRZAR
-            tipo_preg={IDTIPOPRE}
-            id_nivel={IDNivel}
-            icono={r_icono}
-            AbrirEditarMEMRZAR={AbrirEditarMEMRZAR}
-          />
-        );
-      case openEditMEMRZAR:
-        return (
-          <MEMRZAR_resp
-            id_pregunta={idPregunta}
-            buscar={buscarEditMEMRZAR}
-            id_nivel={IDNivel}
-          />
-        );
-        */
+      case openParticipantes:
+        return <Participantes idTest_id={idTest} Regresar={Regresar} />;
+      case openSeleccionarSeccion:
+        return <SeleccionarSecciones idTest_id={idTest} Regresar={Regresar} />;
       default:
         return null; // Otra opción por defecto si ninguna condición es verdadera
     }

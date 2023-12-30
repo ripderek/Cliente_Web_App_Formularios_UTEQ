@@ -12,6 +12,7 @@ import Cookies from "universal-cookie";
 import { useState, useEffect } from "react";
 import Lottie from "lottie-react";
 import anim from "../../public/anim/check.json";
+import { useGoogleLogin } from "@react-oauth/google";
 //paguina para el login desde los administradores --> profesores
 export default function Index() {
     //Borrar cookies en caso de existir alguna
@@ -79,12 +80,92 @@ export default function Index() {
             //console.log(result.data);
 
         } catch (error) {
+            console.log(error);
             setLoader(false);
             //colocar una alerta de error cuando no se pueda inciar sesion
             setError(true);
             setMensajeError(error.response.data.error);
         }
     }
+
+    //Envento clik para iniciar con google
+    
+    const login = useGoogleLogin({
+        onSuccess: async (respose) => {
+            setLoader(true);
+            try {
+                const res = await axios.get(
+                    "https://www.googleapis.com/oauth2/v3/userinfo",
+                    {
+                        headers: {
+                            Authorization: `Bearer ${respose.access_token}`,
+                        },
+                    }
+                );
+
+                console.log(res.data);
+                //Aqui va para sacar el token ty sacar el mail del token que te regresa google
+                const email = res.data.email;
+                console.log(email);
+                setLoader(false);
+                //Llama al metodo pasandole el email
+                GoogleLogin(email);
+            } catch (error) {
+                console.log(error);
+                setLoader(false);
+            }
+        },
+    });
+    
+
+    const GoogleLogin = async (email) => {
+        try {
+            setLoader(true);
+            console.log(email);
+            const result = await axios.post(
+                process.env.NEXT_PUBLIC_ACCESLINK + "authgoogle/LoginG",
+                { email },
+                {
+                    withCredentials: true,
+                }
+            );
+            console.log("asdas", result);
+
+            const cookies = new Cookies();
+            //Cookie para el token
+            cookies.set("myTokenName", result.data.token, { path: "/" }); //enviar cokiee y almacenarla
+            //Cookie para el id del usuario
+            cookies.set("id_user", result.data.id, { path: "/" });
+            setLoader(false);
+            //para abrir la nueva ruta en la misma pestana
+            //Router.push("/dashboard/Home");
+
+            //para abrir la nueva ventana del dashboard 
+            // Para abrir una nueva ruta en la misma pestaña
+            const nuevaRuta = "/dashboard/Home"; // Reemplaza con tu nueva ruta
+
+            const nuevaPestana = window.open(nuevaRuta, "_blank");
+
+            // Asegúrate de manejar el caso en el que window.open sea bloqueado por el navegador
+            if (nuevaPestana) {
+                //hacer la interfaz cambie y que salga un mensaje de accedido con exito xd
+                setAutencidado(true);
+            } else {
+                // window.open fue bloqueado por el navegador
+                // Puedes proporcionar un mensaje al usuario o tomar otras medidas
+                alert('La apertura de la nueva pestaña fue bloqueada por el navegador.');
+            }
+
+            //console.log(result.data);
+        } catch (error) {
+            console.log(error);
+            setLoader(false);
+            //colocar una alerta de error cuando no se pueda inciar sesion
+            setError(true);
+            setMensajeError(error.response.data.error);
+        }
+    };
+
     //funcion para cerrar el dialog del error 
     const cerrar = (valor) => {
         setError(valor)
@@ -135,7 +216,10 @@ export default function Index() {
                     <Button className="mt-6 bg-light-green-900 font-bold " type="submit" fullWidth >
                         Aceptar
                     </Button>
-                    <div className="h-auto bg-gray-200  flex items-center justify-center mt-4 cursor-pointer text-center rounded-lg mx-auto">
+                    <div
+                        className="h-auto bg-gray-200  flex items-center justify-center mt-4 cursor-pointer text-center rounded-lg mx-auto"
+                        onClick={login}
+                    >
                         <div className="p-2">
                             <img
                                 className="h-7 w-7 rounded-full"

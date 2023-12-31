@@ -1,7 +1,11 @@
 import React from 'react'
 import { useRouter } from 'next/router';
+
+//importar la barra de navegacion 
+import { NavBarForms } from '@/components/FormsLayout'
 import { useGoogleLogin } from "@react-oauth/google";
 import axios from "axios";
+
 
 export default function Formulario() {
     const router = useRouter();
@@ -41,9 +45,8 @@ export default function Formulario() {
     });
 
     //primero verificar si el formulario esta activo y mostrar el login xd
-
-    return (
-        
+    //para realizar la consulta sobre el estado del formulario se obtiene el token desde la URL
+    return (        
         <>
             <div>token: {token}</div>
             <div
@@ -62,5 +65,6 @@ export default function Formulario() {
                         </div>
                     </div>
         </>
+
     )
 }

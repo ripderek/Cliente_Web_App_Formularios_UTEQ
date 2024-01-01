@@ -22,5 +22,5 @@ export async function middleware(request) {
 }
 //http://localhost:3000/dashboard/
 export const config = {
-    matcher: ["/dashboard/:path*"],
+    matcher: ["/dashboard/:path*", "/FormulariosOP/:path*"],
 };

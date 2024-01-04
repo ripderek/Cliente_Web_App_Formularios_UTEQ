@@ -29,6 +29,7 @@ import {
   DialogHeader,
   DialogBody,
   DialogFooter,
+  Alert,
 } from "@material-tailwind/react";
 import { Crear, Errores_Test } from "@/pages/dashboard/FormulariosC";
 import { Dialog_Error, Loader, Notification } from "@/widgets"; //Importar el componente
@@ -152,6 +153,24 @@ export default function Lista({ AbrirParticipantes, AbrirSecciones }) {
       setMensajeError(error.response.data.error);
     }
   };
+  // funcion para copiar el link del formulario en el cortapapeles
+  const copiarTextoAlPortapapeles = (texto) => {
+    // Crea un elemento de texto temporal
+    const input = document.createElement("textarea");
+    // Asigna el texto que deseas copiar al portapapeles
+    input.value = texto;
+    // Agrega el elemento al DOM
+    document.body.appendChild(input);
+    // Selecciona el texto en el elemento
+    input.select();
+    // Copia el texto al portapapeles
+    document.execCommand("copy");
+    // Remueve el elemento temporal
+    document.body.removeChild(input);
+    setOpenAlertTexto(true);
+  };
+  //estado para el alert de copiar texto
+  const [openAlertTexto, setOpenAlertTexto] = useState(false);
   return (
     <Card className="h-full w-full mt-4">
       {load ? <Loader /> : ""}
@@ -159,10 +178,24 @@ export default function Lista({ AbrirParticipantes, AbrirSecciones }) {
       <Crear abrir={openCreate} cerrar={cerrar} crear={crear} />
       {/* Para visualizar los detalles del test y poder seleccionar secciones, niveles y participantes*/}
       <Dialog open={openDetalles} size="xl" handler={handleOpenDetalles}>
-        <DialogHeader> {detallesTest.r_titulo}</DialogHeader>
+        <DialogHeader>
+          {" "}
+          <div className="flex w-full flex-col gap-2">
+            <Alert
+              open={openAlertTexto}
+              onClose={() => setOpenAlertTexto(false)}
+              color="green"
+            >
+              Enlace copiado
+            </Alert>
+          </div>
+        </DialogHeader>
         <DialogBody className="font-semibold">
           {/*Detalles del test: {detallesTest.r_descripcion}*/}
-          <div>{detallesTest.r_titulo_completo}</div>
+
+          <div className="font-bold text-black text-xl">
+            {detallesTest.r_titulo_completo}
+          </div>
           {detallesTest.r_descripcion}
           <table className="mt-4 w-full min-w-max table-auto text-left">
             <thead>
@@ -312,14 +345,21 @@ export default function Lista({ AbrirParticipantes, AbrirSecciones }) {
             </tbody>
           </table>
           <div className="bg-blue-gray-100 p-6 rounded-2xl mt-3 flex flex-col md:flex-row md:items-center">
-            {detallesTest.r_error == false ? (
+            {detallesTest.r_error ? (
               <div>No puede compartir el enlace hasta que corrija el Test</div>
             ) : (
               <>
                 <div className="md:w-2/3 mb-2 md:mb-0 md:mr-2">
-                  {detallesTest.r_token}
+                  http://localhost:3000/Forms/{detallesTest.r_token}
                 </div>
-                <div className="md:w-1/3">
+                <div
+                  className="md:w-1/3"
+                  onClick={() =>
+                    copiarTextoAlPortapapeles(
+                      "http://localhost:3000/Forms/" + detallesTest.r_token
+                    )
+                  }
+                >
                   <div className=" bg-white rounded-xl mx-auto  text-center cursor-pointer">
                     Copiar enlace
                     <IconButton variant="text" disabled>

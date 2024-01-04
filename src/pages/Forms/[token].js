@@ -16,6 +16,7 @@ import {
     Tooltip,
 } from "@material-tailwind/react";
 import alertGradient from '@material-tailwind/react/theme/components/alert/alertGradient';
+import { Dialog_Error, Loader, Notification } from "@/widgets"; //Importar el componente
 
 export default function Formulario() {
     const router = useRouter();
@@ -64,11 +65,8 @@ export default function Formulario() {
                 setNotFound(false);
                 //como si hay data crear un switch para verificar si se puede iniciar sesion 
                 //con el switch si una varibale esta en falso deshbilita la funcion de iniicar sesion
-
                 setEnableGoogle(true);
             }
-
-
             setLoader(false);
         } catch (error) {
             setLoader(false);
@@ -96,14 +94,15 @@ export default function Formulario() {
                     console.log(res.data);
                     const { email: email, family_name: apellidos, given_name: nombres, hd: dominio, name: nombres_completos, picture: foto } = res.data;
                     //Llama al metodo pasandole el email
-                    GoogleLogin(email, nombres_completos, dominio);
+                    GoogleLogin(email, nombres_completos, dominio, foto);
                 }
             } catch (error) {
                 console.log(error);
             }
         },
     });
-    const GoogleLogin = async (email, name, hd) => {
+    const GoogleLogin = async (email, name, hd, foto) => {
+        setLoader(true);
         try {
             setLoader(true);
             console.log(email);
@@ -115,8 +114,6 @@ export default function Formulario() {
                 }
             );
             //console.log("asdas", result);
-
-
             const cookies = new Cookies();
             //Cookie para el token
             cookies.set("myTokenName", result.data.token, { path: "/" }); //enviar cokiee y almacenarla
@@ -124,34 +121,63 @@ export default function Formulario() {
             cookies.set("id_user", result.data.id, { path: "/" });
             //agregar una nueva cookie para identificar el id del formulario 
             cookies.set("token_test", token, { path: "/" });
-
-
+            cookies.set("foto_url", foto, { path: "/" });
             setLoader(false);
             //para abrir la nueva ruta en la misma pestana
-            Router.push("/FormulariosOP/Hola");
+            //antes de reenviar primero verificar si este usuario ya se encuentra registrado en el test 
+            const response = await fetch(
+                process.env.NEXT_PUBLIC_ACCESLINK +
+                "test/VerificacionIngresoParticipante/" + result.data.id +
+                "/" + token,
+                {
+                    method: "GET",
+                    headers: { "Content-Type": "application/json" },
+                    credentials: "include",
+                }
+            );
+            const data = await response.json();
+            //si no encuentra verificado en el test entonces que se registre
+            if (data.r_verification)
+                Router.push("/FormulariosOP/Test");
+            else
+                Router.push("/FormulariosOP/Hola");
             //console.log(result.data);
-
+            setLoader(false);
         } catch (error) {
             console.log(error);
             setLoader(false);
             //colocar una alerta de error cuando no se pueda inciar sesion
             //setError(true);
-            alert(error.response.data.error);
+            setMensajeError(error.response.data.error);
+            //alert(error.response.data.error);
+            setError(true);
         }
     };
-
-
-
-
+    const cerrar1 = (valor) => {
+        setError(valor);
+    };
+    //variable para detectar un error y mostrar el error
+    const [error, setError] = useState(false);
+    //variable para almacenar el mensaje del error
+    const [mensajeError, setMensajeError] = useState("");
     //Hacer un Switch para habilitar el inicio de google, en el cual si un case falla retornar falso el inicio de sesion con google 
-
     //primero verificar si el formulario esta activo y mostrar el login xd
     //para realizar la consulta sobre el estado del formulario se obtiene el token desde la URL
     return (
         <>
             <NavBarFormsLogin titulo={"Hola"} user_name={"user1"} viewLogin={EnableGoogle} loginG={loginG} />
-            {NotFound ? (<div className='mx-auto items-center text-center font-body text-4xl mt-8'>{":(  "}Este formulario no existe </div>) : <Card className="w-96 mx-auto mt-2">
-                <CardHeader floated={false} className="h-auto">
+            {load ? <Loader /> : ""}
+            {error ? (
+                <Dialog_Error
+                    mensaje={mensajeError}
+                    titulo="Error al autenticar"
+                    cerrar={cerrar1}
+                />
+            ) : (
+                ""
+            )}
+            {NotFound ? (<div className='mx-auto items-center text-center font-body text-4xl mt-8'>{":(  "}Este formulario no existe </div>) : <Card className="w-96 mx-auto mt-6 border-4 border-solid border-green-900 rounded-none">
+                <CardHeader floated={false} className="h-auto 	">
                     {/* 
                     <img src="https://docs.material-tailwind.com/img/team-3.jpg" alt="profile-picture" />
                     */}

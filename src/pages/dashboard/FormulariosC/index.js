@@ -4,3 +4,4 @@ export { default as Errores_Test } from '@/pages/dashboard/FormulariosC/Errores_
 export { default as Participantes } from '@/pages/dashboard/FormulariosC/Participantes'
 export { default as SeleccionarSecciones } from '@/pages/dashboard/FormulariosC/SeleccionarSecciones'
 export { default as AddSeccion } from '@/pages/dashboard/FormulariosC/AddSeccion'
+export { default as SeccionesDisponibles } from '@/pages/dashboard/FormulariosC/SeccionesDisponibles'

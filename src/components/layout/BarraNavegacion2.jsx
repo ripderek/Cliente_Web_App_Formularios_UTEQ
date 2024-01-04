@@ -23,7 +23,7 @@ export function BarraNavegacion2({ routes, brandImg, brandName }) {
   // Define la lógica para determinar si un enlace está activo
   const isActive = (path) => useRouter().pathname === path;
   const sidenavTypes = {
-    dark: "bg-gradient-to-br from-gray-800 to-gray-900",
+    dark: "bg-green-500",
     white: "bg-white shadow-sm",
     transparent: "bg-transparent",
   };
@@ -36,17 +36,13 @@ export function BarraNavegacion2({ routes, brandImg, brandName }) {
       <div className={`relative `}>
         <Card
           className={`w-auto shadow-none mb-0 ${
-            sidenavType === "dark"
-              ? "bg-gradient-to-br from-gray-800 to-gray-900"
-              : "bg-white"
+            sidenavType === "dark" ? "bg-green-500" : "bg-white"
           }`}
         >
           <CardHeader
             floated={false}
             className={`h-auto w-44 mx-auto text-center shadow-none${
-              sidenavType === "dark"
-                ? "bg-gradient-to-br from-gray-800 to-gray-900"
-                : "bg-white"
+              sidenavType === "dark" ? "bg-green-500" : "bg-white"
             }`}
           >
             <img

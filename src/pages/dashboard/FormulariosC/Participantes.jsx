@@ -122,7 +122,7 @@ export default function Participantes({ idTest_id, Regresar }) {
     setLoader(true);
     try {
       const response = await fetch(
-        process.env.NEXT_PUBLIC_ACCESLINK + "test/ListaParticipantes/",
+        process.env.NEXT_PUBLIC_ACCESLINK + "test/ListaParticipantes",
         {
           method: "GET",
           headers: { "Content-Type": "application/json" },
@@ -162,6 +162,7 @@ export default function Participantes({ idTest_id, Regresar }) {
         //console.log(result.data);
         setLoader(false);
       } catch (error) {
+        console.log(error);
         setLoader(false);
         //colocar una alerta de error cuando no se pueda inciar sesion
         //setError(true);

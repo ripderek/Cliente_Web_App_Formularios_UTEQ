@@ -35,12 +35,12 @@ export function NavBarFormsLogin({ user_name, titulo, viewLogin, loginG }) {
   const { fixedNavbar, openSidenav, sidenavColor } = controller;
 
   return (
-    <nav class="bg-white border-gray-200 dark:bg-gray-900">
+    <nav class="bg-green-900   border-4 border-solid border-orange-800 rounded-none">
       <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
         <a class="flex items-center space-x-3 rtl:space-x-reverse">
           <img
-            src="/img/Home/Extintor_logo.png"
-            class="h-8"
+            src="/img/Home/Extintor_logo7.png"
+            class="h-14"
             alt="Flowbite Logo"
           />
           {/* 
@@ -52,7 +52,7 @@ export function NavBarFormsLogin({ user_name, titulo, viewLogin, loginG }) {
         {viewLogin ? (
           <div>
             <div
-              className="h-auto bg-blue-gray-100  flex items-center justify-center mt-4 cursor-pointer text-center rounded-lg mx-auto w-full"
+              className="h-auto bg-white  flex items-center justify-center mt-4 cursor-pointer text-center rounded-none mx-auto w-full border-4 border-solid border-orange-500 "
               onClick={loginG}
             >
               <div className="p-2">
@@ -62,7 +62,7 @@ export function NavBarFormsLogin({ user_name, titulo, viewLogin, loginG }) {
                   alt="User image"
                 />
               </div>
-              <div className="ml-2 font-bold text-blue-gray-600 p-2">
+              <div className="ml-2 font-bold text-blue-gray-600 p-2 ">
                 Continuar con Google
               </div>
             </div>

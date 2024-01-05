@@ -11,7 +11,7 @@ import {
 import { ClockIcon } from "@heroicons/react/24/solid";
 import { TiempoAgotado } from "@/widgets";
 
-export default function MEMRZAR_resolv({
+export default function SELCIMG_resolv({
   id_pregunta,
   id_progreso_sec,
   RegresarProgresoSeccion,
@@ -35,7 +35,7 @@ export default function MEMRZAR_resolv({
       //alert("Editando por ID");
       const response = await fetch(
         process.env.NEXT_PUBLIC_ACCESLINK +
-          "preguntas/MEMRZAR_Datos_pregunta_id_pregunta/" +
+          "preguntas/SELCIMG_Datos_pregunta_id_pregunta/" +
           id_pregunta,
         {
           method: "GET",
@@ -48,8 +48,7 @@ export default function MEMRZAR_resolv({
       setLoader(false);
       setIdPregunta(data.r_id_pregunta);
       cargarRespuestas(data.r_id_pregunta);
-      setSegundosRespuestas(data.r_tiempo_respuesta);
-      setSegundos(data.r_tiempo_enunciado);
+      setSegundos(data.r_tiempo_segundo);
     } catch (error) {
       setLoader(false);
       console.log(error);
@@ -57,15 +56,13 @@ export default function MEMRZAR_resolv({
   };
   //{PARA LOS SEGUNDOS DE LA PREGUNTA}
   const [segundos, setSegundos] = useState(0);
-  const [VerPregunta, SetVerPregunta] = useState(true);
   useEffect(() => {
     const intervalId = setInterval(() => {
       setSegundos((prevSegundos) => {
         if (prevSegundos === 1) {
           // Si llegamos a cero, detenemos el temporizador y ocultamos el div
           clearInterval(intervalId);
-          SetVerPregunta(false);
-          setVerRespuestas(true);
+          enviarRespuesta();
         }
         return prevSegundos - 1;
       });
@@ -74,43 +71,6 @@ export default function MEMRZAR_resolv({
     // Limpieza del temporizador cuando el componente se desmonta o cuando la variable cambia
     return () => clearInterval(intervalId);
   }, [IDPregunta]); // el segundo argumento vacío garantiza que el efecto se ejecute solo una vez al montar el componente
-  //timer para ver las respuestas
-  const [VerRespuestas, setVerRespuestas] = useState(null);
-
-  const [segundosRespuestas, setSegundosRespuestas] = useState(-1);
-  const intervalRef1 = useRef(null);
-  //{USEEFECT PARA VER LAS RESPUESTAS}
-  useEffect(() => {
-    // Iniciar el temporizador solo cuando IDPregunta cambia
-    if (VerRespuestas) {
-      intervalRef1.current = setInterval(() => {
-        setSegundosRespuestas((prevSegundos1) => {
-          if (prevSegundos1 === 1) {
-            // Si llegamos a cero, detenemos el temporizador y realizamos la acción
-            clearInterval(intervalRef1.current);
-            setVerRespuestas(false);
-            //alert("Seg: " + prevSegundos1);
-            //return;
-          }
-          return prevSegundos1 - 1;
-        });
-      }, 1000);
-    }
-
-    // Limpiar el temporizador cuando IDPregunta cambia o cuando el componente se desmonta
-    return () => clearInterval(intervalRef1.current);
-  }, [VerRespuestas]);
-
-  //useffect para detener el timer de ver respuestas y enviar la repuesta xd
-  useEffect(() => {
-    // Iniciar el temporizador solo cuando IDPregunta cambia
-    if (segundosRespuestas === 0) {
-      clearInterval(intervalRef1.current);
-      enviarRespuesta();
-    }
-  }, [VerRespuestas]);
-
-  //return () => clearInterval(temporizador); // Limpiar el temporizador cuando el componente se desmonta
 
   const [respuestas, setRespuestas] = useState([]);
   //funcion para cargar todas las respuestas de una pregunta MEMRZAR
@@ -134,30 +94,27 @@ export default function MEMRZAR_resolv({
   const [tiempoAgotado, setTiempoAgotado] = useState(false);
   const enviarRespuesta = () => {
     setTiempoAgotado(true);
-    //  {{{{{{{{{{{{{{{{{{{{{{{{{PETICION AXIOS}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}
+    //  {{{{{{{{{{{{{{{{{{{{{{{{{PETICION AXIOS PARA REGISTRAR LA RESPUESTA}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}
 
     //setTiempoAgotado(false);
     //cuando finalice volver a ProgresoSecciones
     Enviar_Respuesta("NA");
     //setData_User(null);
-    //cuando finalice cargar la siguiente pregunta
+    //RegresarProgresoSeccion(true);
+
+    //cuando finalice volver a carga la ultima pregunta
     //click();
   };
 
   //FUNCION DE SELECCIONAR LA RESPUESTA
   const seleccionRepuesta = (opcion) => {
     //alert(opcion);
-    setVerRespuestas(false);
     Enviar_Respuesta(opcion);
-    //  {{{{{{{{{{{{{{{{{{{{{{{{{PETICION AXIOS}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}
+    //  {{{{{{{{{{{{{{{{{{{{{{{{{PETICION AXIOS PARA REGISTRAR LA RESPUESTA}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}
     //setData_User(null);
-    // RegresarProgresoSeccion(true);
+    //RegresarProgresoSeccion(true);
     //click();
   };
-
-  //funcion para guardar la repuesta en la pregunta
-  /* [ESTA FUNCION PUEDE SERVIR PARA ENVIAR LA REPUESTA A LA API] */
-
   const Enviar_Respuesta = async (respuesta) => {
     //process.env.NEXT_PUBLIC_ACCESLINK
     //Router.push("/Inicio");
@@ -168,7 +125,7 @@ export default function MEMRZAR_resolv({
         {
           p_id_progreso_pregunta: ProgresoPregunta,
           p_respuesta: respuesta,
-          p_tiempo_respuesta: segundosRespuestas,
+          p_tiempo_respuesta: segundos,
         },
         {
           withCredentials: true,
@@ -185,41 +142,20 @@ export default function MEMRZAR_resolv({
       //alert(error.response.data.error);
     }
   };
-
   return (
     <Card className="w-auto rounded-none mx-auto">
       {tiempoAgotado && <TiempoAgotado />}
       {load && <Loader />}
-      {VerPregunta && (
-        <Alert
-          color={segundos <= 5 ? "red" : segundos <= 10 ? "yellow" : "green"}
-          icon={<ClockIcon className="h-10" />}
-          className="fixed top-4 right-24 md:right-80 z-1 w-auto"
-          open={true}
-        >
-          <Typography variant="h3" color="white">
-            {segundos}
-          </Typography>
-        </Alert>
-      )}
-      {VerRespuestas && (
-        <Alert
-          color={
-            segundosRespuestas <= 5
-              ? "red"
-              : segundosRespuestas <= 10
-              ? "yellow"
-              : "green"
-          }
-          icon={<ClockIcon className="h-10" />}
-          className="fixed top-4 right-24 md:right-80 z-1 w-auto"
-          open={true}
-        >
-          <Typography variant="h3" color="white">
-            {segundosRespuestas}
-          </Typography>
-        </Alert>
-      )}
+      <Alert
+        color={segundos <= 5 ? "red" : segundos <= 10 ? "yellow" : "green"}
+        icon={<ClockIcon className="h-10" />}
+        className="fixed top-4 right-24 md:right-80 z-1 w-auto"
+        open={true}
+      >
+        <Typography variant="h3" color="white">
+          {segundos}
+        </Typography>
+      </Alert>
 
       <CardBody className="flex flex-col gap-4">
         {/* 
@@ -280,51 +216,38 @@ export default function MEMRZAR_resolv({
             </Button>
           </div>
   */}
-        {VerPregunta && (
-          <img
-            src={
-              process.env.NEXT_PUBLIC_ACCESLINK +
-              "preguntas/Ver_ImagenPregunta/" +
-              data_user.r_id_pregunta
-            }
-            alt="Imagen"
-            className="mt-3 h-64 w-auto mx-auto"
-          />
-        )}
-
-        {VerRespuestas && (
-          <div>
-            <Typography variant="h4" color="orange">
-              Opciones:
-            </Typography>
-            <div className="grid grid-cols-3   md:grid-cols-4 gap-3 p-5">
-              {respuestas.map(
-                ({
-                  r_id_repuesta,
-                  r_opcion,
-                  r_correcta,
-                  r_estado,
-                  r_eliminado,
-                }) => (
-                  <div
-                    key={r_id_repuesta}
-                    className="bg-blue-gray-50 h-auto shadow-xl rounded-none cursor-pointer hover:shadow-yellow-900 hover:border-yellow-900 hover:border-4"
-                    onClick={() => seleccionRepuesta(r_opcion)}
-                  >
-                    <div className="bg-zinc-900 text-black  rounded-2xl">
-                      <div className="mx-auto">
-                        <div className="text-center">
-                          <img
-                            src={
-                              process.env.NEXT_PUBLIC_ACCESLINK +
-                              "preguntas/Ver_ImagenRespuestaMEMRZAR/" +
-                              r_id_repuesta
-                            }
-                            alt={r_id_repuesta}
-                            className="mt-3 h-64 w-auto mx-auto mb-6"
-                          />
-                        </div>
-                        {/* 
+        <div>
+          <Typography variant="h4" color="orange">
+            Opciones:
+          </Typography>
+          <div className="grid grid-cols-3   md:grid-cols-6 gap-8  p-5">
+            {respuestas.map(
+              ({
+                r_id_repuesta,
+                r_opcion,
+                r_correcta,
+                r_estado,
+                r_eliminado,
+              }) => (
+                <div
+                  key={r_id_repuesta}
+                  className="bg-blue-gray-50 h-auto shadow-xl rounded-none cursor-pointer hover:shadow-yellow-900 hover:border-yellow-900 hover:border-4"
+                  onClick={() => seleccionRepuesta(r_opcion)}
+                >
+                  <div className="bg-zinc-900 text-black  rounded-2xl">
+                    <div className="mx-auto">
+                      <div className="text-center">
+                        <img
+                          src={
+                            process.env.NEXT_PUBLIC_ACCESLINK +
+                            "preguntas/Ver_ImagenRespuestaMEMRZAR/" +
+                            r_id_repuesta
+                          }
+                          alt={r_id_repuesta}
+                          className="mt-3 h-64 w-auto mx-auto mb-6"
+                        />
+                      </div>
+                      {/* 
                       <div className="w-full p-4">
                         <input
                           className="w-full text-lg bg-blue-gray-50 font-semibold	text-blue-gray-800 "
@@ -333,10 +256,10 @@ export default function MEMRZAR_resolv({
                         />
                       </div>
                       */}
-                        <div className="w-auto flex ml-2 mb-2">{/** */}</div>
+                      <div className="w-auto flex ml-2 mb-2">{/** */}</div>
 
-                        <div className="w-auto flex ml-2 mb-2">{/** */}</div>
-                        {/* 
+                      <div className="w-auto flex ml-2 mb-2">{/** */}</div>
+                      {/* 
                     <div className="p-2 flex justify-end">
                       <Tooltip content="Editar respuesta">
                         <button className="bg-zinc-50 p-2 bg-green-700 rounded-xl cursor-pointer">
@@ -345,14 +268,13 @@ export default function MEMRZAR_resolv({
                       </Tooltip>
                     </div>
                     */}
-                      </div>
                     </div>
                   </div>
-                )
-              )}
-            </div>
+                </div>
+              )
+            )}
           </div>
-        )}
+        </div>
 
         {/* 
           <div className="flex items-center">

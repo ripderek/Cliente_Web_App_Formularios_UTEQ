@@ -80,6 +80,7 @@ export default function ListaPreguntas({
   AbrirNiveles,
   AbrirPlantilla,
   AbrirEditarMEMRZAR,
+  AbrirEditarSELCIMG,
 }) {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(!open);
@@ -151,7 +152,12 @@ export default function ListaPreguntas({
   const [idPregunta, setIDPregunta] = useState(0);
   //AbrirEditarMEMRZAR
   const editar = (value) => {
-    if (value === "respuesta") AbrirEditarMEMRZAR(idPregunta, false);
+    if (value === "respuesta") {
+      if (tipo_pregunta_editar === "MEMRZAR")
+        AbrirEditarMEMRZAR(idPregunta, false);
+      if (tipo_pregunta_editar === "SELCIMG")
+        AbrirEditarSELCIMG(idPregunta, false);
+    }
   };
   return (
     <Card className="h-full w-full mt-5">
@@ -414,7 +420,7 @@ export default function ListaPreguntas({
                     : "p-4 border-b border-blue-gray-50";
 
                   return (
-                    <tr key={r_id_pregunta}>
+                    <tr key={r_id_p}>
                       <td className={classes}>
                         <div className="flex flex-col">
                           <Typography

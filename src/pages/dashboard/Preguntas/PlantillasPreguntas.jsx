@@ -31,6 +31,7 @@ export default function CrearPregunta({
   titulo_tipo,
   id_niv,
   AbrirMEMRZAR,
+  AbrirSELCIMG,
 }) {
   const [load, setLoader] = useState(false);
   const [error, setError] = useState(false);
@@ -72,6 +73,23 @@ export default function CrearPregunta({
       //colocar una alerta de error cuando no se pueda inciar sesion
       setError(true);
       setMensajeError(error.response.data.error);
+    }
+  };
+  //funcion para abrir el editor de una pregunta xd
+  const AbrirEditor = (r_id_tipo_pregunta, r_icono, r_codigo) => {
+    //AbrirMEMRZAR(r_id_tipo_pregunta, r_icono)
+    //console.log(r_id_tipo_pregunta, r_icono, r_codigo);
+    //if (r_codigo === "MEMRZAR") AbrirMEMRZAR(r_id_tipo_pregunta, r_icono);
+    switch (r_codigo) {
+      case "MEMRZAR":
+        AbrirMEMRZAR(r_id_tipo_pregunta, r_icono);
+        break;
+      case "SELCIMG":
+        AbrirSELCIMG(r_id_tipo_pregunta, r_icono);
+        break;
+      // Puedes agregar más casos según sea necesario
+      default:
+        break;
     }
   };
   return (
@@ -176,7 +194,7 @@ export default function CrearPregunta({
                         <button
                           className="bg-zinc-50 p-2 bg-green-700 rounded-xl cursor-pointer font-bold text-white"
                           onClick={() =>
-                            AbrirMEMRZAR(r_id_tipo_pregunta, r_icono)
+                            AbrirEditor(r_id_tipo_pregunta, r_icono, r_codigo)
                           }
                         >
                           {/*  <ArrowRightCircleIcon className="w-7" color="white" />*/}

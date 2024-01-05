@@ -27,7 +27,12 @@ import axios from "axios";
 import { Fragment, useState, useEffect } from "react";
 import { Lista } from "@/pages/dashboard/OpcionesSecciones";
 import { ListaNiveles } from "@/pages/dashboard/Niveles";
-import { MEMRZAR, MEMRZAR_resp } from "@/pages/dashboard/Plantillas";
+import {
+  MEMRZAR,
+  MEMRZAR_resp,
+  SELCIMG,
+  SELCIMG_resp,
+} from "@/pages/dashboard/Plantillas";
 import {
   ListaPreguntas,
   PlantillasPreguntas,
@@ -89,6 +94,8 @@ export default function Secciones() {
     setOpenPlantilla(false);
     setMEMRZAR(false);
     setOpenEditMEMRZAR(false);
+    setSELCIMG(false);
+    setOpenEditSELCIMG(false);
   };
   //funcion para abrir secciones
   const [openSeccion, setOpenSecciones] = useState(true);
@@ -99,6 +106,8 @@ export default function Secciones() {
     setOpenPlantilla(false);
     setMEMRZAR(false);
     setOpenEditMEMRZAR(false);
+    setSELCIMG(false);
+    setOpenEditSELCIMG(false);
   };
   //funcion para abrir lista de preguntas
   const [IDNivel, setIDNivel] = useState("");
@@ -113,6 +122,8 @@ export default function Secciones() {
     setOpenPlantilla(false);
     setMEMRZAR(false);
     setOpenEditMEMRZAR(false);
+    setSELCIMG(false);
+    setOpenEditSELCIMG(false);
   };
   //funcion para abrir el menu de seleccionar plantilla para crear una pregunta dependiendo del tipo maestro de pregunta
   //necesito el id del tipo de pregunta, el titulo y el id del nivel.
@@ -129,6 +140,8 @@ export default function Secciones() {
     setOpenSecciones(false);
     setMEMRZAR(false);
     setOpenEditMEMRZAR(false);
+    setSELCIMG(false);
+    setOpenEditSELCIMG(false);
   };
   //funcion para abrir la creacion de una pregunta xd
   //para la plantilla MEMRZAR --> Memorizar opcion uninca
@@ -144,6 +157,8 @@ export default function Secciones() {
     setOpenPlantilla(false);
     setr_icono(iconoP);
     setOpenEditMEMRZAR(false);
+    setSELCIMG(false);
+    setOpenEditSELCIMG(false);
   };
   //funcion para crear o editar las imagenes respuestas de MEMRZAR
   const [idPregunta, setIDPregunta] = useState(0);
@@ -158,9 +173,38 @@ export default function Secciones() {
     setOpenSecciones(false);
     setOpenPlantilla(false);
     setMEMRZAR(false);
+    setSELCIMG(false);
+    setOpenEditSELCIMG(false);
   };
-  //funcion para abrir la edicion de las repuestas de una pregunta de tipo MEMRZAR
-
+  //funcion para abrir el creador de preguntas de tipo SELCIMG
+  const [openSELCIMG, setSELCIMG] = useState(false);
+  const AbrirSELCIMG = (r_codigo, iconoP) => {
+    setMEMRZAR(false);
+    setIDTIPO(r_codigo);
+    setOpenPreguntas(false);
+    setOpenNiveles(false);
+    setOpenSecciones(false);
+    setOpenPlantilla(false);
+    setr_icono(iconoP);
+    setOpenEditMEMRZAR(false);
+    setSELCIMG(true);
+    setOpenEditSELCIMG(false);
+  };
+  //funcion para abrir el editor de tipo SELCIMG
+  const [openEditSELCIMG, setOpenEditSELCIMG] = useState(false);
+  const [buscarEditSELCIMG, setbuscarEditSELCIMG] = useState(true);
+  const AbrirEditarSELCIMG = (id_pr, busqueda) => {
+    setIDPregunta(id_pr);
+    setbuscarEditSELCIMG(busqueda);
+    setOpenEditMEMRZAR(false);
+    setOpenPreguntas(false);
+    setOpenNiveles(false);
+    setOpenSecciones(false);
+    setOpenPlantilla(false);
+    setMEMRZAR(false);
+    setSELCIMG(false);
+    setOpenEditSELCIMG(true);
+  };
   //funcion para renderizar los componentes segun un switch
   const renderComponent = () => {
     switch (true) {
@@ -185,6 +229,7 @@ export default function Secciones() {
             AbrirNiveles={AbrirNiveles}
             AbrirPlantilla={AbrirPlantilla}
             AbrirEditarMEMRZAR={AbrirEditarMEMRZAR}
+            AbrirEditarSELCIMG={AbrirEditarSELCIMG}
           />
         );
       case openPlantilla:
@@ -194,6 +239,7 @@ export default function Secciones() {
             titulo_tipo={tituloTipo}
             id_niv={IDNivel}
             AbrirMEMRZAR={AbrirMEMRZAR}
+            AbrirSELCIMG={AbrirSELCIMG}
           />
         );
       case openMEMRZAR:
@@ -210,6 +256,23 @@ export default function Secciones() {
           <MEMRZAR_resp
             id_pregunta={idPregunta}
             buscar={buscarEditMEMRZAR}
+            id_nivel={IDNivel}
+          />
+        );
+      case openSELCIMG:
+        return (
+          <SELCIMG
+            tipo_preg={IDTIPOPRE}
+            id_nivel={IDNivel}
+            icono={r_icono}
+            AbrirEditarSELCIMG={AbrirEditarSELCIMG}
+          />
+        );
+      case openEditSELCIMG:
+        return (
+          <SELCIMG_resp
+            id_pregunta={idPregunta}
+            buscar={buscarEditSELCIMG}
             id_nivel={IDNivel}
           />
         );

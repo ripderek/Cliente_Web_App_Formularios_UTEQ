@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
+
 import {
   MagnifyingGlassIcon,
   NoSymbolIcon,
@@ -30,14 +32,23 @@ import {
 import { Dialog_Error, Loader, Notification } from "@/widgets"; //Importar el componente
 import Cookies from "universal-cookie";
 
-export default function ProgresoSecciones({ openQuestion }) {
+export default function ProgresoSecciones({
+  openQuestion,
+  siguiente,
+  r_id_progreso_seccion_p,
+  id_sec_p,
+  RegresarProgresoSeccion,
+}) {
+  const Router = useRouter();
+
   //hacer una funcion que cargue todo el progreso de las secciones del participantes
   const [progreso, setProgreso] = useState([]);
   const [load, setLoader] = useState(false);
   const cookies = new Cookies();
   const [dataTest, setDataTest] = useState([]);
   useEffect(() => {
-    obtener_Progreso();
+    if (siguiente) click(r_id_progreso_seccion_p, id_sec_p);
+    else obtener_Progreso();
   }, []);
   //funcion para cargar las secciones que tiene el usuario obteniendo su id de la cookie
   const obtener_Progreso = async () => {
@@ -78,8 +89,66 @@ export default function ProgresoSecciones({ openQuestion }) {
     }
   };
   //funcion que retorna a la interfaz principal toda la info necesaria como el id del progreso
-  const click = (r_id_progreso_seccion) => {
-    openQuestion(r_id_progreso_seccion, "MEMRZAR");
+  const [SiguientePre, SetSiguientePre] = useState([]);
+  const click = async (r_id_progreso_seccion, id_sec) => {
+    //aqui se necesita obtener la siguiente pregunta sin resolver del participante
+    //id de la pregunta,
+    //tipo de pregunta,
+    //id_progreso_pregunta
+    setLoader(true);
+    try {
+      const response1 = await fetch(
+        process.env.NEXT_PUBLIC_ACCESLINK +
+          "test/HayMas/" +
+          cookies.get("id_user") +
+          "/" +
+          cookies.get("token_test") +
+          "/" +
+          id_sec,
+        {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+        }
+      );
+      const data1 = await response1.json();
+      if (data1.r_verification) {
+        const response = await fetch(
+          process.env.NEXT_PUBLIC_ACCESLINK +
+            "test/ProgresoPreguntasSeccion/" +
+            cookies.get("id_user") +
+            "/" +
+            cookies.get("token_test") +
+            "/" +
+            id_sec,
+          {
+            method: "GET",
+            headers: { "Content-Type": "application/json" },
+            credentials: "include",
+          }
+        );
+        const data = await response.json();
+        SetSiguientePre(data);
+        if (data) {
+          openQuestion(
+            r_id_progreso_seccion,
+            data.r_codigo,
+            data.r_id_pregunta,
+            data.r_id_progreso_preguntas,
+            id_sec
+          );
+        }
+      } else obtener_Progreso();
+
+      setLoader(false);
+    } catch (error) {
+      //obtener_Progreso();
+      //setLoader(false);
+      //colocar una alerta de error cuando no se pueda inciar sesion
+      console.log(error);
+      //hacer un reload a la paguina
+      //Router.push("/FormulariosOP/Test");
+    }
   };
   return (
     <div>
@@ -128,8 +197,8 @@ export default function ProgresoSecciones({ openQuestion }) {
               }) => (
                 <div
                   key={r_id_progreso_seccion}
-                  className="bg-blue-gray-50 shadow-2xl rounded-none  border-orange-500 border-4 border-solid cursor-pointer"
-                  onClick={() => click(r_id_progreso_seccion)}
+                  className="bg-blue-gray-50 shadow-2xl rounded-none  border-orange-500 border-4 border-solid cursor-pointer  hover:shadow-yellow-900"
+                  onClick={() => click(r_id_progreso_seccion, r_id_seccion)}
                 >
                   <div className="bg-zinc-900 text-black shadow-2xl rounded-none">
                     <div className="mx-auto">

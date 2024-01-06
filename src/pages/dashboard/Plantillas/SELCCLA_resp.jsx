@@ -33,13 +33,13 @@ import {
   XCircleIcon,
 } from "@heroicons/react/24/solid";
 
-export default function MEMRZAR_resp({
+export default function SELCCLA_resp({
   id_pregunta,
   buscar,
   id_nivel,
-  nombrenivel,
   AbrirPreguntas,
   idni,
+  nombrenivel,
 }) {
   const [load, setLoader] = useState(false);
   const [data_user, setData_User] = useState([]);
@@ -54,12 +54,13 @@ export default function MEMRZAR_resp({
   const obtener_datos_pregunta = async () => {
     //alert(id_pregunta + " " + buscar + " " + id_nivel);
     setLoader(true);
+    console.log(id_pregunta + "-" + buscar + "-" + id_nivel);
     try {
       if (buscar) {
         //alert("Buscando");
         const response = await fetch(
           process.env.NEXT_PUBLIC_ACCESLINK +
-            "preguntas/MEMRZAR_Datos_pregunta/" +
+            "preguntas/SELCIMG_Datos_pregunta/" +
             id_nivel,
           {
             method: "GET",
@@ -78,7 +79,7 @@ export default function MEMRZAR_resp({
         //alert("Editando por ID");
         const response = await fetch(
           process.env.NEXT_PUBLIC_ACCESLINK +
-            "preguntas/MEMRZAR_Datos_pregunta_id_pregunta/" +
+            "preguntas/SELCIMG_Datos_pregunta_id_pregunta/" +
             id_pregunta,
           {
             method: "GET",
@@ -123,27 +124,7 @@ export default function MEMRZAR_resp({
   const hanldeOpen = () => {
     setOpenNew(!openNew);
   };
-  //para la carga de imagenes
-  const fileInputRef = useRef(null);
-  const cerrar1 = (valor) => {
-    setError(valor);
-  };
-  const handleButtonClick = () => {
-    if (fileInputRef.current) {
-      fileInputRef.current.click(); // Activa el input de tipo "file"
-    }
-  };
-  //img preview
-  const [file, setFile] = useState(null);
-  const [fileP, setFileP] = useState();
-  const ImagePreview = (e) => {
-    try {
-      setFile(e.target.files[0]);
-      setFileP(URL.createObjectURL(e.target.files[0]));
-    } catch (error) {
-      console.log(error);
-    }
-  };
+
   const [isChecked, setIsChecked] = useState(false);
 
   const handleChange = (event) => {
@@ -158,14 +139,14 @@ export default function MEMRZAR_resp({
     //Router.push("/Inicio");
     setLoader(true);
     try {
-      const form = new FormData();
-      form.set("file", file);
-      form.set("id_pregunta", IDPregunta);
-      form.set("p_correcta", isChecked);
-
+      //alert(IDPregunta);
       const result = await axios.post(
-        process.env.NEXT_PUBLIC_ACCESLINK + "preguntas/Crear_respuestaMEMRZAR",
-        form,
+        process.env.NEXT_PUBLIC_ACCESLINK + "preguntas/Crea_respuesta_text",
+        {
+          respuesta: respuesta,
+          id_pregunta: IDPregunta,
+          p_correcta: isChecked,
+        },
         {
           withCredentials: true,
         }
@@ -184,7 +165,10 @@ export default function MEMRZAR_resp({
       setError(true);
     }
   };
-
+  const [respuesta, setRespuesta] = useState("");
+  const cerrar1 = (valor) => {
+    setError(valor);
+  };
   return (
     <Card className="w-auto mt-6 mx-auto">
       {load ? <Loader /> : ""}
@@ -199,37 +183,19 @@ export default function MEMRZAR_resp({
       )}
       {/* Para agregar una opcion de respuesta a la pregunta con imagen*/}
       <Dialog open={openNew} handler={hanldeOpen}>
-        <DialogBody>
+        <DialogBody className="w-full">
           <Typography variant="h4" color="blue-gray">
             Agregar opcion de respuesta
           </Typography>
 
-          <img
-            src={!fileP ? "/img/Home/materia_icon.png" : fileP}
-            alt="Imagen"
-            className="mt-3 h-64 w-auto mx-auto"
+          <textarea
+            className="border p-2 rounded-sm font-bold w-full h-full mt-3"
+            rows={5} // Número de filas
+            cols={50} // Número de columnas
+            value={respuesta}
+            placeholder="Aquí escribe la respuesta"
+            onChange={(e) => setRespuesta(e.target.value)}
           />
-          <div className="mt-2">
-            <div className="mx-auto w-48 bg-yellow-800 p-2 rounded-xl">
-              <label htmlFor="fileInput" className="text-white font-bold ">
-                Subir Foto:
-              </label>
-              <input
-                type="file"
-                id="fileInput"
-                onChange={ImagePreview}
-                accept="image/png, .jpeg"
-                className="hidden"
-                ref={fileInputRef}
-              />
-              <Button
-                className="ml-3  rounded-xl  bg-white h-11"
-                onClick={handleButtonClick}
-              >
-                <AiOutlineUpload size="25px" color="black" />
-              </Button>
-            </div>
-          </div>
           <div className="flex items-center">
             <Typography className="text-lg font-bold" color="black">
               ¿Respuesta Correcta?:
@@ -261,7 +227,6 @@ export default function MEMRZAR_resp({
               Pregunta:
             </Typography>
           </div>
-
           <div className="flex shrink-0 flex-col gap-2 sm:flex-row">
             <Button
               variant="gradient"
@@ -275,7 +240,7 @@ export default function MEMRZAR_resp({
         </div>
       </CardHeader>
       <CardBody className="flex flex-col gap-4">
-        {/* */}
+        {/* AbrirPreguntas()*/}
 
         {/* 
         <Typography className="text-lg font-bold" color="black">
@@ -323,15 +288,6 @@ export default function MEMRZAR_resp({
           </Button>
         </div>
 */}
-        <img
-          src={
-            process.env.NEXT_PUBLIC_ACCESLINK +
-            "preguntas/Ver_ImagenPregunta/" +
-            data_user.r_id_pregunta
-          }
-          alt="Imagen"
-          className="mt-3 h-64 w-auto mx-auto"
-        />
         <Typography variant="h4" color="orange">
           Opciones:
         </Typography>
@@ -342,7 +298,8 @@ export default function MEMRZAR_resp({
         ) : (
           ""
         )}
-        <div className="grid grid-cols-2   md:grid-cols-3 gap-3 p-5">
+
+        <div className="grid grid-cols-2   md:grid-cols-3 gap-3 p-5 ">
           {respuestas.map(
             ({
               r_id_repuesta,
@@ -357,15 +314,10 @@ export default function MEMRZAR_resp({
               >
                 <div className="bg-zinc-900 text-black  rounded-2xl">
                   <div className="mx-auto">
-                    <div className="text-center">
-                      <img
-                        src={
-                          process.env.NEXT_PUBLIC_ACCESLINK +
-                          "preguntas/Ver_ImagenRespuestaMEMRZAR/" +
-                          r_id_repuesta
-                        }
-                        alt={r_id_repuesta}
-                        className="mt-3 h-64 w-auto mx-auto mb-6"
+                    <div className="text-center mt-4 bg-blue-gray-50">
+                      <textarea
+                        className="border p-2  rounded-sm font-bold bg-blue-gray-50"
+                        value={r_opcion}
                       />
                     </div>
                     {/* 
@@ -395,7 +347,7 @@ export default function MEMRZAR_resp({
                       />
                     </div>
 
-                    <div className="p-2 flex justify-end">
+                    <div className="p-2 flex justify-end mb-0">
                       <Tooltip content="Editar respuesta">
                         <button className="bg-zinc-50 p-2 bg-green-700 rounded-xl cursor-pointer">
                           <PencilIcon className="w-7" color="white" />
@@ -419,6 +371,7 @@ export default function MEMRZAR_resp({
             </Tooltip>
           </div>
         </div>
+
         {/* 
         <div className="flex items-center">
           <Typography className="text-lg font-bold" color="black">

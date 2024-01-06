@@ -33,7 +33,14 @@ import {
   XCircleIcon,
 } from "@heroicons/react/24/solid";
 
-export default function SELCIMG_resp({ id_pregunta, buscar, id_nivel }) {
+export default function SELCIMG_resp({
+  id_pregunta,
+  buscar,
+  id_nivel,
+  nombrenivel,
+  AbrirPreguntas,
+  idni,
+}) {
   const [load, setLoader] = useState(false);
   const [data_user, setData_User] = useState([]);
   const [IDPregunta, setIdPregunta] = useState(0);
@@ -248,11 +255,29 @@ export default function SELCIMG_resp({ id_pregunta, buscar, id_nivel }) {
           </Button>
         </DialogFooter>
       </Dialog>
+      <CardHeader floated={false} shadow={false} className="rounded-none">
+        <div className="mb-1 flex items-center justify-between gap-8">
+          <div>
+            <Typography variant="h4" color="orange">
+              Pregunta:
+            </Typography>
+          </div>
+
+          <div className="flex shrink-0 flex-col gap-2 sm:flex-row">
+            <Button
+              variant="gradient"
+              size="sm"
+              color="orange"
+              onClick={() => AbrirPreguntas(true, idni, nombrenivel)}
+            >
+              Regresar
+            </Button>
+          </div>
+        </div>
+      </CardHeader>
       <CardBody className="flex flex-col gap-4">
         {/* */}
-        <Typography variant="h4" color="orange">
-          Pregunta:
-        </Typography>
+
         {/* 
         <Typography className="text-lg font-bold" color="black">
           Escriba el enunciado:
@@ -376,7 +401,7 @@ export default function SELCIMG_resp({ id_pregunta, buscar, id_nivel }) {
             )
           )}
           <div
-            className="bg-green-600 shadow-2xl h-auto rounded-2xl cursor-pointer"
+            className="bg-green-600 shadow-2xl h-20 w-20 ml-6 mt-12 rounded-2xl cursor-pointer"
             onClick={() => setOpenNew(true)}
           >
             <Tooltip content="Crear una respuesta">

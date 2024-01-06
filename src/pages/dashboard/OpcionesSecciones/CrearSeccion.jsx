@@ -41,7 +41,6 @@ export default function CrearSeccion({ abrir, cerrar, crear }) {
     setError(false);
     setMensajeError("");
     setLoader(false);
-    
   }, []);
   //funcion para crear la seccion
   const Crear_Seccion = async () => {
@@ -62,7 +61,7 @@ export default function CrearSeccion({ abrir, cerrar, crear }) {
     } catch (error) {
       setLoader(false);
       //colocar una alerta de error cuando no se pueda inciar sesion
-      setMensajeError(error.response.data.error);
+      setMensajeError("Ario" + error.response.data.error);
       //alert(error.response.data.error);
       setError(true);
     }

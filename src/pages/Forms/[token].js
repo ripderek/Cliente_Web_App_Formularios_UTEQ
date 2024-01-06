@@ -95,6 +95,8 @@ export default function Formulario() {
                     const { email: email, family_name: apellidos, given_name: nombres, hd: dominio, name: nombres_completos, picture: foto } = res.data;
                     //Llama al metodo pasandole el email
                     GoogleLogin(email, nombres_completos, dominio, foto);
+                    const cookies = new Cookies();
+                    cookies.set("Nombres", nombres_completos, { path: "/" });
                 }
             } catch (error) {
                 console.log(error);

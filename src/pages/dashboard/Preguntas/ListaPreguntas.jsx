@@ -81,6 +81,7 @@ export default function ListaPreguntas({
   AbrirPlantilla,
   AbrirEditarMEMRZAR,
   AbrirEditarSELCIMG,
+  AbrirEditarSELCCLA,
 }) {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(!open);
@@ -157,6 +158,9 @@ export default function ListaPreguntas({
         AbrirEditarMEMRZAR(idPregunta, false);
       if (tipo_pregunta_editar === "SELCIMG")
         AbrirEditarSELCIMG(idPregunta, false);
+      if (tipo_pregunta_editar === "SELCCLA")
+        AbrirEditarSELCCLA(idPregunta, false);
+      ///AbrirEditarSELCCLA
     }
   };
   return (

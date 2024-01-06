@@ -91,6 +91,83 @@ export default function ProgresoSecciones({
   //funcion que retorna a la interfaz principal toda la info necesaria como el id del progreso
   const [SiguientePre, SetSiguientePre] = useState([]);
   const click = async (r_id_progreso_seccion, id_sec) => {
+    setLoader(true);
+
+    try {
+      const response1 = await fetch(
+        process.env.NEXT_PUBLIC_ACCESLINK +
+          "test/HayMas/" +
+          cookies.get("id_user") +
+          "/" +
+          cookies.get("token_test") +
+          "/" +
+          id_sec,
+        {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+        }
+      );
+
+      if (response1.ok) {
+        const data1 = await response1.json();
+
+        if (data1.r_verification) {
+          const response = await fetch(
+            process.env.NEXT_PUBLIC_ACCESLINK +
+              "test/ProgresoPreguntasSeccion/" +
+              cookies.get("id_user") +
+              "/" +
+              cookies.get("token_test") +
+              "/" +
+              id_sec,
+            {
+              method: "GET",
+              headers: { "Content-Type": "application/json" },
+              credentials: "include",
+            }
+          );
+
+          if (response.ok) {
+            const responseData = await response.text(); // Obtener el texto de la respuesta
+
+            if (responseData.trim() !== "") {
+              const data = JSON.parse(responseData);
+              SetSiguientePre(data);
+
+              if (data) {
+                openQuestion(
+                  r_id_progreso_seccion,
+                  data.r_codigo,
+                  data.r_id_pregunta,
+                  data.r_id_progreso_preguntas,
+                  id_sec
+                );
+              }
+            } else {
+              obtener_Progreso();
+            }
+          } else {
+            obtener_Progreso();
+          }
+        } else {
+          obtener_Progreso();
+        }
+
+        setLoader(false);
+      } else {
+        obtener_Progreso();
+        setLoader(false);
+      }
+    } catch (error) {
+      console.log(error);
+      // Puedes manejar el error de otra manera si es necesario
+    }
+  };
+
+  {
+    /* 
+  const click = async (r_id_progreso_seccion, id_sec) => {
     //aqui se necesita obtener la siguiente pregunta sin resolver del participante
     //id de la pregunta,
     //tipo de pregunta,
@@ -150,11 +227,26 @@ export default function ProgresoSecciones({
       //Router.push("/FormulariosOP/Test");
     }
   };
+  */
+  }
+  const [openAlert, setOpenAlert] = useState(false);
+  const crear = (value) => {
+    setOpenAlert(value);
+  };
+  const abrir = (value, r_id_progreso_seccion, r_id_seccion) => {
+    if (value) setOpenAlert(true);
+    else click(r_id_progreso_seccion, r_id_seccion);
+  };
   return (
     <div>
       {load ? <Loader /> : ""}
       <Card className="h-full w-full rounded-none">
         <CardBody className="overflow-scroll px-0">
+          <Notification
+            mensaje="Ya se encuentra completa"
+            abrir={openAlert}
+            crear={crear}
+          />
           <div className="ml-4 flex items-center justify-between gap-8">
             <div>
               <Typography variant="h5" color="blue-gray">
@@ -198,7 +290,13 @@ export default function ProgresoSecciones({
                 <div
                   key={r_id_progreso_seccion}
                   className="bg-blue-gray-50 shadow-2xl rounded-none  border-orange-500 border-4 border-solid cursor-pointer  hover:shadow-yellow-900"
-                  onClick={() => click(r_id_progreso_seccion, r_id_seccion)}
+                  onClick={() =>
+                    abrir(
+                      r_estado_completado,
+                      r_id_progreso_seccion,
+                      r_id_seccion
+                    )
+                  }
                 >
                   <div className="bg-zinc-900 text-black shadow-2xl rounded-none">
                     <div className="mx-auto">
@@ -237,14 +335,18 @@ export default function ProgresoSecciones({
                           />
                         </div>
                       )}
+
                       <div className="w-auto flex ml-2 mb-2">
                         <Chip
                           variant="ghost"
                           size="sm"
                           color="blue-gray"
+                          //r_porcentaje +
                           value={r_porcentaje + "%"}
+                          className=" text-2xl"
                         />
                       </div>
+
                       <div className="p-2 flex justify-end">
                         {r_bloqueado ? (
                           <Tooltip content="Seccion bloqueada">

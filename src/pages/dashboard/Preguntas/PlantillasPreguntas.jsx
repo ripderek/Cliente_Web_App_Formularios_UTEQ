@@ -1,24 +1,10 @@
-import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
-import {
-  PencilIcon,
-  UserPlusIcon,
-  PlusIcon,
-  ArrowRightCircleIcon,
-} from "@heroicons/react/24/solid";
 import {
   Card,
   CardHeader,
-  Input,
   Typography,
   Button,
   CardBody,
-  Chip,
   CardFooter,
-  Tabs,
-  TabsHeader,
-  Tab,
-  Avatar,
-  IconButton,
   Tooltip,
 } from "@material-tailwind/react";
 import { CrearSeccion } from "@/pages/dashboard/OpcionesSecciones";
@@ -32,6 +18,7 @@ export default function CrearPregunta({
   id_niv,
   AbrirMEMRZAR,
   AbrirSELCIMG,
+  AbrirSELCCLA,
 }) {
   const [load, setLoader] = useState(false);
   const [error, setError] = useState(false);
@@ -87,7 +74,10 @@ export default function CrearPregunta({
       case "SELCIMG":
         AbrirSELCIMG(r_id_tipo_pregunta, r_icono);
         break;
-      // Puedes agregar más casos según sea necesario
+      case "SELCCLA":
+        AbrirSELCCLA(r_id_tipo_pregunta, r_icono);
+        break;
+      // Agregar las demas plantillas de ser necesario
       default:
         break;
     }

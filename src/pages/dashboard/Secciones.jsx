@@ -32,6 +32,8 @@ import {
   MEMRZAR_resp,
   SELCIMG,
   SELCIMG_resp,
+  SELCCLA,
+  SELCCLA_resp,
 } from "@/pages/dashboard/Plantillas";
 import {
   ListaPreguntas,
@@ -96,6 +98,8 @@ export default function Secciones() {
     setOpenEditMEMRZAR(false);
     setSELCIMG(false);
     setOpenEditSELCIMG(false);
+    setSELCCLA(false);
+    setOpenEditSELCCLA(false);
   };
   //funcion para abrir secciones
   const [openSeccion, setOpenSecciones] = useState(true);
@@ -108,6 +112,8 @@ export default function Secciones() {
     setOpenEditMEMRZAR(false);
     setSELCIMG(false);
     setOpenEditSELCIMG(false);
+    setSELCCLA(false);
+    setOpenEditSELCCLA(false);
   };
   //funcion para abrir lista de preguntas
   const [IDNivel, setIDNivel] = useState("");
@@ -124,6 +130,8 @@ export default function Secciones() {
     setOpenEditMEMRZAR(false);
     setSELCIMG(false);
     setOpenEditSELCIMG(false);
+    setSELCCLA(false);
+    setOpenEditSELCCLA(false);
   };
   //funcion para abrir el menu de seleccionar plantilla para crear una pregunta dependiendo del tipo maestro de pregunta
   //necesito el id del tipo de pregunta, el titulo y el id del nivel.
@@ -142,6 +150,8 @@ export default function Secciones() {
     setOpenEditMEMRZAR(false);
     setSELCIMG(false);
     setOpenEditSELCIMG(false);
+    setSELCCLA(false);
+    setOpenEditSELCCLA(false);
   };
   //funcion para abrir la creacion de una pregunta xd
   //para la plantilla MEMRZAR --> Memorizar opcion uninca
@@ -159,6 +169,8 @@ export default function Secciones() {
     setOpenEditMEMRZAR(false);
     setSELCIMG(false);
     setOpenEditSELCIMG(false);
+    setSELCCLA(false);
+    setOpenEditSELCCLA(false);
   };
   //funcion para crear o editar las imagenes respuestas de MEMRZAR
   const [idPregunta, setIDPregunta] = useState(0);
@@ -175,6 +187,8 @@ export default function Secciones() {
     setMEMRZAR(false);
     setSELCIMG(false);
     setOpenEditSELCIMG(false);
+    setSELCCLA(false);
+    setOpenEditSELCCLA(false);
   };
   //funcion para abrir el creador de preguntas de tipo SELCIMG
   const [openSELCIMG, setSELCIMG] = useState(false);
@@ -189,6 +203,8 @@ export default function Secciones() {
     setOpenEditMEMRZAR(false);
     setSELCIMG(true);
     setOpenEditSELCIMG(false);
+    setSELCCLA(false);
+    setOpenEditSELCCLA(false);
   };
   //funcion para abrir el editor de tipo SELCIMG
   const [openEditSELCIMG, setOpenEditSELCIMG] = useState(false);
@@ -204,6 +220,42 @@ export default function Secciones() {
     setMEMRZAR(false);
     setSELCIMG(false);
     setOpenEditSELCIMG(true);
+    setSELCCLA(false);
+    setOpenEditSELCCLA(false);
+  };
+  //AbrirSELCCLA
+  //funcion para abrir el creador de preguntas de tipo SELCIMG
+  const [openSELCCLA, setSELCCLA] = useState(false);
+  const AbrirSELCCLA = (r_codigo, iconoP) => {
+    setMEMRZAR(false);
+    setIDTIPO(r_codigo);
+    setOpenPreguntas(false);
+    setOpenNiveles(false);
+    setOpenSecciones(false);
+    setOpenPlantilla(false);
+    setr_icono(iconoP);
+    setOpenEditMEMRZAR(false);
+    setSELCCLA(true);
+    setSELCIMG(false);
+    setOpenEditSELCIMG(false);
+    setOpenEditSELCCLA(false);
+  };
+  //funcion para abrir el editor de tipo SELCIMG
+  const [openEditSELCCLA, setOpenEditSELCCLA] = useState(false);
+  const [buscarEditSELCCLA, setbuscarEditSELCCLA] = useState(true);
+  const AbrirEditarSELCCLA = (id_pr, busqueda) => {
+    setIDPregunta(id_pr);
+    setbuscarEditSELCCLA(busqueda);
+    setOpenEditMEMRZAR(false);
+    setOpenPreguntas(false);
+    setOpenNiveles(false);
+    setOpenSecciones(false);
+    setOpenPlantilla(false);
+    setMEMRZAR(false);
+    setSELCIMG(false);
+    setOpenEditSELCIMG(false);
+    setOpenEditSELCCLA(true);
+    setSELCCLA(false);
   };
   //funcion para renderizar los componentes segun un switch
   const renderComponent = () => {
@@ -230,6 +282,7 @@ export default function Secciones() {
             AbrirPlantilla={AbrirPlantilla}
             AbrirEditarMEMRZAR={AbrirEditarMEMRZAR}
             AbrirEditarSELCIMG={AbrirEditarSELCIMG}
+            AbrirEditarSELCCLA={AbrirEditarSELCCLA}
           />
         );
       case openPlantilla:
@@ -240,6 +293,7 @@ export default function Secciones() {
             id_niv={IDNivel}
             AbrirMEMRZAR={AbrirMEMRZAR}
             AbrirSELCIMG={AbrirSELCIMG}
+            AbrirSELCCLA={AbrirSELCCLA}
           />
         );
       case openMEMRZAR:
@@ -257,6 +311,9 @@ export default function Secciones() {
             id_pregunta={idPregunta}
             buscar={buscarEditMEMRZAR}
             id_nivel={IDNivel}
+            AbrirPreguntas={AbrirPreguntas}
+            idni={IDNivel}
+            nombrenivel={nombre_nivel}
           />
         );
       case openSELCIMG:
@@ -274,6 +331,30 @@ export default function Secciones() {
             id_pregunta={idPregunta}
             buscar={buscarEditSELCIMG}
             id_nivel={IDNivel}
+            AbrirPreguntas={AbrirPreguntas}
+            idni={IDNivel}
+            nombrenivel={nombre_nivel}
+          />
+        );
+      //SELCCLA
+      case openSELCCLA:
+        return (
+          <SELCCLA
+            tipo_preg={IDTIPOPRE}
+            id_nivel={IDNivel}
+            icono={r_icono}
+            AbrirEditarSELCCLA={AbrirEditarSELCCLA}
+          />
+        );
+      case openEditSELCCLA:
+        return (
+          <SELCCLA_resp
+            id_pregunta={idPregunta}
+            buscar={buscarEditSELCCLA}
+            id_nivel={IDNivel}
+            AbrirPreguntas={AbrirPreguntas}
+            idni={IDNivel}
+            nombrenivel={nombre_nivel}
           />
         );
       default:

@@ -11,7 +11,7 @@ import {
 import { ClockIcon } from "@heroicons/react/24/solid";
 import { TiempoAgotado } from "@/widgets";
 
-export default function SELCIMG_resolv({
+export default function SELCCLA_resolv({
   id_pregunta,
   id_progreso_sec,
   RegresarProgresoSeccion,
@@ -54,6 +54,8 @@ export default function SELCIMG_resolv({
     }
   };
   //{PARA LOS SEGUNDOS DE LA PREGUNTA}
+  const [VerRespuestas, setVerRespuestas] = useState(null);
+
   const [segundos, setSegundos] = useState(0);
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -61,6 +63,7 @@ export default function SELCIMG_resolv({
         if (prevSegundos === 1) {
           // Si llegamos a cero, detenemos el temporizador y ocultamos el div
           clearInterval(intervalId);
+          setVerRespuestas(false);
           enviarRespuesta();
         }
         return prevSegundos - 1;
@@ -69,7 +72,7 @@ export default function SELCIMG_resolv({
 
     // Limpieza del temporizador cuando el componente se desmonta o cuando la variable cambia
     return () => clearInterval(intervalId);
-  }, [IDPregunta]); // el segundo argumento vacío garantiza que el efecto se ejecute solo una vez al montar el componente
+  }, [VerRespuestas]); // el segundo argumento vacío garantiza que el efecto se ejecute solo una vez al montar el componente
 
   const [respuestas, setRespuestas] = useState([]);
   //funcion para cargar todas las respuestas de una pregunta MEMRZAR
@@ -130,7 +133,7 @@ export default function SELCIMG_resolv({
           withCredentials: true,
         }
       );
-      setLoader(false);
+      //setLoader(false);
       RegresarProgresoSeccion(true);
     } catch (error) {
       console.log(error);
@@ -220,7 +223,7 @@ export default function SELCIMG_resolv({
           <Typography variant="h4" color="orange">
             Opciones:
           </Typography>
-          <div className="grid grid-cols-3   md:grid-cols-6 gap-8  p-5">
+          <div className="grid grid-cols-1 p-0 mt-1">
             {respuestas.map(
               ({
                 r_id_repuesta,
@@ -231,12 +234,22 @@ export default function SELCIMG_resolv({
               }) => (
                 <div
                   key={r_id_repuesta}
-                  className="bg-blue-gray-50 h-auto shadow-xl rounded-none cursor-pointer hover:shadow-yellow-900 hover:border-yellow-900 hover:border-4"
+                  className="bg-white h-2/3 shadow-sm rounded-none cursor-pointer hover:shadow-yellow-900 hover:border-yellow-900 hover:border-4 border-2 border-green-700"
                   onClick={() => seleccionRepuesta(r_opcion)}
                 >
                   <div className="bg-zinc-900 text-black  rounded-2xl">
                     <div className="mx-auto">
-                      <div className="text-center">
+                      <div className="p-5">
+                        {r_opcion}
+                        {/* 
+                        <textarea
+                          className="border p-2 rounded-sm font-bold w-full h-full mt-3"
+                          value={r_opcion}
+                          disabled
+                          readOnly
+                        />
+                        */}
+                        {/*
                         <img
                           src={
                             process.env.NEXT_PUBLIC_ACCESLINK +
@@ -246,6 +259,7 @@ export default function SELCIMG_resolv({
                           alt={r_id_repuesta}
                           className="mt-3 h-64 w-auto mx-auto mb-6"
                         />
+                        */}
                       </div>
                       {/* 
                       <div className="w-full p-4">

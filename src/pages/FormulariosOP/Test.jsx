@@ -1,7 +1,11 @@
 import { useEffect, useState } from "react";
 import { NavBarFormsLogin, NavBarForms } from "@/components/FormsLayout";
 import { ProgresoSecciones } from "@/pages/FormulariosOP";
-import { MEMRZAR_resolv, SELCIMG_resolv } from "@/pages/dashboard/Plantillas";
+import {
+  MEMRZAR_resolv,
+  SELCIMG_resolv,
+  SELCCLA_resolv,
+} from "@/pages/dashboard/Plantillas";
 import Cookies from "universal-cookie";
 import { Dialog_Error, Loader, Notification } from "@/widgets"; //Importar el componente
 
@@ -40,7 +44,13 @@ export default function Test() {
         break;
       case "SELCIMG":
         handlerSELCIMG();
+        break;
+      case "SELCCLA":
+        handlerSELCCLA();
+        break;
       default:
+        RegresarProgresoSeccion(true);
+        break;
       // Código para el caso por defecto (si tipo no coincide con ninguno de los casos)
     }
     //con el r_id_progreso_seccion hay que cargar la ultima pregunta de ese progreso y enviarla a la interfaz
@@ -53,6 +63,7 @@ export default function Test() {
     setOpenMEMRZAR(true);
     setOpenProgresoSecciones(false);
     setOpenSELCIMG(false);
+    setOpenSELCCLA(false);
   };
   //Funcion para abrir una pregunta de tipo SELCIMG
   const [openSELCIMG, setOpenSELCIMG] = useState(false);
@@ -60,65 +71,30 @@ export default function Test() {
     setOpenSELCIMG(true);
     setOpenMEMRZAR(false);
     setOpenProgresoSecciones(false);
+    setOpenSELCCLA(false);
+  };
+
+  const [openSELCCLA, setOpenSELCCLA] = useState(false);
+  const handlerSELCCLA = () => {
+    setOpenSELCCLA(true);
+    setOpenSELCIMG(false);
+    setOpenMEMRZAR(false);
+    setOpenProgresoSecciones(false);
   };
 
   //funcion regresar a un progreso seccion
   //necesita el id del progreso_seccion para abrirse xd
   const RegresarProgresoSeccion = (value) => {
-    setsiguient(value);
+    setsiguient(true);
     setOpenMEMRZAR(false);
     setOpenProgresoSecciones(true);
-    //setIdProgresoSeccion(id_progreso_sec);
     setOpenSELCIMG(false);
+    setOpenSELCCLA(false);
   };
   const [load, setLoader] = useState(false);
 
   //hacer una funcion que retorne el avance de las preguntas segun la seccion y devuelva la ultima pregunta
-  const [SiguientePre, SetSiguientePre] = useState([]);
-  const click = async () => {
-    //aqui se necesita obtener la siguiente pregunta sin resolver del participante
-    //id de la pregunta,
-    //tipo de pregunta,
-    //id_progreso_pregunta
-    setLoader(true);
-    try {
-      const response = await fetch(
-        process.env.NEXT_PUBLIC_ACCESLINK +
-          "test/ProgresoPreguntasSeccion/" +
-          cookies.get("id_user") +
-          "/" +
-          cookies.get("token_test") +
-          "/" +
-          idSeccion,
-        {
-          method: "GET",
-          headers: { "Content-Type": "application/json" },
-          credentials: "include",
-        }
-      );
-      const data = await response.json();
-      SetSiguientePre(data);
-      alert("Datos de la siguiente pregunta cargados");
-      console.log(data);
-      //AQUI HACER UN SWITCH PARA SABER EL TIPO DE PREGUNTA QUE SE VA ABRIR PARA RESOLVER
-      if (data) {
-        openQuestion(
-          idProgresoSeccion,
-          data.r_codigo,
-          data.r_id_pregunta,
-          data.r_id_progreso_preguntas
-        );
-      } else {
-        alert("Ya esta completa la seccion");
-        RegresarProgresoSeccion();
-      }
-      setLoader(false);
-    } catch (error) {
-      setLoader(false);
-      //colocar una alerta de error cuando no se pueda inciar sesion
-      console.log(error);
-    }
-  };
+
   const [siguiente, setsiguient] = useState(false);
   const renderComponent = () => {
     switch (true) {
@@ -139,7 +115,6 @@ export default function Test() {
             id_progreso_sec={idProgresoSeccion}
             RegresarProgresoSeccion={RegresarProgresoSeccion}
             ProgresoPregunta={id_progrso_pregunta}
-            click={click}
           />
         );
       case openSELCIMG:
@@ -149,13 +124,28 @@ export default function Test() {
             id_progreso_sec={idProgresoSeccion}
             RegresarProgresoSeccion={RegresarProgresoSeccion}
             ProgresoPregunta={id_progrso_pregunta}
-            click={click}
           />
         );
-      case Loader:
-        return <Loader />;
+      //openSELCCLA
+      case openSELCCLA:
+        return (
+          <SELCCLA_resolv
+            id_pregunta={idPregunta}
+            id_progreso_sec={idProgresoSeccion}
+            RegresarProgresoSeccion={RegresarProgresoSeccion}
+            ProgresoPregunta={id_progrso_pregunta}
+          />
+        );
       default:
-        return null; // Otra opción por defecto si ninguna condición es verdadera
+        return (
+          <ProgresoSecciones
+            openQuestion={openQuestion}
+            siguiente={siguiente}
+            r_id_progreso_seccion_p={idProgresoSeccion}
+            id_sec_p={idSeccion}
+            RegresarProgresoSeccion={RegresarProgresoSeccion}
+          />
+        ); // Otra opción por defecto si ninguna condición es verdadera
     }
   };
   return (

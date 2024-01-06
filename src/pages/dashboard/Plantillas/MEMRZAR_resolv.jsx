@@ -16,7 +16,6 @@ export default function MEMRZAR_resolv({
   id_progreso_sec,
   RegresarProgresoSeccion,
   ProgresoPregunta,
-  click,
 }) {
   const [load, setLoader] = useState(false);
   const [data_user, setData_User] = useState([]);
@@ -180,9 +179,12 @@ export default function MEMRZAR_resolv({
       console.log(error);
       setLoader(false);
       //colocar una alerta de error cuando no se pueda inciar sesion
-      Alert("Hubo un error");
+      //alert("Hubo un error");
+      RegresarProgresoSeccion(true);
       console.log(error);
       //alert(error.response.data.error);
+      /*if (error.response.data.error===Ha ocurrido un error en la transacción principal: duplicate key value violates unique constraint "UQ_Repuestas_Preguta_progreso")
+       */
     }
   };
 
@@ -194,7 +196,7 @@ export default function MEMRZAR_resolv({
         <Alert
           color={segundos <= 5 ? "red" : segundos <= 10 ? "yellow" : "green"}
           icon={<ClockIcon className="h-10" />}
-          className="fixed top-4 right-24 md:right-80 z-1 w-auto"
+          className="fixed top-4 right-24 md:right-96 z-1 w-auto"
           open={true}
         >
           <Typography variant="h3" color="white">
@@ -212,7 +214,7 @@ export default function MEMRZAR_resolv({
               : "green"
           }
           icon={<ClockIcon className="h-10" />}
-          className="fixed top-4 right-24 md:right-80 z-1 w-auto"
+          className="fixed top-4 right-24 md:right-96 z-1 w-auto"
           open={true}
         >
           <Typography variant="h3" color="white">

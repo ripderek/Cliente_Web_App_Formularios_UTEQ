@@ -86,7 +86,7 @@ export default function Lista({ AbrirNiveles }) {
       setLoader(false);
       //colocar una alerta de error cuando no se pueda inciar sesion
       setError(true);
-      setMensajeError(error.response.data.error);
+      setMensajeError("Ario" + error.response.data.error);
     }
   };
   return (

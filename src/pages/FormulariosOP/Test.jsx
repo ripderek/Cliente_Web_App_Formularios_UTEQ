@@ -5,6 +5,7 @@ import {
   MEMRZAR_resolv,
   SELCIMG_resolv,
   SELCCLA_resolv,
+  LOCIMG_resolv,
 } from "@/pages/dashboard/Plantillas";
 import Cookies from "universal-cookie";
 import { Dialog_Error, Loader, Notification } from "@/widgets"; //Importar el componente
@@ -48,6 +49,9 @@ export default function Test() {
       case "SELCCLA":
         handlerSELCCLA();
         break;
+      case "LOCIMG":
+        handlerLOCIMG();
+        break;
       default:
         RegresarProgresoSeccion(true);
         break;
@@ -64,6 +68,7 @@ export default function Test() {
     setOpenProgresoSecciones(false);
     setOpenSELCIMG(false);
     setOpenSELCCLA(false);
+    setOpenLOCIMG(false);
   };
   //Funcion para abrir una pregunta de tipo SELCIMG
   const [openSELCIMG, setOpenSELCIMG] = useState(false);
@@ -72,11 +77,22 @@ export default function Test() {
     setOpenMEMRZAR(false);
     setOpenProgresoSecciones(false);
     setOpenSELCCLA(false);
+    setOpenLOCIMG(false);
   };
 
   const [openSELCCLA, setOpenSELCCLA] = useState(false);
   const handlerSELCCLA = () => {
     setOpenSELCCLA(true);
+    setOpenSELCIMG(false);
+    setOpenMEMRZAR(false);
+    setOpenProgresoSecciones(false);
+    setOpenLOCIMG(false);
+  };
+  const [openLOCIMG, setOpenLOCIMG] = useState(false);
+
+  const handlerLOCIMG = () => {
+    setOpenLOCIMG(true);
+    setOpenSELCCLA(false);
     setOpenSELCIMG(false);
     setOpenMEMRZAR(false);
     setOpenProgresoSecciones(false);
@@ -90,7 +106,9 @@ export default function Test() {
     setOpenProgresoSecciones(true);
     setOpenSELCIMG(false);
     setOpenSELCCLA(false);
+    setOpenLOCIMG(false);
   };
+
   const [load, setLoader] = useState(false);
 
   //hacer una funcion que retorne el avance de las preguntas segun la seccion y devuelva la ultima pregunta
@@ -130,6 +148,15 @@ export default function Test() {
       case openSELCCLA:
         return (
           <SELCCLA_resolv
+            id_pregunta={idPregunta}
+            id_progreso_sec={idProgresoSeccion}
+            RegresarProgresoSeccion={RegresarProgresoSeccion}
+            ProgresoPregunta={id_progrso_pregunta}
+          />
+        );
+      case openLOCIMG:
+        return (
+          <LOCIMG_resolv
             id_pregunta={idPregunta}
             id_progreso_sec={idProgresoSeccion}
             RegresarProgresoSeccion={RegresarProgresoSeccion}

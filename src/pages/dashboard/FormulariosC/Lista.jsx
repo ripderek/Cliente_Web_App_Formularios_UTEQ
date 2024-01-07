@@ -345,7 +345,28 @@ export default function Lista({ AbrirParticipantes, AbrirSecciones }) {
             </tbody>
           </table>
           <div className="bg-blue-gray-100 p-6 rounded-2xl mt-3 flex flex-col md:flex-row md:items-center">
-            {detallesTest.r_error ? (
+            <>
+              <div className="md:w-2/3 mb-2 md:mb-0 md:mr-2">
+                http://localhost:3000/Forms/{detallesTest.r_token}
+              </div>
+              <div
+                className="md:w-1/3"
+                onClick={() =>
+                  copiarTextoAlPortapapeles(
+                    "http://localhost:3000/Forms/" + detallesTest.r_token
+                  )
+                }
+              >
+                <div className=" bg-white rounded-xl mx-auto  text-center cursor-pointer">
+                  Copiar enlace
+                  <IconButton variant="text" disabled>
+                    <ClipboardIcon className="h-4 w-4" />
+                  </IconButton>
+                </div>
+              </div>
+            </>
+            {/* 
+            {detallesTest.r_error  ? (
               <div>No puede compartir el enlace hasta que corrija el Test</div>
             ) : (
               <>
@@ -369,6 +390,7 @@ export default function Lista({ AbrirParticipantes, AbrirSecciones }) {
                 </div>
               </>
             )}
+            */}
           </div>
         </DialogBody>
         <DialogFooter>

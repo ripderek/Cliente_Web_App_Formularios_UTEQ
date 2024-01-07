@@ -17,7 +17,9 @@ export default function MEMRZAR({
   tipo_preg,
   id_nivel,
   icono,
-  AbrirEditarMEMRZAR,
+  AbrirEditor,
+  cambiarPestañas,
+  //AbrirEditarMEMRZAR,
 }) {
   const [open, setOpen] = useState(true);
   const handleOpen = () => setOpen((cur) => !cur);
@@ -75,7 +77,7 @@ export default function MEMRZAR({
       );
       setLoader(false);
       //se manda 0 como id porque se desconoce el id de la pregunta que se creo, y se envia true como segundo parametro para que relize la busqueda de la ultima pregunta en la sigueinte ventana en un useEffect
-      AbrirEditarMEMRZAR(0, true);
+      AbrirEditor("MEMRZAR", 0, true);
     } catch (error) {
       console.log(error);
       setLoader(false);
@@ -97,10 +99,26 @@ export default function MEMRZAR({
       ) : (
         ""
       )}
+      <CardHeader floated={false} shadow={false} className="rounded-none">
+        <div className="mb-1 flex items-center justify-between gap-8">
+          <div>
+            <Typography variant="h4" color="orange">
+              Memorizar con una única opcion
+            </Typography>
+          </div>
+          <div className="flex shrink-0 flex-col gap-2 sm:flex-row">
+            <Button
+              variant="gradient"
+              size="sm"
+              color="orange"
+              onClick={() => cambiarPestañas("openPreguntas")}
+            >
+              Regresar
+            </Button>
+          </div>
+        </div>
+      </CardHeader>
       <CardBody className="flex flex-col gap-4">
-        <Typography variant="h4" color="orange">
-          Memorizar con una única opcion
-        </Typography>
         <Typography className="text-lg font-bold" color="black">
           Escriba el enunciado:
         </Typography>

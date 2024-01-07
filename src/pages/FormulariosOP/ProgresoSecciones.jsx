@@ -92,7 +92,7 @@ export default function ProgresoSecciones({
   const [SiguientePre, SetSiguientePre] = useState([]);
   const click = async (r_id_progreso_seccion, id_sec) => {
     setLoader(true);
-
+    //alert("Progreso Seccion: " + r_id_progreso_seccion + "IDSeccion" + id_sec);
     try {
       const response1 = await fetch(
         process.env.NEXT_PUBLIC_ACCESLINK +
@@ -111,6 +111,8 @@ export default function ProgresoSecciones({
 
       if (response1.ok) {
         const data1 = await response1.json();
+        //alert("Response1.ok");
+        //alert("data1.r_verification" + data1.r_verification);
 
         if (data1.r_verification) {
           const response = await fetch(
@@ -129,6 +131,7 @@ export default function ProgresoSecciones({
           );
 
           if (response.ok) {
+            //alert("Response OK");
             const responseData = await response.text(); // Obtener el texto de la respuesta
 
             if (responseData.trim() !== "") {
@@ -234,6 +237,7 @@ export default function ProgresoSecciones({
     setOpenAlert(value);
   };
   const abrir = (value, r_id_progreso_seccion, r_id_seccion) => {
+    //alert(r_id_progreso_seccion);
     if (value) setOpenAlert(true);
     else click(r_id_progreso_seccion, r_id_seccion);
   };

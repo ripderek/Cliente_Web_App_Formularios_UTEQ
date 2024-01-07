@@ -17,7 +17,9 @@ export default function SELCCLA({
   tipo_preg,
   id_nivel,
   icono,
-  AbrirEditarSELCCLA,
+  AbrirEditor,
+  cambiarPestañas,
+  //AbrirEditarSELCCLA,
 }) {
   //variable para detectar un error y mostrar el error
   const [error, setError] = useState(false);
@@ -62,7 +64,8 @@ export default function SELCCLA({
       //se manda 0 como id porque se desconoce el id de la pregunta que se creo, y se envia true como segundo parametro para que relize la busqueda de la ultima pregunta en la sigueinte ventana en un useEffect
 
       //{IMPORTANTE CREAR ESTA FUNCION Y ESTE COMPONENTE}
-      AbrirEditarSELCCLA(0, true);
+      //AbrirEditarSELCCLA(0, true);
+      AbrirEditor("SELCCLA", id_nivel, true);
     } catch (error) {
       console.log(error);
       setLoader(false);
@@ -84,10 +87,26 @@ export default function SELCCLA({
       ) : (
         ""
       )}
+      <CardHeader floated={false} shadow={false} className="rounded-none">
+        <div className="mb-1 flex items-center justify-between gap-8">
+          <div>
+            <Typography variant="h4" color="orange">
+              Seleccionar opcion
+            </Typography>
+          </div>
+          <div className="flex shrink-0 flex-col gap-2 sm:flex-row">
+            <Button
+              variant="gradient"
+              size="sm"
+              color="orange"
+              onClick={() => cambiarPestañas("openPreguntas")}
+            >
+              Regresar
+            </Button>
+          </div>
+        </div>
+      </CardHeader>
       <CardBody className="flex flex-col gap-4">
-        <Typography variant="h4" color="orange">
-          Seleccionar opcion
-        </Typography>
         <Typography className="text-lg font-bold" color="black">
           Escriba el enunciado:
         </Typography>

@@ -27,6 +27,7 @@ import axios from "axios";
 import { Fragment, useState, useEffect } from "react";
 import { Lista } from "@/pages/dashboard/OpcionesSecciones";
 import { ListaNiveles } from "@/pages/dashboard/Niveles";
+//Importar las interfaces de crear por plantillas
 import {
   MEMRZAR,
   MEMRZAR_resp,
@@ -34,6 +35,7 @@ import {
   SELCIMG_resp,
   SELCCLA,
   SELCCLA_resp,
+  LOCIMG,
 } from "@/pages/dashboard/Plantillas";
 import {
   ListaPreguntas,
@@ -84,6 +86,117 @@ export default function Secciones() {
     }
   };
   //funcion para cambiar de pestanas entre lista de secciones y lista de niveles de una seccion
+
+  const [tabs, setTabs] = useState({
+    openSeccion: true,
+    openNiveles: false,
+    openPreguntas: false,
+    openPlantilla: false,
+    openMEMRZAR: false,
+    openEditMEMRZAR: false,
+    openSELCIMG: false,
+    openEditSELCIMG: false,
+    openSELCCLA: false,
+    openEditSELCCLA: false,
+    openLOCIMG: false,
+    openEditLOCIMG: false,
+  });
+
+  const [tabInfo, setTabInfo] = useState({
+    IDSeccion: "",
+    tituloSeccion: "",
+    IDNivel: "",
+    nombre_nivel: "",
+    idTipoPregunta: "",
+    tituloTipo: "",
+    idPregunta: 0,
+    IDTIPOPRE: 0,
+    r_icono: "",
+    buscarEditMEMRZAR: true,
+    buscarEditSELCIMG: true,
+    buscarEditSELCCLA: true,
+    buscarEditLOCIMG: true,
+  });
+
+  // Función para cambiar entre pestañas
+  const cambiarPestañas = (nuevaPestaña) => {
+    setTabs((prevTabs) => ({
+      ...Object.fromEntries(
+        Object.entries(prevTabs).map(([key]) => [key, false])
+      ),
+      [nuevaPestaña]: true,
+    }));
+  };
+
+  // Función para abrir pestaña de niveles
+  const AbrirNiveles = (IDSeccion, tituloSeccion) => {
+    setTabInfo({
+      ...tabInfo,
+      IDSeccion,
+      tituloSeccion,
+    });
+    cambiarPestañas("openNiveles");
+  };
+
+  // Función para abrir pestaña de secciones
+  const AbrirSecciones = () => {
+    cambiarPestañas("openSeccion");
+  };
+
+  // Función para abrir pestaña de preguntas
+  const AbrirPreguntas = (IDNivel, nombre_nivel) => {
+    setTabInfo({
+      ...tabInfo,
+      IDNivel,
+      nombre_nivel,
+    });
+    cambiarPestañas("openPreguntas");
+  };
+
+  // Función para abrir pestaña de plantilla
+  const AbrirPlantilla = (idTipoPregunta, tituloTipo, IDNivel) => {
+    setTabInfo({
+      ...tabInfo,
+      idTipoPregunta,
+      tituloTipo,
+      IDNivel,
+    });
+    cambiarPestañas("openPlantilla");
+  };
+
+  // Función para abrir pestaña de las Preguntas
+  //Reemplazar AbrirMEMRZAR todos los Abrir por esta funcion
+  const AbrirCreador = (pestaña, IDTIPOPRE, r_icono) => {
+    setTabInfo({
+      ...tabInfo,
+      IDTIPOPRE,
+      r_icono,
+    });
+    cambiarPestañas(`open${pestaña}`);
+  };
+
+  // Función para abrir pestaña de editar MEMRZAR, SELCIMG, SELCCLA
+  //AbrirEditarMEMRZAR
+  //AbrirEditarSELCIMG
+  //AbrirEditarSELCCLA
+  //en pestana solo se envia MEMRZAR por ejemplo
+  const AbrirEditor = (pestaña, idPregunta, busqueda) => {
+    setTabInfo({
+      ...tabInfo,
+      idPregunta,
+      [`buscarEdit${pestaña}`]: busqueda,
+    });
+    cambiarPestañas(`openEdit${pestaña}`);
+  };
+  //ahora hay que enviar estos parametros
+  //SELCCLA
+  //MEMRZAR
+  //SELCCLA
+
+  {
+    /* Antiguas lineas de programacion*/
+  }
+  /*
   const [openNiveles, setOpenNiveles] = useState(false);
   const [IDSeccion, setIdSeccion] = useState("");
   const [tituloSeccion, setTituloSeccion] = useState("");
@@ -257,104 +370,131 @@ export default function Secciones() {
     setOpenEditSELCCLA(true);
     setSELCCLA(false);
   };
+*/
+
   //funcion para renderizar los componentes segun un switch
   const renderComponent = () => {
     switch (true) {
-      case openSeccion:
+      case tabs.openSeccion:
         return <Lista AbrirNiveles={AbrirNiveles} />;
-      case openNiveles:
+      case tabs.openNiveles:
         return (
           <ListaNiveles
-            id_seccion={IDSeccion}
+            id_seccion={tabInfo.IDSeccion}
             AbrirSecciones={AbrirSecciones}
-            Titulo={tituloSeccion}
+            Titulo={tabInfo.tituloSeccion}
             AbrirPreguntas={AbrirPreguntas}
           />
         );
-      case openPreguntas:
+      case tabs.openPreguntas:
         return (
           <ListaPreguntas
-            id_nivel={IDNivel}
-            nivel={nombre_nivel}
-            seccion={tituloSeccion}
-            id_seccion={IDSeccion}
+            id_nivel={tabInfo.IDNivel}
+            nivel={tabInfo.nombre_nivel}
+            seccion={tabInfo.tituloSeccion}
+            id_seccion={tabInfo.IDSeccion}
             AbrirNiveles={AbrirNiveles}
             AbrirPlantilla={AbrirPlantilla}
-            AbrirEditarMEMRZAR={AbrirEditarMEMRZAR}
-            AbrirEditarSELCIMG={AbrirEditarSELCIMG}
-            AbrirEditarSELCCLA={AbrirEditarSELCCLA}
+            AbrirEditor={AbrirEditor}
+            //AbrirEditarMEMRZAR={AbrirEditarMEMRZAR}
+            //AbrirEditarSELCIMG={AbrirEditarSELCIMG}
+            // AbrirEditarSELCCLA={AbrirEditarSELCCLA}
           />
         );
-      case openPlantilla:
+      case tabs.openPlantilla:
         return (
           <PlantillasPreguntas
-            id_tipo={idTipoPregunta}
-            titulo_tipo={tituloTipo}
-            id_niv={IDNivel}
-            AbrirMEMRZAR={AbrirMEMRZAR}
-            AbrirSELCIMG={AbrirSELCIMG}
-            AbrirSELCCLA={AbrirSELCCLA}
+            id_tipo={tabInfo.idTipoPregunta}
+            titulo_tipo={tabInfo.tituloTipo}
+            id_niv={tabInfo.IDNivel}
+            AbrirCreador={AbrirCreador}
+            cambiarPestañas={cambiarPestañas}
+
+            //AbrirMEMRZAR={AbrirMEMRZAR}
+            //AbrirSELCIMG={AbrirSELCIMG}
+            //AbrirSELCCLA={AbrirSELCCLA}
           />
         );
-      case openMEMRZAR:
+      case tabs.openMEMRZAR:
         return (
           <MEMRZAR
-            tipo_preg={IDTIPOPRE}
-            id_nivel={IDNivel}
-            icono={r_icono}
-            AbrirEditarMEMRZAR={AbrirEditarMEMRZAR}
+            tipo_preg={tabInfo.IDTIPOPRE}
+            id_nivel={tabInfo.IDNivel}
+            icono={tabInfo.r_icono}
+            AbrirEditor={AbrirEditor}
+            cambiarPestañas={cambiarPestañas}
+            //AbrirEditarMEMRZAR={AbrirEditarMEMRZAR}
           />
         );
-      case openEditMEMRZAR:
+      case tabs.openEditMEMRZAR:
         return (
           <MEMRZAR_resp
-            id_pregunta={idPregunta}
-            buscar={buscarEditMEMRZAR}
-            id_nivel={IDNivel}
+            id_pregunta={tabInfo.idPregunta}
+            buscar={tabInfo.buscarEditMEMRZAR}
+            id_nivel={tabInfo.IDNivel}
             AbrirPreguntas={AbrirPreguntas}
-            idni={IDNivel}
-            nombrenivel={nombre_nivel}
+            idni={tabInfo.IDNivel}
+            nombrenivel={tabInfo.nombre_nivel}
+            //verificadoup
           />
         );
-      case openSELCIMG:
+      case tabs.openSELCIMG:
         return (
           <SELCIMG
-            tipo_preg={IDTIPOPRE}
-            id_nivel={IDNivel}
-            icono={r_icono}
-            AbrirEditarSELCIMG={AbrirEditarSELCIMG}
+            cambiarPestañas={cambiarPestañas}
+            tipo_preg={tabInfo.IDTIPOPRE}
+            id_nivel={tabInfo.IDNivel}
+            icono={tabInfo.r_icono}
+            AbrirEditor={AbrirEditor}
+            //AbrirEditarSELCIMG={AbrirEditarSELCIMG}
           />
         );
-      case openEditSELCIMG:
+      case tabs.openEditSELCIMG:
         return (
           <SELCIMG_resp
-            id_pregunta={idPregunta}
-            buscar={buscarEditSELCIMG}
-            id_nivel={IDNivel}
+            id_pregunta={tabInfo.idPregunta}
+            buscar={tabInfo.buscarEditSELCIMG}
+            id_nivel={tabInfo.IDNivel}
             AbrirPreguntas={AbrirPreguntas}
-            idni={IDNivel}
-            nombrenivel={nombre_nivel}
+            idni={tabInfo.IDNivel}
+            nombrenivel={tabInfo.nombre_nivel}
+            //
           />
         );
       //SELCCLA
-      case openSELCCLA:
+      case tabs.openSELCCLA:
         return (
           <SELCCLA
-            tipo_preg={IDTIPOPRE}
-            id_nivel={IDNivel}
-            icono={r_icono}
-            AbrirEditarSELCCLA={AbrirEditarSELCCLA}
+            cambiarPestañas={cambiarPestañas}
+            tipo_preg={tabInfo.IDTIPOPRE}
+            id_nivel={tabInfo.IDNivel}
+            icono={tabInfo.r_icono}
+            AbrirEditor={AbrirEditor}
+            //AbrirEditarSELCCLA={AbrirEditarSELCCLA}
           />
         );
-      case openEditSELCCLA:
+      case tabs.openEditSELCCLA:
         return (
           <SELCCLA_resp
-            id_pregunta={idPregunta}
-            buscar={buscarEditSELCCLA}
-            id_nivel={IDNivel}
+            id_pregunta={tabInfo.idPregunta}
+            buscar={tabInfo.buscarEditSELCCLA}
+            id_nivel={tabInfo.IDNivel}
             AbrirPreguntas={AbrirPreguntas}
-            idni={IDNivel}
-            nombrenivel={nombre_nivel}
+            idni={tabInfo.IDNivel}
+            nombrenivel={tabInfo.nombre_nivel}
+            //
+          />
+        );
+      //Plantilla de localizar imagen
+      case tabs.openLOCIMG:
+        return (
+          <LOCIMG
+            cambiarPestañas={cambiarPestañas}
+            tipo_preg={tabInfo.IDTIPOPRE}
+            id_nivel={tabInfo.IDNivel}
+            icono={tabInfo.r_icono}
+            AbrirEditor={AbrirEditor}
+            //AbrirEditarSELCCLA={AbrirEditarSELCCLA}
           />
         );
       default:

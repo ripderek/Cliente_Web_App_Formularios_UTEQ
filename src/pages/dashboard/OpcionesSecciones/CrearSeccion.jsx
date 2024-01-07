@@ -61,7 +61,7 @@ export default function CrearSeccion({ abrir, cerrar, crear }) {
     } catch (error) {
       setLoader(false);
       //colocar una alerta de error cuando no se pueda inciar sesion
-      setMensajeError("Ario" + error.response.data.error);
+      setMensajeError(error.response.data.error);
       //alert(error.response.data.error);
       setError(true);
     }

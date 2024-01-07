@@ -79,9 +79,10 @@ export default function ListaPreguntas({
   id_seccion,
   AbrirNiveles,
   AbrirPlantilla,
-  AbrirEditarMEMRZAR,
-  AbrirEditarSELCIMG,
-  AbrirEditarSELCCLA,
+  AbrirEditor,
+  //AbrirEditarMEMRZAR,
+  //AbrirEditarSELCIMG,
+  //AbrirEditarSELCCLA,
 }) {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(!open);
@@ -154,6 +155,12 @@ export default function ListaPreguntas({
   //AbrirEditarMEMRZAR
   const editar = (value) => {
     if (value === "respuesta") {
+      if (tipo_pregunta_editar === "LOCIMG")
+        AbrirEditor("MEMRZAR", idPregunta, false);
+      else AbrirEditor(tipo_pregunta_editar, idPregunta, false);
+    }
+    /*
+    if (value === "respuesta") {
       if (tipo_pregunta_editar === "MEMRZAR")
         AbrirEditarMEMRZAR(idPregunta, false);
       if (tipo_pregunta_editar === "SELCIMG")
@@ -162,6 +169,7 @@ export default function ListaPreguntas({
         AbrirEditarSELCCLA(idPregunta, false);
       ///AbrirEditarSELCCLA
     }
+    */
   };
   return (
     <Card className="h-full w-full mt-5">
@@ -280,7 +288,7 @@ export default function ListaPreguntas({
                     <tr
                       key={r_id_maestro}
                       onClick={() =>
-                        AbrirPlantilla(true, r_id_maestro, r_titulo, id_nivel)
+                        AbrirPlantilla(r_id_maestro, r_titulo, id_nivel)
                       }
                     >
                       <td className={classes}>
@@ -345,7 +353,7 @@ export default function ListaPreguntas({
               variant="outlined"
               size="sm"
               color="orange"
-              onClick={() => AbrirNiveles(true, id_seccion, seccion)}
+              onClick={() => AbrirNiveles(id_seccion, seccion)}
             >
               Ver niveles
             </Button>
@@ -436,18 +444,19 @@ export default function ListaPreguntas({
                           </Typography>
                         </div>
                       </td>
+
                       <td className={classes}>
-                        <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-3 ">
                           {/* 
                           <Avatar src={img} alt={name} size="sm" />
                           */}
-                          <div className="flex flex-col">
+                          <div className="flex flex-col ">
                             <Typography
                               variant="small"
                               color="blue-gray"
                               className="font-normal"
                             >
-                              {r_enunciado}
+                              {r_enunciado.substring(0, 25)}
                             </Typography>
                             {/* 
                             <Typography

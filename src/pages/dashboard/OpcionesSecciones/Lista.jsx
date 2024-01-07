@@ -86,7 +86,7 @@ export default function Lista({ AbrirNiveles }) {
       setLoader(false);
       //colocar una alerta de error cuando no se pueda inciar sesion
       setError(true);
-      setMensajeError("Ario" + error.response.data.error);
+      setMensajeError(error.response.data.error);
     }
   };
   return (
@@ -139,6 +139,15 @@ export default function Lista({ AbrirNiveles }) {
         </div>
       </CardHeader>
       <CardBody className="overflow-scroll px-0">
+        {secciones.length === 0 && (
+          <Typography
+            color="gray"
+            variant="h4"
+            className="mt-1 font-normal mx-auto items-center text-center"
+          >
+            Usted no se encuentra en ninguna sección
+          </Typography>
+        )}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3 p-5">
           {secciones.map(
             ({ r_titulo, r_id_seccion, r_descripcion, r_admin_seccion }) => (
@@ -179,9 +188,7 @@ export default function Lista({ AbrirNiveles }) {
                       <Tooltip content="Ir a la seccion">
                         <button
                           className="bg-zinc-50 p-2 bg-green-700 rounded-xl cursor-pointer"
-                          onClick={() =>
-                            AbrirNiveles(true, r_id_seccion, r_titulo)
-                          }
+                          onClick={() => AbrirNiveles(r_id_seccion, r_titulo)}
                         >
                           <ArrowRightCircleIcon className="w-7" color="white" />
                         </button>

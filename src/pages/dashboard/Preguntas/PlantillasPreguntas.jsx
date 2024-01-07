@@ -16,9 +16,12 @@ export default function CrearPregunta({
   id_tipo,
   titulo_tipo,
   id_niv,
-  AbrirMEMRZAR,
-  AbrirSELCIMG,
-  AbrirSELCCLA,
+  AbrirCreador,
+  cambiarPestañas,
+
+  // AbrirMEMRZAR,
+  //AbrirSELCIMG,
+  // AbrirSELCCLA,
 }) {
   const [load, setLoader] = useState(false);
   const [error, setError] = useState(false);
@@ -64,9 +67,12 @@ export default function CrearPregunta({
   };
   //funcion para abrir el editor de una pregunta xd
   const AbrirEditor = (r_id_tipo_pregunta, r_icono, r_codigo) => {
+    //alert("Pregunta a creer " + r_codigo);
+    AbrirCreador(r_codigo, r_id_tipo_pregunta, r_icono);
     //AbrirMEMRZAR(r_id_tipo_pregunta, r_icono)
     //console.log(r_id_tipo_pregunta, r_icono, r_codigo);
     //if (r_codigo === "MEMRZAR") AbrirMEMRZAR(r_id_tipo_pregunta, r_icono);
+    /*
     switch (r_codigo) {
       case "MEMRZAR":
         AbrirMEMRZAR(r_id_tipo_pregunta, r_icono);
@@ -77,10 +83,14 @@ export default function CrearPregunta({
       case "SELCCLA":
         AbrirSELCCLA(r_id_tipo_pregunta, r_icono);
         break;
+      case "LOCIMG":
+        alert("Nuevo Tipo");
+        break;
       // Agregar las demas plantillas de ser necesario
       default:
         break;
     }
+    */
   };
   return (
     <Card className="h-full w-full mt-4">
@@ -88,14 +98,27 @@ export default function CrearPregunta({
       <CrearSeccion abrir={openCreate} cerrar={cerrar} crear={crear} />
       <CardHeader floated={false} shadow={false} className="rounded-none">
         <div className="mb-8 flex items-center justify-between gap-8">
-          <div>
-            <Typography variant="h5" color="blue-gray">
-              Plantillas
-            </Typography>
-            <Typography color="gray" className="mt-1 font-normal">
-              Lista de plantillas para {titulo_tipo}
-            </Typography>
+          <div className="mb-1 flex items-center justify-between gap-8">
+            <div>
+              <Typography variant="h5" color="blue-gray">
+                Plantillas
+              </Typography>
+              <Typography color="gray" className="mt-1 font-normal">
+                Lista de plantillas para {titulo_tipo}
+              </Typography>
+            </div>
+            <div className="flex shrink-0 flex-col gap-2 sm:flex-row">
+              <Button
+                variant="gradient"
+                size="sm"
+                color="orange"
+                onClick={() => cambiarPestañas("openPreguntas")}
+              >
+                Regresar
+              </Button>
+            </div>
           </div>
+
           {/* 
           <div className="flex shrink-0 flex-col gap-2 sm:flex-row">
             

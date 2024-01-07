@@ -58,6 +58,7 @@ export default function SELCCLA_resp({
     try {
       if (buscar) {
         //alert("Buscando");
+        //alert("Buscar por nivel: " + id_nivel);
         const response = await fetch(
           process.env.NEXT_PUBLIC_ACCESLINK +
             "preguntas/SELCIMG_Datos_pregunta/" +
@@ -77,6 +78,7 @@ export default function SELCCLA_resp({
         cargarRespuestas(data.r_id_pregunta);
       } else {
         //alert("Editando por ID");
+        //alert("Buscar por id_pregunta: " + id_pregunta);
         const response = await fetch(
           process.env.NEXT_PUBLIC_ACCESLINK +
             "preguntas/SELCIMG_Datos_pregunta_id_pregunta/" +
@@ -117,6 +119,8 @@ export default function SELCCLA_resp({
     );
     const data = await response.json();
     setRespuestas(data);
+    setRespuesta("");
+    setIsChecked(false);
     setLoader(false);
   };
   //estado para abrir el dialog para anadir una opcion de respuesta
@@ -151,7 +155,10 @@ export default function SELCCLA_resp({
           withCredentials: true,
         }
       );
+
       setLoader(false);
+      setRespuesta("");
+      setIsChecked(false);
       //se manda 0 como id porque se desconoce el id de la pregunta que se creo, y se envia true como segundo parametro para que relize la busqueda de la ultima pregunta en la sigueinte ventana en un useEffect
       //AbrirEditarMEMRZAR(0, true);
       cargarRespuestas(IDPregunta);
@@ -232,7 +239,7 @@ export default function SELCCLA_resp({
               variant="gradient"
               size="sm"
               color="orange"
-              onClick={() => AbrirPreguntas(true, idni, nombrenivel)}
+              onClick={() => AbrirPreguntas(idni, nombrenivel)}
             >
               Regresar
             </Button>

@@ -171,6 +171,7 @@ export default function MEMRZAR_resp({
         }
       );
       setLoader(false);
+      setIsChecked(false);
       //se manda 0 como id porque se desconoce el id de la pregunta que se creo, y se envia true como segundo parametro para que relize la busqueda de la ultima pregunta en la sigueinte ventana en un useEffect
       //AbrirEditarMEMRZAR(0, true);
       cargarRespuestas(IDPregunta);
@@ -188,14 +189,12 @@ export default function MEMRZAR_resp({
   return (
     <Card className="w-auto mt-6 mx-auto">
       {load ? <Loader /> : ""}
-      {error ? (
+      {error && (
         <Dialog_Error
           mensaje={mensajeError}
           titulo="Error al llenar el formulario"
           cerrar={cerrar1}
         />
-      ) : (
-        ""
       )}
       {/* Para agregar una opcion de respuesta a la pregunta con imagen*/}
       <Dialog open={openNew} handler={hanldeOpen}>
@@ -267,7 +266,7 @@ export default function MEMRZAR_resp({
               variant="gradient"
               size="sm"
               color="orange"
-              onClick={() => AbrirPreguntas(true, idni, nombrenivel)}
+              onClick={() => AbrirPreguntas(idni, nombrenivel)}
             >
               Regresar
             </Button>
@@ -342,7 +341,7 @@ export default function MEMRZAR_resp({
         ) : (
           ""
         )}
-        <div className="grid grid-cols-2   md:grid-cols-3 gap-3 p-5">
+        <div className="grid grid-cols-4   md:grid-cols-6 gap-3 p-5">
           {respuestas.map(
             ({
               r_id_repuesta,
@@ -365,7 +364,7 @@ export default function MEMRZAR_resp({
                           r_id_repuesta
                         }
                         alt={r_id_repuesta}
-                        className="mt-3 h-64 w-auto mx-auto mb-6"
+                        className="mt-3 h-auto w-auto mx-auto mb-6"
                       />
                     </div>
                     {/* 

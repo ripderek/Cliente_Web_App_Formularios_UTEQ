@@ -299,7 +299,7 @@ export default function MEMRZAR_resolv({
             <Typography variant="h4" color="orange">
               Opciones:
             </Typography>
-            <div className="grid grid-cols-3   md:grid-cols-4 gap-3 p-5">
+            <div className="grid grid-cols-4   md:grid-cols-6 gap-3 p-5">
               {respuestas.map(
                 ({
                   r_id_repuesta,
@@ -323,7 +323,7 @@ export default function MEMRZAR_resolv({
                               r_id_repuesta
                             }
                             alt={r_id_repuesta}
-                            className="mt-3 h-64 w-auto mx-auto mb-6"
+                            className="mt-3 h-min w-min mx-auto mb-6"
                           />
                         </div>
                         {/* 

@@ -268,7 +268,7 @@ export default function SELCIMG_resp({
               variant="gradient"
               size="sm"
               color="orange"
-              onClick={() => AbrirPreguntas(true, idni, nombrenivel)}
+              onClick={() => AbrirPreguntas(idni, nombrenivel)}
             >
               Regresar
             </Button>

@@ -161,7 +161,7 @@ export default function ListaNiveles({
               variant="outlined"
               size="sm"
               color="orange"
-              onClick={() => AbrirSecciones(true)}
+              onClick={() => AbrirSecciones()}
               className=" w-auto"
             >
               Ver Secciones
@@ -246,9 +246,7 @@ export default function ListaNiveles({
                       <Tooltip content="Ir a las preguntas ">
                         <button
                           className="bg-zinc-50 p-2 bg-green-700 rounded-xl cursor-pointer"
-                          onClick={() =>
-                            AbrirPreguntas(true, r_id_nivel, r_nivel)
-                          }
+                          onClick={() => AbrirPreguntas(r_id_nivel, r_nivel)}
                         >
                           <ArrowRightCircleIcon className="w-7" color="white" />
                         </button>

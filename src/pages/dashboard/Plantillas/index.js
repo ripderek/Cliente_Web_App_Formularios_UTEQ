@@ -7,6 +7,8 @@ export { default as SELCIMG_resolv } from "@/pages/dashboard/Plantillas/SELCIMG_
 export { default as SELCCLA } from "@/pages/dashboard/Plantillas/SELCCLA"
 export { default as SELCCLA_resp } from "@/pages/dashboard/Plantillas/SELCCLA_resp"
 export { default as SELCCLA_resolv } from "@/pages/dashboard/Plantillas/SELCCLA_resolv"
+export { default as LOCIMG } from "@/pages/dashboard/Plantillas/LOCIMG"
+export { default as LOCIMG_resolv } from "@/pages/dashboard/Plantillas/LOCIMG_resolv"
 
 
-//SELCCLA_resolv
+//LOCIMG_resolv

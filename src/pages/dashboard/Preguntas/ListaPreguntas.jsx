@@ -155,21 +155,17 @@ export default function ListaPreguntas({
   //AbrirEditarMEMRZAR
   const editar = (value) => {
     if (value === "respuesta") {
-      if (tipo_pregunta_editar === "LOCIMG")
-        AbrirEditor("MEMRZAR", idPregunta, false);
-      else AbrirEditor(tipo_pregunta_editar, idPregunta, false);
+      switch (tipo_pregunta_editar) {
+        case "LOCIMG":
+          AbrirEditor("MEMRZAR", idPregunta, false);
+          break;
+        case "MULTIMG":
+          AbrirEditor("SELCIMG", idPregunta, false);
+          break;
+        default:
+          AbrirEditor(tipo_pregunta_editar, idPregunta, false);
+      }
     }
-    /*
-    if (value === "respuesta") {
-      if (tipo_pregunta_editar === "MEMRZAR")
-        AbrirEditarMEMRZAR(idPregunta, false);
-      if (tipo_pregunta_editar === "SELCIMG")
-        AbrirEditarSELCIMG(idPregunta, false);
-      if (tipo_pregunta_editar === "SELCCLA")
-        AbrirEditarSELCCLA(idPregunta, false);
-      ///AbrirEditarSELCCLA
-    }
-    */
   };
   return (
     <Card className="h-full w-full mt-5">

@@ -378,7 +378,7 @@ export default function SELCIMG_resp({
                         value={r_correcta ? "Correcta" : "Incorrecta"}
                       />
                     </div>
-
+                    {/* 
                     <div className="w-auto flex ml-2 mb-2">
                       <Chip
                         variant="ghost"
@@ -387,7 +387,7 @@ export default function SELCIMG_resp({
                         value={r_estado ? "Habilitado" : "Inhabilitado"}
                       />
                     </div>
-
+*/}
                     <div className="p-2 flex justify-end">
                       <Tooltip content="Editar respuesta">
                         <button className="bg-zinc-50 p-2 bg-green-700 rounded-xl cursor-pointer">

@@ -306,7 +306,7 @@ export default function SELCCLA_resp({
           ""
         )}
 
-        <div className="grid grid-cols-2   md:grid-cols-3 gap-3 p-5 ">
+        <div className="grid grid-cols-1   md:grid-cols-1 gap-3 p-5 ">
           {respuestas.map(
             ({
               r_id_repuesta,
@@ -317,13 +317,13 @@ export default function SELCCLA_resp({
             }) => (
               <div
                 key={r_id_repuesta}
-                className="bg-blue-gray-50 h-auto shadow-2xl rounded-2xl"
+                className="bg-blue-gray-50 h-auto shadow-2xl rounded-none"
               >
                 <div className="bg-zinc-900 text-black  rounded-2xl">
                   <div className="mx-auto">
                     <div className="text-center mt-4 bg-blue-gray-50">
                       <textarea
-                        className="border p-2  rounded-sm font-bold bg-blue-gray-50"
+                        className="border p-2 w-full  rounded-none font-bold bg-blue-gray-50"
                         value={r_opcion}
                       />
                     </div>
@@ -344,7 +344,7 @@ export default function SELCCLA_resp({
                         value={r_correcta ? "Correcta" : "Incorrecta"}
                       />
                     </div>
-
+                    {/*
                     <div className="w-auto flex ml-2 mb-2">
                       <Chip
                         variant="ghost"
@@ -353,11 +353,11 @@ export default function SELCCLA_resp({
                         value={r_estado ? "Habilitado" : "Inhabilitado"}
                       />
                     </div>
-
+ */}
                     <div className="p-2 flex justify-end mb-0">
                       <Tooltip content="Editar respuesta">
                         <button className="bg-zinc-50 p-2 bg-green-700 rounded-xl cursor-pointer">
-                          <PencilIcon className="w-7" color="white" />
+                          <PencilIcon className="w-4" color="white" />
                         </button>
                       </Tooltip>
                     </div>

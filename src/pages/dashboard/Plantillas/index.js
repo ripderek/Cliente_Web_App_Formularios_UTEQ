@@ -9,6 +9,8 @@ export { default as SELCCLA_resp } from "@/pages/dashboard/Plantillas/SELCCLA_re
 export { default as SELCCLA_resolv } from "@/pages/dashboard/Plantillas/SELCCLA_resolv"
 export { default as LOCIMG } from "@/pages/dashboard/Plantillas/LOCIMG"
 export { default as LOCIMG_resolv } from "@/pages/dashboard/Plantillas/LOCIMG_resolv"
+export { default as MULTIMG } from "@/pages/dashboard/Plantillas/MULTIMG"
+export { default as MULTIMG_resolv } from "@/pages/dashboard/Plantillas/MULTIMG_resolv"
 
-
-//LOCIMG_resolv
+//MULTIMG
+//MULTIMG_resolv.jsx

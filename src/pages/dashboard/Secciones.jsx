@@ -1,11 +1,4 @@
-import {
-  Card,
-  Input,
-  Checkbox,
-  Button,
-  Typography,
-  IconButton,
-} from "@material-tailwind/react";
+import { IconButton } from "@material-tailwind/react";
 import { Cog6ToothIcon } from "@heroicons/react/24/solid";
 import { Dialog_Error, Loader } from "@/widgets";
 import {
@@ -23,7 +16,6 @@ import {
 } from "@/context";
 import React from "react";
 import Cookies from "universal-cookie";
-import axios from "axios";
 import { Fragment, useState, useEffect } from "react";
 import { Lista } from "@/pages/dashboard/OpcionesSecciones";
 import { ListaNiveles } from "@/pages/dashboard/Niveles";
@@ -36,6 +28,7 @@ import {
   SELCCLA,
   SELCCLA_resp,
   LOCIMG,
+  MULTIMG,
 } from "@/pages/dashboard/Plantillas";
 import {
   ListaPreguntas,
@@ -100,6 +93,8 @@ export default function Secciones() {
     openEditSELCCLA: false,
     openLOCIMG: false,
     openEditLOCIMG: false,
+    openMULTIMG: false,
+    openEditMULTIMG: false,
   });
 
   const [tabInfo, setTabInfo] = useState({
@@ -116,6 +111,7 @@ export default function Secciones() {
     buscarEditSELCIMG: true,
     buscarEditSELCCLA: true,
     buscarEditLOCIMG: true,
+    buscarEditMULTIMG: true,
   });
 
   // Función para cambiar entre pestañas
@@ -193,185 +189,6 @@ export default function Secciones() {
   //MEMRZAR
   //SELCCLA
 
-  {
-    /* Antiguas lineas de programacion*/
-  }
-  /*
-  const [openNiveles, setOpenNiveles] = useState(false);
-  const [IDSeccion, setIdSeccion] = useState("");
-  const [tituloSeccion, setTituloSeccion] = useState("");
-  const AbrirNiveles = (value, id_seccion, titulo) => {
-    setOpenNiveles(value);
-    setIdSeccion(id_seccion);
-    setTituloSeccion(titulo);
-    setOpenSecciones(false);
-    setOpenPreguntas(false);
-    setOpenPlantilla(false);
-    setMEMRZAR(false);
-    setOpenEditMEMRZAR(false);
-    setSELCIMG(false);
-    setOpenEditSELCIMG(false);
-    setSELCCLA(false);
-    setOpenEditSELCCLA(false);
-  };
-  //funcion para abrir secciones
-  const [openSeccion, setOpenSecciones] = useState(true);
-  const AbrirSecciones = (value) => {
-    setOpenSecciones(value);
-    setOpenNiveles(false);
-    setOpenPreguntas(false);
-    setOpenPlantilla(false);
-    setMEMRZAR(false);
-    setOpenEditMEMRZAR(false);
-    setSELCIMG(false);
-    setOpenEditSELCIMG(false);
-    setSELCCLA(false);
-    setOpenEditSELCCLA(false);
-  };
-  //funcion para abrir lista de preguntas
-  const [IDNivel, setIDNivel] = useState("");
-  const [openPreguntas, setOpenPreguntas] = useState(false);
-  const [nombre_nivel, setNombreNivel] = useState("");
-  const AbrirPreguntas = (value, id_nv, nivel) => {
-    setIDNivel(id_nv);
-    setOpenPreguntas(value);
-    setNombreNivel(nivel);
-    setOpenNiveles(false);
-    setOpenSecciones(false);
-    setOpenPlantilla(false);
-    setMEMRZAR(false);
-    setOpenEditMEMRZAR(false);
-    setSELCIMG(false);
-    setOpenEditSELCIMG(false);
-    setSELCCLA(false);
-    setOpenEditSELCCLA(false);
-  };
-  //funcion para abrir el menu de seleccionar plantilla para crear una pregunta dependiendo del tipo maestro de pregunta
-  //necesito el id del tipo de pregunta, el titulo y el id del nivel.
-  const [idTipoPregunta, setIdTipoPregunta] = useState("");
-  const [tituloTipo, setTituloTipo] = useState("");
-  const [openPlantilla, setOpenPlantilla] = useState(false);
-  const AbrirPlantilla = (value, tip, tit, idn) => {
-    setOpenPlantilla(value);
-    setIdTipoPregunta(tip);
-    setTituloTipo(tit);
-    setIDNivel(idn);
-    setOpenPreguntas(false);
-    setOpenNiveles(false);
-    setOpenSecciones(false);
-    setMEMRZAR(false);
-    setOpenEditMEMRZAR(false);
-    setSELCIMG(false);
-    setOpenEditSELCIMG(false);
-    setSELCCLA(false);
-    setOpenEditSELCCLA(false);
-  };
-  //funcion para abrir la creacion de una pregunta xd
-  //para la plantilla MEMRZAR --> Memorizar opcion uninca
-  const [openMEMRZAR, setMEMRZAR] = useState(false);
-  const [IDTIPOPRE, setIDTIPO] = useState(0);
-  const [r_icono, setr_icono] = useState("");
-  const AbrirMEMRZAR = (r_codigo, iconoP) => {
-    setMEMRZAR(true);
-    setIDTIPO(r_codigo);
-    setOpenPreguntas(false);
-    setOpenNiveles(false);
-    setOpenSecciones(false);
-    setOpenPlantilla(false);
-    setr_icono(iconoP);
-    setOpenEditMEMRZAR(false);
-    setSELCIMG(false);
-    setOpenEditSELCIMG(false);
-    setSELCCLA(false);
-    setOpenEditSELCCLA(false);
-  };
-  //funcion para crear o editar las imagenes respuestas de MEMRZAR
-  const [idPregunta, setIDPregunta] = useState(0);
-  const [openEditMEMRZAR, setOpenEditMEMRZAR] = useState(false);
-  const [buscarEditMEMRZAR, setbuscarEditMEMRZAR] = useState(true);
-  const AbrirEditarMEMRZAR = (id_pr, busqueda) => {
-    setIDPregunta(id_pr);
-    setbuscarEditMEMRZAR(busqueda);
-    setOpenEditMEMRZAR(true);
-    setOpenPreguntas(false);
-    setOpenNiveles(false);
-    setOpenSecciones(false);
-    setOpenPlantilla(false);
-    setMEMRZAR(false);
-    setSELCIMG(false);
-    setOpenEditSELCIMG(false);
-    setSELCCLA(false);
-    setOpenEditSELCCLA(false);
-  };
-  //funcion para abrir el creador de preguntas de tipo SELCIMG
-  const [openSELCIMG, setSELCIMG] = useState(false);
-  const AbrirSELCIMG = (r_codigo, iconoP) => {
-    setMEMRZAR(false);
-    setIDTIPO(r_codigo);
-    setOpenPreguntas(false);
-    setOpenNiveles(false);
-    setOpenSecciones(false);
-    setOpenPlantilla(false);
-    setr_icono(iconoP);
-    setOpenEditMEMRZAR(false);
-    setSELCIMG(true);
-    setOpenEditSELCIMG(false);
-    setSELCCLA(false);
-    setOpenEditSELCCLA(false);
-  };
-  //funcion para abrir el editor de tipo SELCIMG
-  const [openEditSELCIMG, setOpenEditSELCIMG] = useState(false);
-  const [buscarEditSELCIMG, setbuscarEditSELCIMG] = useState(true);
-  const AbrirEditarSELCIMG = (id_pr, busqueda) => {
-    setIDPregunta(id_pr);
-    setbuscarEditSELCIMG(busqueda);
-    setOpenEditMEMRZAR(false);
-    setOpenPreguntas(false);
-    setOpenNiveles(false);
-    setOpenSecciones(false);
-    setOpenPlantilla(false);
-    setMEMRZAR(false);
-    setSELCIMG(false);
-    setOpenEditSELCIMG(true);
-    setSELCCLA(false);
-    setOpenEditSELCCLA(false);
-  };
-  //AbrirSELCCLA
-  //funcion para abrir el creador de preguntas de tipo SELCIMG
-  const [openSELCCLA, setSELCCLA] = useState(false);
-  const AbrirSELCCLA = (r_codigo, iconoP) => {
-    setMEMRZAR(false);
-    setIDTIPO(r_codigo);
-    setOpenPreguntas(false);
-    setOpenNiveles(false);
-    setOpenSecciones(false);
-    setOpenPlantilla(false);
-    setr_icono(iconoP);
-    setOpenEditMEMRZAR(false);
-    setSELCCLA(true);
-    setSELCIMG(false);
-    setOpenEditSELCIMG(false);
-    setOpenEditSELCCLA(false);
-  };
-  //funcion para abrir el editor de tipo SELCIMG
-  const [openEditSELCCLA, setOpenEditSELCCLA] = useState(false);
-  const [buscarEditSELCCLA, setbuscarEditSELCCLA] = useState(true);
-  const AbrirEditarSELCCLA = (id_pr, busqueda) => {
-    setIDPregunta(id_pr);
-    setbuscarEditSELCCLA(busqueda);
-    setOpenEditMEMRZAR(false);
-    setOpenPreguntas(false);
-    setOpenNiveles(false);
-    setOpenSecciones(false);
-    setOpenPlantilla(false);
-    setMEMRZAR(false);
-    setSELCIMG(false);
-    setOpenEditSELCIMG(false);
-    setOpenEditSELCCLA(true);
-    setSELCCLA(false);
-  };
-*/
-
   //funcion para renderizar los componentes segun un switch
   const renderComponent = () => {
     switch (true) {
@@ -396,9 +213,6 @@ export default function Secciones() {
             AbrirNiveles={AbrirNiveles}
             AbrirPlantilla={AbrirPlantilla}
             AbrirEditor={AbrirEditor}
-            //AbrirEditarMEMRZAR={AbrirEditarMEMRZAR}
-            //AbrirEditarSELCIMG={AbrirEditarSELCIMG}
-            // AbrirEditarSELCCLA={AbrirEditarSELCCLA}
           />
         );
       case tabs.openPlantilla:
@@ -409,10 +223,6 @@ export default function Secciones() {
             id_niv={tabInfo.IDNivel}
             AbrirCreador={AbrirCreador}
             cambiarPestañas={cambiarPestañas}
-
-            //AbrirMEMRZAR={AbrirMEMRZAR}
-            //AbrirSELCIMG={AbrirSELCIMG}
-            //AbrirSELCCLA={AbrirSELCCLA}
           />
         );
       case tabs.openMEMRZAR:
@@ -423,7 +233,6 @@ export default function Secciones() {
             icono={tabInfo.r_icono}
             AbrirEditor={AbrirEditor}
             cambiarPestañas={cambiarPestañas}
-            //AbrirEditarMEMRZAR={AbrirEditarMEMRZAR}
           />
         );
       case tabs.openEditMEMRZAR:
@@ -435,7 +244,6 @@ export default function Secciones() {
             AbrirPreguntas={AbrirPreguntas}
             idni={tabInfo.IDNivel}
             nombrenivel={tabInfo.nombre_nivel}
-            //verificadoup
           />
         );
       case tabs.openSELCIMG:
@@ -446,7 +254,6 @@ export default function Secciones() {
             id_nivel={tabInfo.IDNivel}
             icono={tabInfo.r_icono}
             AbrirEditor={AbrirEditor}
-            //AbrirEditarSELCIMG={AbrirEditarSELCIMG}
           />
         );
       case tabs.openEditSELCIMG:
@@ -458,7 +265,6 @@ export default function Secciones() {
             AbrirPreguntas={AbrirPreguntas}
             idni={tabInfo.IDNivel}
             nombrenivel={tabInfo.nombre_nivel}
-            //
           />
         );
       //SELCCLA
@@ -470,7 +276,6 @@ export default function Secciones() {
             id_nivel={tabInfo.IDNivel}
             icono={tabInfo.r_icono}
             AbrirEditor={AbrirEditor}
-            //AbrirEditarSELCCLA={AbrirEditarSELCCLA}
           />
         );
       case tabs.openEditSELCCLA:
@@ -494,7 +299,18 @@ export default function Secciones() {
             id_nivel={tabInfo.IDNivel}
             icono={tabInfo.r_icono}
             AbrirEditor={AbrirEditor}
-            //AbrirEditarSELCCLA={AbrirEditarSELCCLA}
+          />
+        );
+      //MULTIMG
+      //El editor es el mismo que el de SELECIMG
+      case tabs.openMULTIMG:
+        return (
+          <MULTIMG
+            cambiarPestañas={cambiarPestañas}
+            tipo_preg={tabInfo.IDTIPOPRE}
+            id_nivel={tabInfo.IDNivel}
+            icono={tabInfo.r_icono}
+            AbrirEditor={AbrirEditor}
           />
         );
       default:

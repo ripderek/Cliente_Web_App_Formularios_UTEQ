@@ -4,16 +4,14 @@ import {
   CardBody,
   CardFooter,
   Typography,
-  Input,
-  Checkbox,
   Button,
+  Alert,
 } from "@material-tailwind/react";
-import { useRef, useState } from "react";
-import { AiOutlineUpload } from "react-icons/ai";
+import { useState } from "react";
 import axios from "axios";
-import { Dialog_Error, Loader, Notification } from "@/widgets"; //Importar el componente
+import { Dialog_Error, Loader } from "@/widgets"; //Importar el componente
 
-export default function SELCIMG({
+export default function MULTIMG({
   tipo_preg,
   id_nivel,
   icono,
@@ -64,6 +62,8 @@ export default function SELCIMG({
 
       //{IMPORTANTE CREAR ESTA FUNCION Y ESTE COMPONENTE}
       //AbrirEditarSELCIMG(0, true);
+
+      //Alert("AQUI ABRIR EL EDITOR");
       AbrirEditor("SELCIMG", 0, true);
     } catch (error) {
       console.log(error);
@@ -90,7 +90,7 @@ export default function SELCIMG({
         <div className="mb-1 flex items-center justify-between gap-8">
           <div>
             <Typography variant="h4" color="orange">
-              Seleccionar una opcion de tipo imagen
+              Seleccionar opciones multiple de tipo imagen
             </Typography>
           </div>
           <div className="flex shrink-0 flex-col gap-2 sm:flex-row">

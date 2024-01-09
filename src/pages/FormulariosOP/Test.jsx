@@ -6,6 +6,7 @@ import {
   SELCIMG_resolv,
   SELCCLA_resolv,
   LOCIMG_resolv,
+  MULTIMG_resolv,
 } from "@/pages/dashboard/Plantillas";
 import Cookies from "universal-cookie";
 import { Dialog_Error, Loader, Notification } from "@/widgets"; //Importar el componente
@@ -52,6 +53,10 @@ export default function Test() {
       case "LOCIMG":
         handlerLOCIMG();
         break;
+      //MULTIMG
+      case "MULTIMG":
+        handlerMULTIMG();
+        break;
       default:
         RegresarProgresoSeccion(true);
         break;
@@ -69,6 +74,7 @@ export default function Test() {
     setOpenSELCIMG(false);
     setOpenSELCCLA(false);
     setOpenLOCIMG(false);
+    setOpenMULTIMG(false);
   };
   //Funcion para abrir una pregunta de tipo SELCIMG
   const [openSELCIMG, setOpenSELCIMG] = useState(false);
@@ -78,6 +84,7 @@ export default function Test() {
     setOpenProgresoSecciones(false);
     setOpenSELCCLA(false);
     setOpenLOCIMG(false);
+    setOpenMULTIMG(false);
   };
 
   const [openSELCCLA, setOpenSELCCLA] = useState(false);
@@ -87,11 +94,24 @@ export default function Test() {
     setOpenMEMRZAR(false);
     setOpenProgresoSecciones(false);
     setOpenLOCIMG(false);
+    setOpenMULTIMG(false);
   };
   const [openLOCIMG, setOpenLOCIMG] = useState(false);
 
   const handlerLOCIMG = () => {
     setOpenLOCIMG(true);
+    setOpenSELCCLA(false);
+    setOpenSELCIMG(false);
+    setOpenMEMRZAR(false);
+    setOpenProgresoSecciones(false);
+    setOpenMULTIMG(false);
+  };
+  //        handlerMULTIMG();
+  const [openMULTIMG, setOpenMULTIMG] = useState(false);
+
+  const handlerMULTIMG = () => {
+    setOpenMULTIMG(true);
+    setOpenLOCIMG(false);
     setOpenSELCCLA(false);
     setOpenSELCIMG(false);
     setOpenMEMRZAR(false);
@@ -157,6 +177,16 @@ export default function Test() {
       case openLOCIMG:
         return (
           <LOCIMG_resolv
+            id_pregunta={idPregunta}
+            id_progreso_sec={idProgresoSeccion}
+            RegresarProgresoSeccion={RegresarProgresoSeccion}
+            ProgresoPregunta={id_progrso_pregunta}
+          />
+        );
+      //openMULTIMG
+      case openMULTIMG:
+        return (
+          <MULTIMG_resolv
             id_pregunta={idPregunta}
             id_progreso_sec={idProgresoSeccion}
             RegresarProgresoSeccion={RegresarProgresoSeccion}

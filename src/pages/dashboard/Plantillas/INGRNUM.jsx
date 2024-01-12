@@ -1,3 +1,4 @@
+//INGRNUM
 import {
   Card,
   CardHeader,
@@ -13,7 +14,7 @@ import { AiOutlineUpload } from "react-icons/ai";
 import axios from "axios";
 import { Dialog_Error, Loader, Notification } from "@/widgets"; //Importar el componente
 
-export default function LOCIMG({
+export default function INGRNUM({
   tipo_preg,
   id_nivel,
   icono,
@@ -66,10 +67,13 @@ export default function LOCIMG({
       form.set("p_tiempos_segundos", tiempoRespuesta);
       form.set("p_tipo_pregunta", tipo_preg);
       form.set("p_id_nivel", id_nivel);
-      form.set("p_tiempo_img", 100);
+      //este parametro dice tiempoIMG pero en realidad es la respuesta numerica xd skere modo diablo
+      form.set("p_tiempo_img", timepoImg);
 
       const result = await axios.post(
-        process.env.NEXT_PUBLIC_ACCESLINK + "preguntas/Crear_pregunta",
+        //Reemplazar la funcion porque ahora ya la pregunta se ingresa con respuesta
+        process.env.NEXT_PUBLIC_ACCESLINK +
+          "preguntas/Crear_pregunta_input_num",
         form,
         {
           withCredentials: true,
@@ -78,7 +82,7 @@ export default function LOCIMG({
       setLoader(false);
       //se manda 0 como id porque se desconoce el id de la pregunta que se creo, y se envia true como segundo parametro para que relize la busqueda de la ultima pregunta en la sigueinte ventana en un useEffect
       //      AbrirEditor("SELCCLA", id_nivel, true);
-      AbrirEditor("MEMRZAR", id_nivel, true);
+      AbrirEditor("INGRNUM", id_nivel, true);
     } catch (error) {
       console.log(error);
       setLoader(false);
@@ -104,7 +108,7 @@ export default function LOCIMG({
         <div className="mb-1 flex items-center justify-between gap-8">
           <div>
             <Typography variant="h4" color="orange">
-              Localizar imagen
+              Ingresar un numero como respuesta
             </Typography>
           </div>
           <div className="flex shrink-0 flex-col gap-2 sm:flex-row">
@@ -139,7 +143,7 @@ export default function LOCIMG({
           />
         </div>
         <Typography className="text-lg font-bold" color="black">
-          Imagen a Memorizar:
+          Imagen del enunciado:
         </Typography>
         <div className="mx-auto bg-yellow-800 p-2 rounded-xl">
           <label htmlFor="fileInput" className="text-white font-bold ">
@@ -170,10 +174,10 @@ export default function LOCIMG({
           alt="Imagen"
           className="mt-3 h-64 w-auto mx-auto"
         />
-        {/* 
+
         <div className="flex items-center">
           <Typography className="text-lg font-bold" color="black">
-            Tiempo disponible para memorizar la imagen (segundos):
+            Respuesta numerica:
           </Typography>
           <input
             className="ml-6 w-16 p-2 border  rounded-sm border-yellow-900 "
@@ -181,7 +185,6 @@ export default function LOCIMG({
             onChange={(e) => setTiempoIMG(e.target.value)}
           />
         </div>
-        */}
       </CardBody>
       <CardFooter className="pt-0">
         <Button

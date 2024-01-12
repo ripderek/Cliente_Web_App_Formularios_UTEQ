@@ -11,6 +11,15 @@ export { default as LOCIMG } from "@/pages/dashboard/Plantillas/LOCIMG"
 export { default as LOCIMG_resolv } from "@/pages/dashboard/Plantillas/LOCIMG_resolv"
 export { default as MULTIMG } from "@/pages/dashboard/Plantillas/MULTIMG"
 export { default as MULTIMG_resolv } from "@/pages/dashboard/Plantillas/MULTIMG_resolv"
+export { default as INGRNUM } from "@/pages/dashboard/Plantillas/INGRNUM"
+export { default as INGRNUM_resp } from "@/pages/dashboard/Plantillas/INGRNUM_resp"
+export { default as INGRNUM_resolv } from "@/pages/dashboard/Plantillas/INGRNUM_resolv"
+export { default as OPCLAVA } from "@/pages/dashboard/Plantillas/OPCLAVA"
+export { default as OPCLAVA_resp } from "@/pages/dashboard/Plantillas/OPCLAVA_resp"
+export { default as OPCLAVA_resolv } from "@/pages/dashboard/Plantillas/OPCLAVA_resolv"
+export { default as OPCLAV2 } from "@/pages/dashboard/Plantillas/OPCLAV2"
+export { default as OPCLAV2_resp } from "@/pages/dashboard/Plantillas/OPCLAV2_resp"
+export { default as OPCLAV2_resolv } from "@/pages/dashboard/Plantillas/OPCLAV2_resolv"
 
-//MULTIMG
+//OPCLAV2
 //MULTIMG_resolv.jsx

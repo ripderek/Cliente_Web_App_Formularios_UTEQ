@@ -223,9 +223,10 @@ export default function ListaNiveles({
             ) => (
               <div
                 key={r_id_nivel}
-                className="bg-blue-gray-50 shadow-2xl rounded-2xl"
+                className="bg-blue-gray-50 shadow-2xl rounded-2xl cursor-pointer border-4 border-green-900 hover:border-yellow-900"
+                onClick={() => AbrirPreguntas(r_id_nivel, r_nivel)}
               >
-                <div className="bg-zinc-900 text-black shadow-2xl rounded-2xl">
+                <div className="bg-zinc-900 rounded-2xl">
                   <div className="mx-auto">
                     <div className="w-full p-4 text-center">
                       <input
@@ -234,7 +235,7 @@ export default function ListaNiveles({
                         value={r_nivel}
                       />
                     </div>
-                    <div className="w-auto flex ml-2 mb-2">
+                    <div className="w-auto flex mb-3">
                       <Chip
                         variant="ghost"
                         size="sm"
@@ -242,6 +243,7 @@ export default function ListaNiveles({
                         value={"Preguntas: " + r_total_preguntas}
                       />
                     </div>
+                    {/* 
                     <div className="p-2 flex justify-end">
                       <Tooltip content="Ir a las preguntas ">
                         <button
@@ -252,6 +254,7 @@ export default function ListaNiveles({
                         </button>
                       </Tooltip>
                     </div>
+*/}
                   </div>
                 </div>
               </div>

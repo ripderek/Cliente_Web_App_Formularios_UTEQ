@@ -153,9 +153,10 @@ export default function Lista({ AbrirNiveles }) {
             ({ r_titulo, r_id_seccion, r_descripcion, r_admin_seccion }) => (
               <div
                 key={r_id_seccion}
-                className="bg-blue-gray-50 shadow-2xl rounded-2xl"
+                className="bg-blue-gray-50 shadow-2xl rounded-2xl cursor-pointer hover:border-4 hover:border-yellow-900"
+                onClick={() => AbrirNiveles(r_id_seccion, r_titulo)}
               >
-                <div className="bg-zinc-900 text-black shadow-2xl rounded-2xl">
+                <div className="bg-zinc-900 rounded-2xl">
                   <div className="mx-auto">
                     <div className="text-center">
                       <Avatar
@@ -184,6 +185,7 @@ export default function Lista({ AbrirNiveles }) {
                     ) : (
                       ""
                     )}
+                    {/* 
                     <div className="p-2 flex justify-end">
                       <Tooltip content="Ir a la seccion">
                         <button
@@ -194,6 +196,7 @@ export default function Lista({ AbrirNiveles }) {
                         </button>
                       </Tooltip>
                     </div>
+*/}
                   </div>
                 </div>
               </div>

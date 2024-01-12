@@ -7,6 +7,8 @@ import {
   SELCCLA_resolv,
   LOCIMG_resolv,
   MULTIMG_resolv,
+  INGRNUM_resolv,
+  OPCLAVA_resolv,
 } from "@/pages/dashboard/Plantillas";
 import Cookies from "universal-cookie";
 import { Dialog_Error, Loader, Notification } from "@/widgets"; //Importar el componente
@@ -57,6 +59,14 @@ export default function Test() {
       case "MULTIMG":
         handlerMULTIMG();
         break;
+      //INGRNUM_resp
+      case "INGRNUM":
+        handlerINGRNUM();
+        break;
+      //handlerOPCLAVA
+      case "OPCLAVA":
+        handlerOPCLAVA();
+        break;
       default:
         RegresarProgresoSeccion(true);
         break;
@@ -75,6 +85,8 @@ export default function Test() {
     setOpenSELCCLA(false);
     setOpenLOCIMG(false);
     setOpenMULTIMG(false);
+    setOpenINGRNUM(false);
+    setOpenOPCLAVA(false);
   };
   //Funcion para abrir una pregunta de tipo SELCIMG
   const [openSELCIMG, setOpenSELCIMG] = useState(false);
@@ -85,6 +97,8 @@ export default function Test() {
     setOpenSELCCLA(false);
     setOpenLOCIMG(false);
     setOpenMULTIMG(false);
+    setOpenINGRNUM(false);
+    setOpenOPCLAVA(false);
   };
 
   const [openSELCCLA, setOpenSELCCLA] = useState(false);
@@ -95,6 +109,8 @@ export default function Test() {
     setOpenProgresoSecciones(false);
     setOpenLOCIMG(false);
     setOpenMULTIMG(false);
+    setOpenINGRNUM(false);
+    setOpenOPCLAVA(false);
   };
   const [openLOCIMG, setOpenLOCIMG] = useState(false);
 
@@ -105,6 +121,8 @@ export default function Test() {
     setOpenMEMRZAR(false);
     setOpenProgresoSecciones(false);
     setOpenMULTIMG(false);
+    setOpenINGRNUM(false);
+    setOpenOPCLAVA(false);
   };
   //        handlerMULTIMG();
   const [openMULTIMG, setOpenMULTIMG] = useState(false);
@@ -115,6 +133,33 @@ export default function Test() {
     setOpenSELCCLA(false);
     setOpenSELCIMG(false);
     setOpenMEMRZAR(false);
+    setOpenProgresoSecciones(false);
+    setOpenOPCLAVA(false);
+    setOpenINGRNUM(false);
+  };
+  //funcion para resolver la pregunta de ingresar numero
+  //INGRNUM_resp
+  const [openINGRNUM, setOpenINGRNUM] = useState(false);
+  const handlerINGRNUM = () => {
+    setOpenINGRNUM(true);
+    setOpenLOCIMG(false);
+    setOpenSELCCLA(false);
+    setOpenSELCIMG(false);
+    setOpenMEMRZAR(false);
+    setOpenMULTIMG(false);
+    setOpenOPCLAVA(false);
+    setOpenProgresoSecciones(false);
+  };
+  //OPCLAVA_resolv
+  const [openOPCLAVA, setOpenOPCLAVA] = useState(false);
+  const handlerOPCLAVA = () => {
+    setOpenOPCLAVA(true);
+    setOpenLOCIMG(false);
+    setOpenSELCCLA(false);
+    setOpenSELCIMG(false);
+    setOpenMEMRZAR(false);
+    setOpenMULTIMG(false);
+    setOpenINGRNUM(false);
     setOpenProgresoSecciones(false);
   };
 
@@ -127,6 +172,8 @@ export default function Test() {
     setOpenSELCIMG(false);
     setOpenSELCCLA(false);
     setOpenLOCIMG(false);
+    setOpenINGRNUM(false);
+    setOpenOPCLAVA(false);
   };
 
   const [load, setLoader] = useState(false);
@@ -187,6 +234,27 @@ export default function Test() {
       case openMULTIMG:
         return (
           <MULTIMG_resolv
+            id_pregunta={idPregunta}
+            id_progreso_sec={idProgresoSeccion}
+            RegresarProgresoSeccion={RegresarProgresoSeccion}
+            ProgresoPregunta={id_progrso_pregunta}
+          />
+        );
+      //INGRNUM_resp
+      //openINGRNUM
+      case openINGRNUM:
+        return (
+          <INGRNUM_resolv
+            id_pregunta={idPregunta}
+            id_progreso_sec={idProgresoSeccion}
+            RegresarProgresoSeccion={RegresarProgresoSeccion}
+            ProgresoPregunta={id_progrso_pregunta}
+          />
+        );
+      //openOPCLAVA
+      case openOPCLAVA:
+        return (
+          <OPCLAVA_resolv
             id_pregunta={idPregunta}
             id_progreso_sec={idProgresoSeccion}
             RegresarProgresoSeccion={RegresarProgresoSeccion}

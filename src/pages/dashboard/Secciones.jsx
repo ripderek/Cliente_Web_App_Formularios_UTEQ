@@ -29,6 +29,12 @@ import {
   SELCCLA_resp,
   LOCIMG,
   MULTIMG,
+  INGRNUM,
+  INGRNUM_resp,
+  OPCLAVA,
+  OPCLAVA_resp,
+  OPCLAV2,
+  OPCLAV2_resp,
 } from "@/pages/dashboard/Plantillas";
 import {
   ListaPreguntas,
@@ -95,6 +101,12 @@ export default function Secciones() {
     openEditLOCIMG: false,
     openMULTIMG: false,
     openEditMULTIMG: false,
+    openINGRNUM: false,
+    openEditINGRNUM: false,
+    openOPCLAVA: false,
+    openEditOPCLAVA: false,
+    openOPCLAV2: false,
+    openEditOPCLAV2: false,
   });
 
   const [tabInfo, setTabInfo] = useState({
@@ -112,6 +124,10 @@ export default function Secciones() {
     buscarEditSELCCLA: true,
     buscarEditLOCIMG: true,
     buscarEditMULTIMG: true,
+    buscarEditINGRNUM: true,
+    buscarEditOPCLAVA: true,
+    buscarEditOPCLAV2: true,
+    //OPCLAV2
   });
 
   // Función para cambiar entre pestañas
@@ -311,6 +327,77 @@ export default function Secciones() {
             id_nivel={tabInfo.IDNivel}
             icono={tabInfo.r_icono}
             AbrirEditor={AbrirEditor}
+          />
+        );
+      //INGRNUM
+      case tabs.openINGRNUM:
+        return (
+          <INGRNUM
+            cambiarPestañas={cambiarPestañas}
+            tipo_preg={tabInfo.IDTIPOPRE}
+            id_nivel={tabInfo.IDNivel}
+            icono={tabInfo.r_icono}
+            AbrirEditor={AbrirEditor}
+          />
+        );
+      //INGRNUM_resp
+      case tabs.openEditINGRNUM:
+        return (
+          <INGRNUM_resp
+            id_pregunta={tabInfo.idPregunta}
+            buscar={tabInfo.buscarEditINGRNUM}
+            id_nivel={tabInfo.IDNivel}
+            AbrirPreguntas={AbrirPreguntas}
+            idni={tabInfo.IDNivel}
+            nombrenivel={tabInfo.nombre_nivel}
+            //
+          />
+        );
+      //OPCLAVA
+      case tabs.openOPCLAVA:
+        return (
+          <OPCLAVA
+            cambiarPestañas={cambiarPestañas}
+            tipo_preg={tabInfo.IDTIPOPRE}
+            id_nivel={tabInfo.IDNivel}
+            icono={tabInfo.r_icono}
+            AbrirEditor={AbrirEditor}
+          />
+        );
+      //openEditOPCLAVA
+      case tabs.openEditOPCLAVA:
+        return (
+          <OPCLAVA_resp
+            id_pregunta={tabInfo.idPregunta}
+            buscar={tabInfo.buscarEditINGRNUM}
+            id_nivel={tabInfo.IDNivel}
+            AbrirPreguntas={AbrirPreguntas}
+            idni={tabInfo.IDNivel}
+            nombrenivel={tabInfo.nombre_nivel}
+            //
+          />
+        );
+      //  OPCLAV2,
+      case tabs.openOPCLAV2:
+        return (
+          <OPCLAV2
+            cambiarPestañas={cambiarPestañas}
+            tipo_preg={tabInfo.IDTIPOPRE}
+            id_nivel={tabInfo.IDNivel}
+            icono={tabInfo.r_icono}
+            AbrirEditor={AbrirEditor}
+          />
+        );
+      case tabs.openEditOPCLAV2:
+        return (
+          <OPCLAV2_resp
+            id_pregunta={tabInfo.idPregunta}
+            buscar={tabInfo.buscarEditINGRNUM}
+            id_nivel={tabInfo.IDNivel}
+            AbrirPreguntas={AbrirPreguntas}
+            idni={tabInfo.IDNivel}
+            nombrenivel={tabInfo.nombre_nivel}
+            //
           />
         );
       default:

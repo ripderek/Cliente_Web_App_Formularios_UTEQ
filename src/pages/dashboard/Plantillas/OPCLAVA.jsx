@@ -1,19 +1,23 @@
+//OPCLAVA
 import {
   Card,
   CardHeader,
   CardBody,
   CardFooter,
   Typography,
-  Input,
   Checkbox,
   Button,
+  Input,
+  Select,
+  Option,
 } from "@material-tailwind/react";
 import { useRef, useState } from "react";
 import { AiOutlineUpload } from "react-icons/ai";
 import axios from "axios";
 import { Dialog_Error, Loader, Notification } from "@/widgets"; //Importar el componente
+const TABLE_HEAD = ["Num", "Clave", "Tipo", ""];
 
-export default function LOCIMG({
+export default function OPCLAVA({
   tipo_preg,
   id_nivel,
   icono,
@@ -66,10 +70,16 @@ export default function LOCIMG({
       form.set("p_tiempos_segundos", tiempoRespuesta);
       form.set("p_tipo_pregunta", tipo_preg);
       form.set("p_id_nivel", id_nivel);
-      form.set("p_tiempo_img", 100);
-
+      //Antes era un JSON pero ahora solo se envia un valor xd skere modo diablo
+      //form.set("p_claves_valor", JSON.stringify(datos));
+      form.set("p_clave", primerClave);
+      form.set("p_tiempo_enunciado", timepoImg);
+      console.log(datos);
+      //form.set("p_tiempo_img", 100);
+      //en esta funcion se enviaba como jSON ---> Crear_pregunta_clave_valor
       const result = await axios.post(
-        process.env.NEXT_PUBLIC_ACCESLINK + "preguntas/Crear_pregunta",
+        process.env.NEXT_PUBLIC_ACCESLINK +
+          "preguntas/Crear_pregunta_clave_valor_noJSON",
         form,
         {
           withCredentials: true,
@@ -78,7 +88,7 @@ export default function LOCIMG({
       setLoader(false);
       //se manda 0 como id porque se desconoce el id de la pregunta que se creo, y se envia true como segundo parametro para que relize la busqueda de la ultima pregunta en la sigueinte ventana en un useEffect
       //      AbrirEditor("SELCCLA", id_nivel, true);
-      AbrirEditor("MEMRZAR", id_nivel, true);
+      AbrirEditor("OPCLAVA", id_nivel, true);
     } catch (error) {
       console.log(error);
       setLoader(false);
@@ -88,6 +98,32 @@ export default function LOCIMG({
       setError(true);
     }
   };
+  const [primerClave, setPrimerCLave] = useState("");
+  //estado para almacenar las claves con el tipo para agregar a la pregunta
+  const [datos, setDatos] = useState([]);
+  //funcion para almacenar la data en el array de datos
+  const agregarDato = (e) => {
+    setDatos({ ...datos, [e.target.name]: e.target.value });
+    //el datos.lenght sirve para determinarle un id y poder luego borrarlo mediante un boton
+    /*
+    setDatos([
+      ...datos,
+      {clave: valor, tipo: seleccion },
+    ]);
+    console.log(datos);
+    */
+  };
+  //eliminar datos
+  const eliminarDato = (id) => {
+    // Filtrar los datos para excluir el elemento con el id proporcionado
+    const nuevosDatos = datos.filter((dato) => dato.id !== id);
+    // Actualizar el estado con los nuevos datos
+    setDatos(nuevosDatos);
+  };
+  //PARA EL COMBOBOX
+  const [seleccion, setSeleccion] = useState("");
+  const [valor, setValor] = useState("");
+
   return (
     <Card className="w-auto mt-6 mx-auto">
       {load ? <Loader /> : ""}
@@ -104,7 +140,7 @@ export default function LOCIMG({
         <div className="mb-1 flex items-center justify-between gap-8">
           <div>
             <Typography variant="h4" color="orange">
-              Localizar imagen
+              Pregunta con ingreso de datos
             </Typography>
           </div>
           <div className="flex shrink-0 flex-col gap-2 sm:flex-row">
@@ -139,7 +175,7 @@ export default function LOCIMG({
           />
         </div>
         <Typography className="text-lg font-bold" color="black">
-          Imagen a Memorizar:
+          Imagen del enunciado:
         </Typography>
         <div className="mx-auto bg-yellow-800 p-2 rounded-xl">
           <label htmlFor="fileInput" className="text-white font-bold ">
@@ -170,7 +206,119 @@ export default function LOCIMG({
           alt="Imagen"
           className="mt-3 h-64 w-auto mx-auto"
         />
-        {/* 
+        {/* AQUI VA LA TABLA PARA PODER INGRESAR LOS TIPOS DE DATOS QUE EXISTEN COMO CLAVES PARAS RESPUESTAS*/}
+        <div>
+          <Typography className="text-lg font-bold" color="black">
+            Datos a ingresar en cada respuesta:
+          </Typography>
+          {/* Aqui colocar el input, combobox y el boton de agregar a la tabla la clave xd*/}
+          <div className="mb-3 mt-4">
+            <div className="flex w-full flex-row gap-6 mt-2">
+              <Input
+                className=" border-4 border-yellow-900"
+                type="text"
+                variant="outlined"
+                label="Primer Dato"
+                color="orange"
+                valor={primerClave}
+                onChange={(e) => setPrimerCLave(e.target.value)}
+              />
+              {/* 
+              <Input
+                className="mb-4"
+                type="text"
+                variant="outlined"
+                label="Segundo dato"
+                color="green"
+                //onChange={(e) => setValor(e.target.value)}
+              />
+              */}
+            </div>
+            {/**
+            <div className="flex w-full flex-row gap-6 mt-2">
+              <Select size="md" label="Select Version" color="green">
+                <Option onClick={() => setSeleccion("Texto")}>Texto</Option>
+                <Option onClick={() => setSeleccion("Numero")}>Numero</Option>
+              </Select>
+            </div>
+ */}
+          </div>
+          {/**
+          <table className="w-3/4 mx-auto min-w-max table-auto text-left">
+            <thead>
+              <tr>
+                {TABLE_HEAD.map((head) => (
+                  <th
+                    key={head}
+                    className="border-b border-blue-gray-100 bg-blue-gray-50 p-4"
+                  >
+                    <Typography
+                      variant="small"
+                      color="blue-gray"
+                      className="font-normal leading-none opacity-70"
+                    >
+                      {head}
+                    </Typography>
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {datos.map(({ id, clave, tipo }, index) => {
+                const isLast = index === datos.length - 1;
+                const classes = isLast
+                  ? "p-4"
+                  : "p-4 border-b border-blue-gray-50";
+
+                return (
+                  <tr key={id}>
+                    <td className={classes}>
+                      <Typography
+                        variant="small"
+                        color="blue-gray"
+                        className="font-normal"
+                      >
+                        {index + 1}
+                      </Typography>
+                    </td>
+                    <td className={classes}>
+                      <Typography
+                        variant="small"
+                        color="blue-gray"
+                        className="font-normal"
+                      >
+                        {clave}
+                      </Typography>
+                    </td>
+                    <td className={classes}>
+                      <Typography
+                        variant="small"
+                        color="blue-gray"
+                        className="font-normal"
+                      >
+                        {tipo}
+                      </Typography>
+                    </td>
+                    <td className={classes}>
+                      <Typography
+                        as="a"
+                        href="#"
+                        variant="small"
+                        color="blue-gray"
+                        className="font-medium"
+                        onClick={() => eliminarDato(id)}
+                      >
+                        Eliminar
+                      </Typography>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+           */}
+        </div>
+
         <div className="flex items-center">
           <Typography className="text-lg font-bold" color="black">
             Tiempo disponible para memorizar la imagen (segundos):
@@ -181,7 +329,6 @@ export default function LOCIMG({
             onChange={(e) => setTiempoIMG(e.target.value)}
           />
         </div>
-        */}
       </CardBody>
       <CardFooter className="pt-0">
         <Button

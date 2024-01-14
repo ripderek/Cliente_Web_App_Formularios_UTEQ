@@ -13,6 +13,8 @@ import {
   setOpenConfigurator,
   setSidenavColor,
   setFixedNavbar,
+  setSidenavType,
+  setTransparentNavbar,
 } from "@/context";
 import React from "react";
 import Cookies from "universal-cookie";
@@ -58,8 +60,10 @@ export default function Formularios() {
       //console.log(result.data);
       //establecer color verde por defecto xd
       //Esto se deberia cargar desde la base de datos para personlizacion del usuarios
-      setSidenavColor(dispatch, "green");
-      setFixedNavbar(dispatch, true);
+      setSidenavColor(dispatch, cookies.get("sidenavcolor"));
+      setSidenavType(dispatch, cookies.get("sidenavtype"));
+      setTransparentNavbar(dispatch, cookies.get("transparentnavbar"));
+      setFixedNavbar(dispatch, cookies.get("fixednavbar"));
       setLoader(false);
     } catch (error) {
       setLoader(false);
@@ -112,6 +116,15 @@ export default function Formularios() {
   const cerrar = (valor) => {
     setError(valor);
   };
+  const sidenavColors = {
+    white: "border-gray-500",
+    dark: "border-gray-600",
+    green: "border-lime-600",
+    orange: "border-orange-600",
+    red: "border-red-600",
+    pink: "border-pink-600",
+  };
+
   return (
     <div className=" min-h-screen bg-blue-gray-50/50">
       {error ? (
@@ -139,9 +152,8 @@ export default function Formularios() {
         <IconButton
           size="lg"
           color="white"
-          className={`fixed bottom-8 right-8 z-40 rounded-full shadow-blue-gray-900 shadow-2xl border-x-4 border-y-4  ${
-            sidenavColor === "green" ? "border-green-900" : "border-yellow-900"
-          }`}
+          className={`fixed bottom-8 right-8 z-40 rounded-full shadow-blue-gray-900 shadow-2xl border-x-4 border-y-4  
+          ${sidenavColors[sidenavColor]}`}
           ripple={false}
           onClick={() => setOpenConfigurator(dispatch, true)}
         >

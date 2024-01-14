@@ -168,7 +168,7 @@ export default function ListaPreguntas({
     }
   };
   return (
-    <Card className="h-full w-full mt-5">
+    <Card className="h-full w-full mt-5 rounded-none">
       {load ? <Loader /> : ""}
       {/* Para editar una pregunta  */}
       <Dialog open={openEdtiar} handler={handleOpenEditar}>

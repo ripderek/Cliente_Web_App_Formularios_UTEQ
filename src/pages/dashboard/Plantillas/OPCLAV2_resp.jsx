@@ -107,7 +107,7 @@ export default function OPCLAV2_resp({
     setLoader(true);
     const response = await fetch(
       process.env.NEXT_PUBLIC_ACCESLINK +
-        "preguntas/Respuestas1CALVEVALOR/" +
+        "preguntas/Respuestas2CALVEVALOR/" +
         value_id_pregunta,
       {
         method: "GET",
@@ -136,11 +136,14 @@ export default function OPCLAV2_resp({
     const data = await response.json();
     SetClaves(data);
     //en lugar de hacer dos filas mejor hacer una sola xd con r_clave1 r_valor1 para modificarlo mediante el index
-    setClaves1([
+    setClaves1({
       ...claves1,
-      { r_id_clave: data[0].r_id_clave, r_clave: data[0].r_clave, r_valor: "" },
-      { r_id_clave: data[1].r_id_clave, r_clave: data[1].r_clave, r_valor: "" },
-    ]);
+      r_id_clave: data[0].r_id_clave,
+      r_clave: data[0].r_clave,
+
+      r_id_clave1: data[1].r_id_clave,
+      r_clave1: data[1].r_clave,
+    });
 
     //setClaves1({ ...claves1, r_clave: data[0].r_clave });
 
@@ -200,10 +203,12 @@ export default function OPCLAV2_resp({
       form.set("id_pregunta", IDPregunta);
       form.set("r_id_clave", claves1.r_id_clave);
       form.set("r_valor", claves1.r_valor);
+      form.set("r_id_clave1", claves1.r_id_clave1);
+      form.set("r_valor1", claves1.r_valor1);
 
       const result = await axios.post(
         process.env.NEXT_PUBLIC_ACCESLINK +
-          "preguntas/Crear_respuesta1ClaveValor",
+          "preguntas/Crear_respuesta1ClaveValor2",
         form,
         {
           withCredentials: true,
@@ -224,7 +229,15 @@ export default function OPCLAV2_resp({
       setError(true);
     }
   };
-  const [claves1, setClaves1] = useState([]);
+  const [claves1, setClaves1] = useState({
+    r_id_clave: "",
+    r_clave: "",
+    r_valor: "",
+
+    r_id_clave1: "",
+    r_clave1: "",
+    r_valor1: "",
+  });
   return (
     <Card className="w-auto mt-6 mx-auto">
       {load ? <Loader /> : ""}
@@ -268,27 +281,18 @@ export default function OPCLAV2_resp({
               </Button>
             </div>
           </div>
-          <div className="flex items-center mt-4">
+          <div className="p-2 items-center mt-4">
             <Input
-              className=" border-4 border-yellow-900"
+              className=" border-4 mb-3 border-yellow-900"
               type="text"
               variant="outlined"
-              label={claves1[0].r_clave}
+              label={claves1.r_clave}
               name="r_valor"
               color="orange"
               // valor={primerClave}
               onChange={HandleChange}
             />
-            <Input
-              className=" border-4 border-yellow-900"
-              type="text"
-              variant="outlined"
-              label={claves1[1].r_clave}
-              name="r_valor1"
-              color="orange"
-              // valor={primerClave}
-              onChange={HandleChange}
-            />
+
             {/* 
             <Typography className="text-lg font-bold" color="black">
               ¿Respuesta Correcta?: {Claves[0].r_clave}
@@ -299,6 +303,18 @@ export default function OPCLAV2_resp({
               onChange={handleChange}
             />
             */}
+          </div>
+          <div className=" p-2 items-center">
+            <Input
+              className=" border-4  border-yellow-900"
+              type="text"
+              variant="outlined"
+              label={claves1.r_clave1}
+              name="r_valor1"
+              color="orange"
+              // valor={primerClave}
+              onChange={HandleChange}
+            />
           </div>
 
           <IconButton
@@ -369,6 +385,7 @@ export default function OPCLAV2_resp({
               r_estado,
               r_eliminado,
               r_valor,
+              r_valor2,
             }) => (
               <div
                 key={r_id_repuesta}
@@ -393,6 +410,11 @@ export default function OPCLAV2_resp({
                         className="w-full text-lg bg-blue-gray-50 font-semibold	text-blue-gray-800 text-center"
                         disabled
                         value={r_valor}
+                      />
+                      <input
+                        className="w-full text-lg bg-blue-gray-50 font-semibold	text-blue-gray-800 text-center"
+                        disabled
+                        value={r_valor2}
                       />
                     </div>
 

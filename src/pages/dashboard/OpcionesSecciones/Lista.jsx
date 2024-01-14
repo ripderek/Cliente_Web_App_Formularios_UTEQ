@@ -43,7 +43,11 @@ const TABS = [
 
 //const TABLE_HEAD = ["Member", "Function", "Status", "Employed", ""];
 import { useEffect, useState } from "react";
+import { useMaterialTailwindController, setOpenSidenav } from "@/context";
+
 export default function Lista({ AbrirNiveles }) {
+  const [controller, dispatch] = useMaterialTailwindController();
+  const { sidenavColor, sidenavType, openSidenav } = controller;
   const [load, setLoader] = useState(false);
   const [error, setError] = useState(false);
   const [mensajeError, setMensajeError] = useState("");
@@ -89,8 +93,29 @@ export default function Lista({ AbrirNiveles }) {
       setMensajeError(error.response.data.error);
     }
   };
+  const sidenavTypes = {
+    dark: "bg-green-900 ",
+    white: "bg-white shadow-sm",
+    transparent: "bg-transparent",
+  };
+  const sidenavColors = {
+    white: "border-gray-500",
+    dark: "border-gray-600",
+    green: "border-lime-600",
+    orange: "border-orange-600",
+    red: "border-red-600",
+    pink: "border-pink-600",
+  };
+  const shadows = {
+    white: "shadow-gray-500",
+    dark: "shadow-gray-600",
+    green: "shadow-lime-600",
+    orange: "shadow-orange-600",
+    red: "shadow-red-600",
+    pink: "shadow-pink-600",
+  };
   return (
-    <Card className="h-full w-full mt-4">
+    <Card className="h-full w-full mt-4 rounded-none">
       {load ? <Loader /> : ""}
       <CrearSeccion abrir={openCreate} cerrar={cerrar} crear={crear} />
       <CardHeader floated={false} shadow={false} className="rounded-none">
@@ -153,7 +178,7 @@ export default function Lista({ AbrirNiveles }) {
             ({ r_titulo, r_id_seccion, r_descripcion, r_admin_seccion }) => (
               <div
                 key={r_id_seccion}
-                className="bg-blue-gray-50 shadow-2xl rounded-2xl cursor-pointer hover:border-4 hover:border-yellow-900"
+                className={`bg-blue-gray-50 shadow-2xl rounded-none cursor-pointer hover:border-4 ${sidenavColors[sidenavColor]}  ${shadows[sidenavColor]}`}
                 onClick={() => AbrirNiveles(r_id_seccion, r_titulo)}
               >
                 <div className="bg-zinc-900 rounded-2xl">

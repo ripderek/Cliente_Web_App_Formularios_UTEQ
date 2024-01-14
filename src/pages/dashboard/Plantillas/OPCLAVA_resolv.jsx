@@ -224,31 +224,61 @@ export default function OPCLAVA_resolv({
     //process.env.NEXT_PUBLIC_ACCESLINK
     //Router.push("/Inicio");
     setLoader(true);
-    try {
-      const result = await axios.post(
-        process.env.NEXT_PUBLIC_ACCESLINK +
-          "test/RegistrarRespuestasCLAVEVALOR1",
-        {
-          p_id_progreso_pregunta: ProgresoPregunta,
-          p_respuesta: datos,
-          p_tiempo_respuesta: segundosRespuestas,
-        },
-        {
-          withCredentials: true,
-        }
-      );
-      setLoader(false);
-      RegresarProgresoSeccion(true);
-    } catch (error) {
-      console.log(error);
-      setLoader(false);
-      //colocar una alerta de error cuando no se pueda inciar sesion
-      //alert("Hubo un error");
-      RegresarProgresoSeccion(true);
-      console.log(error);
-      //alert(error.response.data.error);
-      /*if (error.response.data.error===Ha ocurrido un error en la transacción principal: duplicate key value violates unique constraint "UQ_Repuestas_Preguta_progreso")
-       */
+
+    //Si hay datos entonces enviar el jSON de lo contrario enviar NA
+    if (datos.length !== 0) {
+      try {
+        const result = await axios.post(
+          process.env.NEXT_PUBLIC_ACCESLINK +
+            "test/RegistrarRespuestasCLAVEVALOR1",
+          {
+            p_id_progreso_pregunta: ProgresoPregunta,
+            p_respuesta: datos,
+            p_tiempo_respuesta: segundosRespuestas,
+          },
+          {
+            withCredentials: true,
+          }
+        );
+        setLoader(false);
+        RegresarProgresoSeccion(true);
+      } catch (error) {
+        console.log(error);
+        setLoader(false);
+        //colocar una alerta de error cuando no se pueda inciar sesion
+        //alert("Hubo un error");
+        RegresarProgresoSeccion(true);
+        console.log(error);
+        //alert(error.response.data.error);
+        /*if (error.response.data.error===Ha ocurrido un error en la transacción principal: duplicate key value violates unique constraint "UQ_Repuestas_Preguta_progreso")
+         */
+      }
+    } else {
+      alert("NO Hay seleccionados");
+
+      try {
+        const result = await axios.post(
+          process.env.NEXT_PUBLIC_ACCESLINK + "test/RegistrarPreguntaUnica",
+          {
+            p_id_progreso_pregunta: ProgresoPregunta,
+            p_respuesta: "NA",
+            p_tiempo_respuesta: segundos,
+          },
+          {
+            withCredentials: true,
+          }
+        );
+        setLoader(false);
+        RegresarProgresoSeccion(true);
+      } catch (error) {
+        console.log(error);
+        setLoader(false);
+        //colocar una alerta de error cuando no se pueda inciar sesion
+        //alert("Hubo un error");
+        RegresarProgresoSeccion(true);
+        console.log(error);
+        //alert(error.response.data.error);
+      }
     }
   };
 

@@ -30,13 +30,15 @@ import { Dialog_Error, Loader, Notification } from "@/widgets"; //Importar el co
 import { useEffect, useState } from "react";
 //const TABLE_HEAD = ["Member", "Function", "Status", "Employed", ""];
 import axios from "axios";
-
+import { useMaterialTailwindController, setOpenSidenav } from "@/context";
 export default function ListaNiveles({
   id_seccion,
   AbrirSecciones,
   Titulo,
   AbrirPreguntas,
 }) {
+  const [controller, dispatch] = useMaterialTailwindController();
+  const { sidenavColor, sidenavType, openSidenav } = controller;
   const [load, setLoader] = useState(false);
   //estado para almacenar todos los niveles de una seccion
   const [niveles, setNiveles] = useState([]);
@@ -109,8 +111,29 @@ export default function ListaNiveles({
   const cerrar1 = (valor) => {
     setError(valor);
   };
+  const sidenavTypes = {
+    dark: "bg-green-900 ",
+    white: "bg-white shadow-sm",
+    transparent: "bg-transparent",
+  };
+  const sidenavColors = {
+    white: "border-gray-500",
+    dark: "border-gray-600",
+    green: "border-lime-600",
+    orange: "border-orange-600",
+    red: "border-red-600",
+    pink: "border-pink-600",
+  };
+  const shadows = {
+    white: "shadow-gray-500",
+    dark: "shadow-gray-600",
+    green: "shadow-lime-600",
+    orange: "shadow-orange-600",
+    red: "shadow-red-600",
+    pink: "shadow-pink-600",
+  };
   return (
-    <Card className="h-full w-full mt-4">
+    <Card className="h-full w-full mt-4 rounded-none">
       {load ? <Loader /> : ""}
       {error ? (
         <Dialog_Error
@@ -223,7 +246,7 @@ export default function ListaNiveles({
             ) => (
               <div
                 key={r_id_nivel}
-                className="bg-blue-gray-50 shadow-2xl rounded-2xl cursor-pointer border-4 border-green-900 hover:border-yellow-900"
+                className={`bg-blue-gray-50 shadow-2xl rounded-none cursor-pointer hover:border-4 ${sidenavColors[sidenavColor]}  ${shadows[sidenavColor]}`}
                 onClick={() => AbrirPreguntas(r_id_nivel, r_nivel)}
               >
                 <div className="bg-zinc-900 rounded-2xl">

@@ -1,6 +1,7 @@
-import React from "react";
 import PropTypes from "prop-types";
 import Link from "next/link";
+import { Dialog_Error, Loader, Notification } from "@/widgets";
+
 //imports del sidenav del otro proyecto
 import {
   Avatar,
@@ -16,34 +17,47 @@ import {
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { useMaterialTailwindController, setOpenSidenav } from "@/context";
 import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import Cookies from "universal-cookie";
+
+//Hacer una consulta a la BD para cargar las configuraciones de la interfaz
 
 export function BarraNavegacion2({ routes, brandImg, brandName }) {
   const [controller, dispatch] = useMaterialTailwindController();
   const { sidenavColor, sidenavType, openSidenav } = controller;
-  // Define la lógica para determinar si un enlace está activo
   const isActive = (path) => useRouter().pathname === path;
   const sidenavTypes = {
-    dark: "bg-green-500",
+    dark: "bg-green-900 ",
     white: "bg-white shadow-sm",
     transparent: "bg-transparent",
   };
+  const sidenavColors = {
+    white: "border-gray-500",
+    dark: "border-gray-600",
+    green: "border-lime-600",
+    orange: "border-orange-600",
+    red: "border-red-600",
+    pink: "border-pink-600",
+  };
+  const [load, setLoader] = useState(false);
+
   return (
     <aside
       className={`${sidenavTypes[sidenavType]} ${
         openSidenav ? "translate-x-0" : "-translate-x-80"
-      } fixed inset-0 z-50 my-4 ml-4 h-[calc(100vh-32px)] w-72 rounded-xl transition-transform duration-300 xl:translate-x-0 border border-blue-gray-100 overflow-y-scroll`}
+      } fixed inset-0 z-50 my-4 ml-4 h-[calc(100vh-32px)] w-72 rounded-none transition-transform duration-300 xl:translate-x-0 border-4 border-blue-gray-100 overflow-y-scroll ${
+        sidenavColors[sidenavColor]
+      }`}
     >
+      {load ? <Loader /> : ""}
+
       <div className={`relative `}>
         <Card
-          className={`w-auto shadow-none mb-0 ${
-            sidenavType === "dark" ? "bg-green-500" : "bg-white"
-          }`}
+          className={`w-auto shadow-none mb-0 ${sidenavTypes[sidenavType]}`}
         >
           <CardHeader
             floated={false}
-            className={`h-auto w-44 mx-auto text-center shadow-none${
-              sidenavType === "dark" ? "bg-green-500" : "bg-white"
-            }`}
+            className={`h-auto w-44 mx-auto text-center shadow-none${sidenavTypes[sidenavType]}`}
           >
             <img
               src="/img/Home/UTEQ.png"
@@ -153,6 +167,7 @@ export function BarraNavegacion2({ routes, brandImg, brandName }) {
                     }
                     className="flex items-center gap-4 px-4 capitalize"
                     fullWidth
+                    onClick={() => setLoader(true)}
                   >
                     {icon}
                     <Typography

@@ -89,7 +89,7 @@ export default function Index() {
     }
 
     //Envento clik para iniciar con google
-    
+
     const login = useGoogleLogin({
         onSuccess: async (respose) => {
             setLoader(true);
@@ -116,7 +116,7 @@ export default function Index() {
             }
         },
     });
-    
+
 
     const GoogleLogin = async (email) => {
         try {
@@ -129,7 +129,7 @@ export default function Index() {
                     withCredentials: true,
                 }
             );
-            console.log("asdas", result);
+            //console.log("asdas", result);
 
             const cookies = new Cookies();
             //Cookie para el token
@@ -140,6 +140,29 @@ export default function Index() {
             //para abrir la nueva ruta en la misma pestana
             //Router.push("/dashboard/Home");
 
+
+            //aqui obtener las opcion de la interfaz del usuario y almacenarlos en cokkies para reutilizar y no llamar a la bd xd skere 
+            //cargar las configuracion de la interfaz depndiendo del suaurio xd
+            const response1 = await fetch(
+                process.env.NEXT_PUBLIC_ACCESLINK +
+                "users/Interfaz_Usuario/" +
+                result.data.id,
+                {
+                    method: "GET",
+                    headers: { "Content-Type": "application/json" },
+                    credentials: "include",
+                }
+            );
+            const data1 = await response1.json();
+            if (data1) {
+                //setSidenavColor(dispatch, data1.sidenavcolor);
+                //setFixedNavbar(dispatch, data1.fixednavbar);
+                //establecerlo en las cookies xd
+                cookies.set("sidenavcolor", data1.sidenavcolor, { path: "/" }); //enviar cokiee y almacenarla
+                cookies.set("fixednavbar", data1.fixednavbar, { path: "/" })
+                cookies.set("sidenavtype", data1.sidenavtype, { path: "/" })
+                cookies.set("transparentnavbar", data1.transparentnavbar, { path: "/" })
+            }
             //para abrir la nueva ventana del dashboard 
             // Para abrir una nueva ruta en la misma pestaña
             const nuevaRuta = "/dashboard/Home"; // Reemplaza con tu nueva ruta
@@ -174,7 +197,7 @@ export default function Index() {
         <div className=" w-full h-full ">
             {load ? <Loader /> : ""}
             {error ? <Dialog_Error mensaje={mensajeError} titulo="Error Inicio de sesion" cerrar={cerrar} /> : ("")}
-            <Card color="transparent" shadow={false} className="mx-auto w-full max-w-[24rem] mt-10 shadow-xl p-6 border-blue-gray-50 border border-solid text-center bg-white items-center justify-center p-4">
+            <Card color="transparent" shadow={false} className="mx-auto w-full max-w-[24rem] mt-10 shadow-xl p-6 hover:shadow-green-500 border-4 border-orange-900  border-solid text-center bg-white items-center justify-center rounded-none">
                 <div className="p-2 mx-auto">
                     <img
                         className="h-10"

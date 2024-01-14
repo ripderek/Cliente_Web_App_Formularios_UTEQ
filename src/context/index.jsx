@@ -30,13 +30,14 @@ export function reducer(state, action) {
   }
 }
 
+//esto cargarlo desde las cookies que se guardar cuando se construye la barra de navegacion2
 export function MaterialTailwindControllerProvider({ children }) {
   const initialState = {
     openSidenav: false,
     sidenavColor: "dark",
     sidenavType: "white",
-    transparentNavbar: true,
-    fixedNavbar: false,
+    transparentNavbar: false,
+    fixedNavbar: true,
     openConfigurator: false,
   };
 

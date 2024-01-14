@@ -20,6 +20,11 @@ export { default as OPCLAVA_resolv } from "@/pages/dashboard/Plantillas/OPCLAVA_
 export { default as OPCLAV2 } from "@/pages/dashboard/Plantillas/OPCLAV2"
 export { default as OPCLAV2_resp } from "@/pages/dashboard/Plantillas/OPCLAV2_resp"
 export { default as OPCLAV2_resolv } from "@/pages/dashboard/Plantillas/OPCLAV2_resolv"
+export { default as MULIMGT } from "@/pages/dashboard/Plantillas/MULIMGT"
+export { default as MULIMGT_resp } from "@/pages/dashboard/Plantillas/MULIMGT_resp"
+export { default as MULIMGT_resolv } from "@/pages/dashboard/Plantillas/MULIMGT_resolv"
 
+
+//MULIMGT
 //OPCLAV2
 //MULTIMG_resolv.jsx

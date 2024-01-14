@@ -32,14 +32,27 @@ import {
 
 export function Navbar_app({ user_name, titulo }) {
   const [controller, dispatch] = useMaterialTailwindController();
-  const { fixedNavbar, openSidenav, sidenavColor } = controller;
-
+  const { fixedNavbar, openSidenav, sidenavColor, sidenavType } = controller;
+  const sidenavTypes = {
+    dark: "bg-green-900 ",
+    white: "bg-white shadow-sm",
+    transparent: "bg-transparent",
+  };
+  const sidenavColors = {
+    white: "border-gray-500",
+    dark: "border-gray-600",
+    green: "border-lime-600",
+    orange: "border-orange-600",
+    red: "border-red-600",
+    pink: "border-pink-600",
+  };
+  //${sidenavTypes[sidenavType]}
   return (
     <Navbar
-      color={fixedNavbar ? "white" : "transparent"}
-      className={`rounded-xl transition-all ${
+      color={fixedNavbar === false ? "transparent" : "blue"}
+      className={`rounded-none transition-all  ${
         fixedNavbar
-          ? "sticky top-4 z-40 py-3 shadow-md shadow-blue-gray-500/5"
+          ? `sticky top-4 z-40 py-3 shadow-md border-4 shadow-blue-gray-500/5 ${sidenavTypes[sidenavType]} ${sidenavColors[sidenavColor]}`
           : "px-0 py-1"
       }`}
       fullWidth
@@ -49,7 +62,7 @@ export function Navbar_app({ user_name, titulo }) {
         <div className="capitalize">
           <Typography
             variant="h4"
-            color={sidenavColor === "dark" ? "black" : sidenavColor}
+            color={sidenavType === "dark" ? "white" : "black"}
           >
             {titulo}
           </Typography>

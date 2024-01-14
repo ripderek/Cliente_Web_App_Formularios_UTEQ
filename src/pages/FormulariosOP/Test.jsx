@@ -9,6 +9,8 @@ import {
   MULTIMG_resolv,
   INGRNUM_resolv,
   OPCLAVA_resolv,
+  OPCLAV2_resolv,
+  MULIMGT_resolv,
 } from "@/pages/dashboard/Plantillas";
 import Cookies from "universal-cookie";
 import { Dialog_Error, Loader, Notification } from "@/widgets"; //Importar el componente
@@ -42,6 +44,7 @@ export default function Test() {
     set_IDPregunta(idp);
     setIDprogresoPregunta(id_progreso_pregunt);
     setIDSeccion(id_sec);
+    //alert(tipo);
     switch (tipo) {
       case "MEMRZAR":
         handlerMEMRZAR();
@@ -67,6 +70,12 @@ export default function Test() {
       case "OPCLAVA":
         handlerOPCLAVA();
         break;
+      case "OPCLAV2":
+        handlerOPCLAV2();
+        break;
+      case "MULIMGT":
+        handlerMULIMGT();
+        break;
       default:
         RegresarProgresoSeccion(true);
         break;
@@ -87,6 +96,8 @@ export default function Test() {
     setOpenMULTIMG(false);
     setOpenINGRNUM(false);
     setOpenOPCLAVA(false);
+    setOpenOPCLAV2(false);
+    setOpenMULIMGT(false);
   };
   //Funcion para abrir una pregunta de tipo SELCIMG
   const [openSELCIMG, setOpenSELCIMG] = useState(false);
@@ -99,6 +110,8 @@ export default function Test() {
     setOpenMULTIMG(false);
     setOpenINGRNUM(false);
     setOpenOPCLAVA(false);
+    setOpenOPCLAV2(false);
+    setOpenMULIMGT(false);
   };
 
   const [openSELCCLA, setOpenSELCCLA] = useState(false);
@@ -111,6 +124,8 @@ export default function Test() {
     setOpenMULTIMG(false);
     setOpenINGRNUM(false);
     setOpenOPCLAVA(false);
+    setOpenOPCLAV2(false);
+    setOpenMULIMGT(false);
   };
   const [openLOCIMG, setOpenLOCIMG] = useState(false);
 
@@ -123,6 +138,8 @@ export default function Test() {
     setOpenMULTIMG(false);
     setOpenINGRNUM(false);
     setOpenOPCLAVA(false);
+    setOpenOPCLAV2(false);
+    setOpenMULIMGT(false);
   };
   //        handlerMULTIMG();
   const [openMULTIMG, setOpenMULTIMG] = useState(false);
@@ -136,6 +153,8 @@ export default function Test() {
     setOpenProgresoSecciones(false);
     setOpenOPCLAVA(false);
     setOpenINGRNUM(false);
+    setOpenOPCLAV2(false);
+    setOpenMULIMGT(false);
   };
   //funcion para resolver la pregunta de ingresar numero
   //INGRNUM_resp
@@ -149,6 +168,8 @@ export default function Test() {
     setOpenMULTIMG(false);
     setOpenOPCLAVA(false);
     setOpenProgresoSecciones(false);
+    setOpenOPCLAV2(false);
+    setOpenMULIMGT(false);
   };
   //OPCLAVA_resolv
   const [openOPCLAVA, setOpenOPCLAVA] = useState(false);
@@ -161,11 +182,42 @@ export default function Test() {
     setOpenMULTIMG(false);
     setOpenINGRNUM(false);
     setOpenProgresoSecciones(false);
+    setOpenOPCLAV2(false);
+    setOpenMULIMGT(false);
   };
-
+  //  OPCLAV2_resolv,
+  const [openOPCLAV2, setOpenOPCLAV2] = useState(false);
+  const handlerOPCLAV2 = () => {
+    setOpenOPCLAV2(true);
+    setOpenLOCIMG(false);
+    setOpenSELCCLA(false);
+    setOpenSELCIMG(false);
+    setOpenMEMRZAR(false);
+    setOpenMULTIMG(false);
+    setOpenINGRNUM(false);
+    setOpenOPCLAVA(false);
+    setOpenProgresoSecciones(false);
+    setOpenMULIMGT(false);
+  };
+  //MULIMGT_resolv
+  const [openMULIMGT, setOpenMULIMGT] = useState(false);
+  const handlerMULIMGT = () => {
+    setOpenMULIMGT(true);
+    setOpenOPCLAV2(false);
+    setOpenLOCIMG(false);
+    setOpenSELCCLA(false);
+    setOpenSELCIMG(false);
+    setOpenMEMRZAR(false);
+    setOpenMULTIMG(false);
+    setOpenINGRNUM(false);
+    setOpenOPCLAVA(false);
+    setOpenProgresoSecciones(false);
+  };
   //funcion regresar a un progreso seccion
   //necesita el id del progreso_seccion para abrirse xd
   const RegresarProgresoSeccion = (value) => {
+    setOpenMULIMGT(false);
+    setOpenOPCLAV2(false);
     setsiguient(true);
     setOpenMEMRZAR(false);
     setOpenProgresoSecciones(true);
@@ -255,6 +307,25 @@ export default function Test() {
       case openOPCLAVA:
         return (
           <OPCLAVA_resolv
+            id_pregunta={idPregunta}
+            id_progreso_sec={idProgresoSeccion}
+            RegresarProgresoSeccion={RegresarProgresoSeccion}
+            ProgresoPregunta={id_progrso_pregunta}
+          />
+        );
+      case openOPCLAV2:
+        return (
+          <OPCLAV2_resolv
+            id_pregunta={idPregunta}
+            id_progreso_sec={idProgresoSeccion}
+            RegresarProgresoSeccion={RegresarProgresoSeccion}
+            ProgresoPregunta={id_progrso_pregunta}
+          />
+        );
+      //openMULIMGT
+      case openMULIMGT:
+        return (
+          <MULIMGT_resolv
             id_pregunta={idPregunta}
             id_progreso_sec={idProgresoSeccion}
             RegresarProgresoSeccion={RegresarProgresoSeccion}

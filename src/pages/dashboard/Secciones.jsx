@@ -13,6 +13,8 @@ import {
   setOpenConfigurator,
   setSidenavColor,
   setFixedNavbar,
+  setSidenavType,
+  setTransparentNavbar,
 } from "@/context";
 import React from "react";
 import Cookies from "universal-cookie";
@@ -35,6 +37,8 @@ import {
   OPCLAVA_resp,
   OPCLAV2,
   OPCLAV2_resp,
+  MULIMGT,
+  MULIMGT_resp,
 } from "@/pages/dashboard/Plantillas";
 import {
   ListaPreguntas,
@@ -74,8 +78,11 @@ export default function Secciones() {
       //console.log(result.data);
       //establecer color verde por defecto xd
       //Esto se deberia cargar desde la base de datos para personlizacion del usuarios
-      setSidenavColor(dispatch, "green");
-      setFixedNavbar(dispatch, true);
+
+      setSidenavColor(dispatch, cookies.get("sidenavcolor"));
+      setSidenavType(dispatch, cookies.get("sidenavtype"));
+      setTransparentNavbar(dispatch, cookies.get("transparentnavbar"));
+      setFixedNavbar(dispatch, cookies.get("fixednavbar"));
       setLoader(false);
     } catch (error) {
       setLoader(false);
@@ -107,6 +114,8 @@ export default function Secciones() {
     openEditOPCLAVA: false,
     openOPCLAV2: false,
     openEditOPCLAV2: false,
+    openMULIMGT: false,
+    openEditMULIMGT: false,
   });
 
   const [tabInfo, setTabInfo] = useState({
@@ -127,6 +136,7 @@ export default function Secciones() {
     buscarEditINGRNUM: true,
     buscarEditOPCLAVA: true,
     buscarEditOPCLAV2: true,
+    buscarEditMULIMGT: true,
     //OPCLAV2
   });
 
@@ -369,7 +379,7 @@ export default function Secciones() {
         return (
           <OPCLAVA_resp
             id_pregunta={tabInfo.idPregunta}
-            buscar={tabInfo.buscarEditINGRNUM}
+            buscar={tabInfo.buscarEditOPCLAVA}
             id_nivel={tabInfo.IDNivel}
             AbrirPreguntas={AbrirPreguntas}
             idni={tabInfo.IDNivel}
@@ -392,7 +402,30 @@ export default function Secciones() {
         return (
           <OPCLAV2_resp
             id_pregunta={tabInfo.idPregunta}
-            buscar={tabInfo.buscarEditINGRNUM}
+            buscar={tabInfo.buscarEditOPCLAV2}
+            id_nivel={tabInfo.IDNivel}
+            AbrirPreguntas={AbrirPreguntas}
+            idni={tabInfo.IDNivel}
+            nombrenivel={tabInfo.nombre_nivel}
+            //
+          />
+        );
+      //MULIMGT
+      case tabs.openMULIMGT:
+        return (
+          <MULIMGT
+            cambiarPestañas={cambiarPestañas}
+            tipo_preg={tabInfo.IDTIPOPRE}
+            id_nivel={tabInfo.IDNivel}
+            icono={tabInfo.r_icono}
+            AbrirEditor={AbrirEditor}
+          />
+        );
+      case tabs.openEditMULIMGT:
+        return (
+          <MULIMGT_resp
+            id_pregunta={tabInfo.idPregunta}
+            buscar={tabInfo.buscarEditMULIMGT}
             id_nivel={tabInfo.IDNivel}
             AbrirPreguntas={AbrirPreguntas}
             idni={tabInfo.IDNivel}
@@ -407,6 +440,15 @@ export default function Secciones() {
   const cerrar = (valor) => {
     setError(valor);
   };
+  const sidenavColors = {
+    white: "border-gray-500",
+    dark: "border-gray-600",
+    green: "border-lime-600",
+    orange: "border-orange-600",
+    red: "border-red-600",
+    pink: "border-pink-600",
+  };
+
   return (
     <div className=" min-h-screen bg-blue-gray-50/50">
       {error ? (
@@ -431,9 +473,8 @@ export default function Secciones() {
         <IconButton
           size="lg"
           color="white"
-          className={`fixed bottom-8 right-8 z-40 rounded-full shadow-blue-gray-900 shadow-2xl border-x-4 border-y-4  ${
-            sidenavColor === "green" ? "border-green-900" : "border-yellow-900"
-          }`}
+          className={`fixed bottom-8 right-8 z-40 rounded-full shadow-blue-gray-900 shadow-2xl border-x-4 border-y-4  
+          ${sidenavColors[sidenavColor]}`}
           ripple={false}
           onClick={() => setOpenConfigurator(dispatch, true)}
         >

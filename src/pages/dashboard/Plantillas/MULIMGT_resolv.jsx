@@ -7,13 +7,12 @@ import {
   CardFooter,
   Typography,
   Alert,
-  Input,
   Button,
 } from "@material-tailwind/react";
 import { ClockIcon } from "@heroicons/react/24/solid";
 import { TiempoAgotado } from "@/widgets";
 
-export default function OPCLAV2_resolv({
+export default function MULIMGT_resolv({
   id_pregunta,
   id_progreso_sec,
   RegresarProgresoSeccion,
@@ -22,6 +21,8 @@ export default function OPCLAV2_resolv({
   const [load, setLoader] = useState(false);
   const [data_user, setData_User] = useState([]);
   const [IDPregunta, setIdPregunta] = useState(null);
+  const [numeroColumnas, setNumeroColumnas] = useState(1);
+
   //funcion para buscar los datos de una pregunta como la foto, el enunciado.
   //si se envia a buscar entonces hay que devolver la ultima pregunta creada.
   useEffect(() => {
@@ -51,46 +52,12 @@ export default function OPCLAV2_resolv({
       cargarRespuestas(data.r_id_pregunta);
       setSegundosRespuestas(data.r_tiempo_respuesta);
       setSegundos(data.r_tiempo_enunciado);
-      cargarCLaves(id_pregunta);
+      setNumeroColumnas(data.r_columnas_pc);
     } catch (error) {
       setLoader(false);
       console.log(error);
     }
   };
-  //PARA LAS CLAVES DE LOS INPUT
-  const [Claves, SetClaves] = useState([]);
-  const cargarCLaves = async (value_id_pregunta) => {
-    setLoader(true);
-    const response = await fetch(
-      process.env.NEXT_PUBLIC_ACCESLINK +
-        "preguntas/Obtener_Claves/" +
-        value_id_pregunta,
-      {
-        method: "GET",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-      }
-    );
-    const data = await response.json();
-    SetClaves(data);
-    setClaves1({
-      ...claves1,
-      r_id_clave: data[0].r_id_clave,
-      r_clave: data[0].r_clave,
-      r_id_clave1: data[1].r_id_clave,
-      r_clave1: data[1].r_clave,
-    });
-  };
-  const [claves1, setClaves1] = useState({
-    r_id_clave: "",
-    r_clave: "",
-    r_valor: "",
-    //2da parte
-    r_id_clave1: "",
-    r_clave1: "",
-    r_valor1: "",
-  });
-  ////
   //{PARA LOS SEGUNDOS DE LA PREGUNTA}
   const [segundos, setSegundos] = useState(0);
   const [VerPregunta, SetVerPregunta] = useState(true);
@@ -163,7 +130,12 @@ export default function OPCLAV2_resolv({
       }
     );
     const data = await response.json();
-    setRespuestas(data);
+    const respuestasConSeleccionado = data.map((respuesta) => ({
+      ...respuesta,
+      seleccionado: false,
+    }));
+
+    setRespuestas(respuestasConSeleccionado);
     setLoader(false);
   };
   //Si el tiempo termino registrar respuesta por default con el id del progreso_pregunta
@@ -174,7 +146,7 @@ export default function OPCLAV2_resolv({
 
     //setTiempoAgotado(false);
     //cuando finalice volver a ProgresoSecciones
-    Enviar_Respuesta("NA");
+    Enviar_Respuesta();
     //setData_User(null);
     //cuando finalice cargar la siguiente pregunta
     //click();
@@ -194,53 +166,27 @@ export default function OPCLAV2_resolv({
   //funcion para guardar la repuesta en la pregunta
   /* [ESTA FUNCION PUEDE SERVIR PARA ENVIAR LA REPUESTA A LA API] */
 
-  const Enviar_Respuesta = async (respuesta) => {
+  const Enviar_Respuesta = async () => {
     //process.env.NEXT_PUBLIC_ACCESLINK
     //Router.push("/Inicio");
-    setLoader(true);
-    try {
-      const result = await axios.post(
-        process.env.NEXT_PUBLIC_ACCESLINK + "test/RegistrarPreguntaUnica",
-        {
-          p_id_progreso_pregunta: ProgresoPregunta,
-          p_respuesta: respuesta,
-          p_tiempo_respuesta: segundosRespuestas,
-        },
-        {
-          withCredentials: true,
-        }
-      );
-      setLoader(false);
-      RegresarProgresoSeccion(true);
-    } catch (error) {
-      console.log(error);
-      setLoader(false);
-      //colocar una alerta de error cuando no se pueda inciar sesion
-      //alert("Hubo un error");
-      RegresarProgresoSeccion(true);
-      console.log(error);
-      //alert(error.response.data.error);
-      /*if (error.response.data.error===Ha ocurrido un error en la transacción principal: duplicate key value violates unique constraint "UQ_Repuestas_Preguta_progreso")
-       */
-    }
-  };
-  //Enviar respuestas con JSON
-  //RegistrarRespuestasCLAVEVALOR1
-  const Enviar_Respuesta_JSON = async () => {
-    //process.env.NEXT_PUBLIC_ACCESLINK
-    //Router.push("/Inicio");
-    setLoader(true);
 
-    //Si hay datos entonces enviar el jSON de lo contrario enviar NA
-    if (datos.length !== 0) {
+    //RegistrarPreguntaMultiples
+    alert("ProgresoPreguntaID: " + ProgresoPregunta);
+    setLoader(true);
+    const haySeleccionado = respuestas.some(
+      (respuesta) => respuesta.seleccionado
+    );
+    if (haySeleccionado) {
+      alert("Hay seleccionados");
+      //como fue resuelta se envia el JSON con las repuestas
+
       try {
         const result = await axios.post(
-          process.env.NEXT_PUBLIC_ACCESLINK +
-            "test/RegistrarRespuestasCLAVEVALOR1",
+          process.env.NEXT_PUBLIC_ACCESLINK + "test/RegistrarPreguntaMultiples",
           {
             p_id_progreso_pregunta: ProgresoPregunta,
-            p_respuesta: datos,
-            p_tiempo_respuesta: segundosRespuestas,
+            p_respuesta: respuestas,
+            p_tiempo_respuesta: segundos,
           },
           {
             withCredentials: true,
@@ -256,8 +202,6 @@ export default function OPCLAV2_resolv({
         RegresarProgresoSeccion(true);
         console.log(error);
         //alert(error.response.data.error);
-        /*if (error.response.data.error===Ha ocurrido un error en la transacción principal: duplicate key value violates unique constraint "UQ_Repuestas_Preguta_progreso")
-         */
       }
     } else {
       alert("NO Hay seleccionados");
@@ -287,58 +231,17 @@ export default function OPCLAV2_resolv({
       }
     }
   };
-
-  //EXAMINAR ESTO PARA PODER ADJUNTAR EL CLAVE VALOR DE LAS REPUESTAS MIENTRAS SE INGRESA SKERE MODO DIABLO
-  const [datos, setDatos] = useState([]);
-  //funcion para almacenar la data en el array de datos
-  const agregarDato = (e, opcion, index, id, id2) => {
-    setDatos((prevDatos) => {
-      const indiceExistente = prevDatos.findIndex(
-        (dato) => dato.index === index
-      );
-
-      if (indiceExistente !== -1) {
-        // Si el índice ya está registrado, actualizar el valor
-        return prevDatos.map((dato, i) =>
-          i === indiceExistente
-            ? {
-                ...dato,
-                [e.target.name]: e.target.value,
-              }
-            : dato
-        );
-      } else {
-        // Si el índice no está registrado, agregar uno nuevo
-        return [
-          ...prevDatos,
-          {
-            [e.target.name]: e.target.value,
-            index: index,
-            opcion: opcion,
-            id_clave: id,
-            id_clave1: id2,
-          },
-        ];
-      }
-    });
+  //funcion para cambiar el estado seleccionado del json para saber si esta seleccionado o no la opcion y enviarlo como respuesta xdxd skere modo diablo
+  const handleSeleccionarRespuesta = (idRespuesta) => {
+    // Actualizar el estado 'seleccionado' de la respuesta correspondiente
+    setRespuestas((prevRespuestas) =>
+      prevRespuestas.map((respuesta) =>
+        respuesta.r_id_repuesta === idRespuesta
+          ? { ...respuesta, seleccionado: !respuesta.seleccionado }
+          : respuesta
+      )
+    );
   };
-
-  /*
-  const agregarDato = (e, opcion, index) => {
-    setDatos([
-      ...datos,
-      //el valor que el usuario le va a dar
-      {
-        [e.target.name]: e.target.value,
-        //el index del mapeo --> servira para poder identificarlo y cambiarlo si ya esta ingresado
-        index: index,
-        //la opcion es decir la URL de la IMGEN en este caso
-        opcion: opcion,
-      },
-    ]);
-    console.log(datos);
-  };
-*/
   return (
     <Card className="w-auto rounded-none mx-auto">
       {tiempoAgotado && <TiempoAgotado />}
@@ -393,9 +296,8 @@ export default function OPCLAV2_resolv({
           </Typography>
           */}
         <textarea
-          className="border p-2  rounded-sm font-bold  h-auto "
+          className="border p-2  rounded-sm font-bold"
           size="lg"
-          style={{ height: "fit-content" }}
           value={data_user.r_enunciado}
         />
         {/*
@@ -450,9 +352,7 @@ export default function OPCLAV2_resolv({
           <div>
             <div className="flex justify-end items-center">
               <Button
-                onClick={() => Enviar_Respuesta_JSON()}
-                //datos
-                // onClick={() => console.log(datos)}
+                onClick={() => Enviar_Respuesta()}
                 color="green"
                 className="rounded-none"
               >
@@ -462,94 +362,40 @@ export default function OPCLAV2_resolv({
             <Typography variant="h4" color="orange">
               Opciones:
             </Typography>
-            <div className="grid grid-cols-4   md:grid-cols-5 gap-3 p-5">
+            <div
+              className={`grid sm:grid-cols-${numeroColumnas} grid-cols-${numeroColumnas} md:grid-cols-${numeroColumnas} gap-1 p-5`}
+            >
               {respuestas.map(
-                (
-                  {
-                    r_id_repuesta,
-                    r_opcion,
-                    r_correcta,
-                    r_estado,
-                    r_eliminado,
-                  },
-                  index
-                ) => (
+                ({
+                  r_id_repuesta,
+                  r_opcion,
+                  r_correcta,
+                  r_estado,
+                  r_eliminado,
+                  seleccionado,
+                }) => (
                   <div
                     key={r_id_repuesta}
-                    className="bg-blue-gray-50 h-auto shadow-xl rounded-none cursor-text hover:shadow-yellow-900 border-green-900 border-4"
+                    className={`bg-blue-gray-50 h-auto shadow-xl rounded-none cursor-pointer 
+                  ${
+                    seleccionado
+                      ? "border-green-500 border-8"
+                      : "hover:shadow-yellow-900 hover:border-yellow-900 hover:border-4"
+                  }`}
                     //onClick={() => seleccionRepuesta(r_opcion)}
+                    onClick={() => handleSeleccionarRespuesta(r_id_repuesta)}
                   >
-                    <div className="bg-zinc-900 text-black  rounded-2xl">
-                      <div className="mx-auto">
-                        <div className="text-center">
-                          <img
-                            src={
-                              process.env.NEXT_PUBLIC_ACCESLINK +
-                              "preguntas/Ver_ImagenRespuestaMEMRZAR/" +
-                              r_id_repuesta
-                            }
-                            alt={r_id_repuesta}
-                            className="mt-3 h-min w-min mx-auto mb-6"
-                          />
-                        </div>
-
-                        <div className=" p-4">
-                          <Input
-                            className="min-w-min mx-auto items-center text-center"
-                            type="text"
-                            variant="outlined"
-                            label={claves1.r_clave}
-                            name="r_valor"
-                            color="orange"
-                            // valor={primerClave}
-                            onChange={(e) =>
-                              agregarDato(
-                                e,
-                                r_opcion,
-                                index,
-                                claves1.r_id_clave,
-                                claves1.r_id_clave1
-                              )
-                            }
-                          />
-                          <Input
-                            className="min-w-min mx-auto items-center text-center"
-                            type="text"
-                            variant="outlined"
-                            label={claves1.r_clave1}
-                            name="r_valor1"
-                            color="orange"
-                            // valor={primerClave}
-                            onChange={(e) =>
-                              agregarDato(
-                                e,
-                                r_opcion,
-                                index,
-                                claves1.r_id_clave,
-                                claves1.r_id_clave1
-                              )
-                            }
-                          />
-                          {/**
-                          <input
-                            className=" w-full p-2 border  rounded-sm border-yellow-900 "
-                            //value={r_opcion}
-                          />
-                           */}
-                        </div>
-
-                        <div className="w-auto flex ml-2 mb-2">{/** */}</div>
-
-                        <div className="w-auto flex ml-2 mb-2">{/** */}</div>
-                        {/* 
-                    <div className="p-2 flex justify-end">
-                      <Tooltip content="Editar respuesta">
-                        <button className="bg-zinc-50 p-2 bg-green-700 rounded-xl cursor-pointer">
-                          <PencilIcon className="w-7" color="white" />
-                        </button>
-                      </Tooltip>
-                    </div>
-                    */}
+                    <div className="mx-auto">
+                      <div className="text-center">
+                        <img
+                          src={
+                            process.env.NEXT_PUBLIC_ACCESLINK +
+                            "preguntas/Ver_ImagenRespuestaMEMRZAR/" +
+                            r_id_repuesta
+                          }
+                          alt={r_id_repuesta}
+                          className="mt-3 h-auto w-auto mx-auto "
+                        />
                       </div>
                     </div>
                   </div>

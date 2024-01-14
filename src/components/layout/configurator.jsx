@@ -115,21 +115,24 @@ export function Configurator() {
           <div className="mt-3 flex items-center gap-2">
             <Button
               variant={sidenavType === "dark" ? "gradient" : "outlined"}
+              color="green"
               onClick={() => setSidenavType(dispatch, "dark")}
             >
               Oscuro
             </Button>
-            {/*
+            {/* 
             <Button
               variant={sidenavType === "transparent" ? "gradient" : "outlined"}
               onClick={() => setSidenavType(dispatch, "transparent")}
             >
-              Sin color
+              Transparente
             </Button>
             */}
             <Button
               variant={sidenavType === "white" ? "gradient" : "outlined"}
               onClick={() => setSidenavType(dispatch, "white")}
+              color="light-green"
+              //className="mt-4"
             >
               Blanco
             </Button>
@@ -149,14 +152,9 @@ export function Configurator() {
           </div>
           <hr />
           <div className="my-8 flex flex-col gap-4">
-            <a
-              href="https://www.creative-tim.com/product/material-tailwind-dashboard-react?rel=mtdr"
-              target="_black"
-            >
-              <Button variant="gradient" fullWidth>
-                Boton
-              </Button>
-            </a>
+            <Button variant="gradient" fullWidth>
+              Guardar configuracion
+            </Button>
           </div>
         </div>
         <div className="text-center">

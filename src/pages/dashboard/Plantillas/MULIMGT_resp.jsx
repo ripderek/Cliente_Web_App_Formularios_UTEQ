@@ -33,7 +33,7 @@ import {
   XCircleIcon,
 } from "@heroicons/react/24/solid";
 
-export default function OPCLAVA_resp({
+export default function MULIMGT_resp({
   id_pregunta,
   buscar,
   id_nivel,
@@ -50,16 +50,20 @@ export default function OPCLAVA_resp({
     obtener_datos_pregunta();
     //else buscar_por_id
   }, []);
-  //funcion para hacer la peticion y obtener los datos de la pregunta
+  const [numeroColumnas, setNumeroColumnas] = useState(1);
+  //funcion para hacer la peticion y obtene r los datos de la pregunta
   const obtener_datos_pregunta = async () => {
     //alert(id_pregunta + " " + buscar + " " + id_nivel);
     setLoader(true);
+    console.log(id_pregunta + "-" + buscar + "-" + id_nivel);
     try {
+      alert(id_pregunta);
+
       if (buscar) {
-        //alert("Buscando");
+        alert("Buscando");
         const response = await fetch(
           process.env.NEXT_PUBLIC_ACCESLINK +
-            "preguntas/MEMRZAR_Datos_pregunta/" +
+            "preguntas/SELCIMG_Datos_pregunta/" +
             id_nivel,
           {
             method: "GET",
@@ -70,14 +74,17 @@ export default function OPCLAVA_resp({
 
         const data = await response.json();
         setData_User(data);
+        setLoader(false);
+        console.log(data);
         setIdPregunta(data.r_id_pregunta);
         cargarRespuestas(data.r_id_pregunta);
-        cargarCLaves(data.r_id_pregunta);
+        //value={data_user.r_columnas_pc}
+        setNumeroColumnas(data.r_columnas_pc);
       } else {
-        //alert("Editando por ID");
+        alert("Editando por ID");
         const response = await fetch(
           process.env.NEXT_PUBLIC_ACCESLINK +
-            "preguntas/MEMRZAR_Datos_pregunta_id_pregunta/" +
+            "preguntas/SELCIMG_Datos_pregunta_id_pregunta/" +
             id_pregunta,
           {
             method: "GET",
@@ -87,12 +94,13 @@ export default function OPCLAVA_resp({
         );
         const data = await response.json();
         setData_User(data);
+        setLoader(false);
         setIdPregunta(data.r_id_pregunta);
         cargarRespuestas(data.r_id_pregunta);
-        cargarCLaves(data.r_id_pregunta);
-      }
+        setNumeroColumnas(data.r_columnas_pc);
 
-      setLoader(false);
+        //value={data_user.r_columnas_pc}
+      }
     } catch (error) {
       setLoader(false);
       console.log(error);
@@ -105,32 +113,9 @@ export default function OPCLAVA_resp({
   //funcion para cargar todas las respuestas de una pregunta MEMRZAR
   const cargarRespuestas = async (value_id_pregunta) => {
     setLoader(true);
-    try {
-      const response = await fetch(
-        process.env.NEXT_PUBLIC_ACCESLINK +
-          "preguntas/Respuestas1CALVEVALOR/" +
-          value_id_pregunta,
-        {
-          method: "GET",
-          headers: { "Content-Type": "application/json" },
-          credentials: "include",
-        }
-      );
-      const data = await response.json();
-      setRespuestas(data);
-      setLoader(false);
-    } catch (error) {
-      alert("Error");
-      console.log(error);
-    }
-  };
-  //funcion para cargar las claves de las preguntas
-  const [Claves, SetClaves] = useState([]);
-  const cargarCLaves = async (value_id_pregunta) => {
-    setLoader(true);
     const response = await fetch(
       process.env.NEXT_PUBLIC_ACCESLINK +
-        "preguntas/Obtener_Claves/" +
+        "preguntas/RespuestasMEMRZAR/" +
         value_id_pregunta,
       {
         method: "GET",
@@ -139,18 +124,7 @@ export default function OPCLAVA_resp({
       }
     );
     const data = await response.json();
-    SetClaves(data);
-    setClaves1({
-      ...claves1,
-      r_id_clave: data[0].r_id_clave,
-      r_clave: data[0].r_clave,
-    });
-    //setClaves1({ ...claves1, r_clave: data[0].r_clave });
-
-    /**
-     *   r_id_clave:0,
-    r_clave:"",
-     */
+    setRespuestas(data);
     setLoader(false);
   };
   //estado para abrir el dialog para anadir una opcion de respuesta
@@ -184,11 +158,6 @@ export default function OPCLAVA_resp({
   const handleChange = (event) => {
     setIsChecked(event.target.checked);
   };
-  const HandleChange = (e) => {
-    setClaves1({ ...claves1, [e.target.name]: e.target.value });
-    console.log(claves1);
-    //    setClaves1({ ...claves1, r_clave: data[0].r_clave });
-  };
   const [error, setError] = useState(false);
   //variable para almacenar el mensaje del error
   const [mensajeError, setMensajeError] = useState("");
@@ -201,19 +170,16 @@ export default function OPCLAVA_resp({
       const form = new FormData();
       form.set("file", file);
       form.set("id_pregunta", IDPregunta);
-      form.set("r_id_clave", claves1.r_id_clave);
-      form.set("r_valor", claves1.r_valor);
+      form.set("p_correcta", isChecked);
 
       const result = await axios.post(
-        process.env.NEXT_PUBLIC_ACCESLINK +
-          "preguntas/Crear_respuesta1ClaveValor",
+        process.env.NEXT_PUBLIC_ACCESLINK + "preguntas/Crear_respuestaMEMRZAR",
         form,
         {
           withCredentials: true,
         }
       );
       setLoader(false);
-      setIsChecked(false);
       //se manda 0 como id porque se desconoce el id de la pregunta que se creo, y se envia true como segundo parametro para que relize la busqueda de la ultima pregunta en la sigueinte ventana en un useEffect
       //AbrirEditarMEMRZAR(0, true);
       cargarRespuestas(IDPregunta);
@@ -227,20 +193,18 @@ export default function OPCLAVA_resp({
       setError(true);
     }
   };
-  const [claves1, setClaves1] = useState({
-    r_id_clave: "",
-    r_clave: "",
-    r_valor: "",
-  });
+
   return (
     <Card className="w-auto mt-6 mx-auto">
       {load ? <Loader /> : ""}
-      {error && (
+      {error ? (
         <Dialog_Error
           mensaje={mensajeError}
           titulo="Error al llenar el formulario"
           cerrar={cerrar1}
         />
+      ) : (
+        ""
       )}
       {/* Para agregar una opcion de respuesta a la pregunta con imagen*/}
       <Dialog open={openNew} handler={hanldeOpen}>
@@ -275,27 +239,15 @@ export default function OPCLAVA_resp({
               </Button>
             </div>
           </div>
-          <div className="flex items-center mt-4">
-            <Input
-              className=" border-4 border-yellow-900"
-              type="text"
-              variant="outlined"
-              label={claves1.r_clave}
-              name="r_valor"
-              color="orange"
-              // valor={primerClave}
-              onChange={HandleChange}
-            />
-            {/* 
+          <div className="flex items-center">
             <Typography className="text-lg font-bold" color="black">
-              ¿Respuesta Correcta?: {Claves[0].r_clave}
+              ¿Respuesta Correcta?:
             </Typography>
             <Checkbox
               color="green"
               checked={isChecked}
               onChange={handleChange}
             />
-            */}
           </div>
 
           <IconButton
@@ -332,12 +284,54 @@ export default function OPCLAVA_resp({
         </div>
       </CardHeader>
       <CardBody className="flex flex-col gap-4">
+        {/* */}
+
+        {/* 
+        <Typography className="text-lg font-bold" color="black">
+          Escriba el enunciado:
+        </Typography>
+        */}
         <textarea
           className="border p-2  rounded-sm font-bold"
           size="lg"
           value={data_user.r_enunciado}
         />
-
+        {/*
+        <div className="flex items-center">
+          <Typography className="text-lg font-bold" color="black">
+            Tiempo disponible para responder (segundos):
+          </Typography>
+          <input
+            className="ml-6 w-16 p-2 border  rounded-sm border-yellow-900 "
+            type="number"
+          />
+        </div>
+         
+        <Typography className="text-lg font-bold" color="black">
+          Imagen a Memorizar:
+        </Typography>
+        */}
+        {/*
+        <div className="mx-auto bg-yellow-800 p-2 rounded-xl">
+          <label htmlFor="fileInput" className="text-white font-bold ">
+            Subir Foto:
+          </label>
+          <input
+            type="file"
+            id="fileInput"
+            onChange={ImagePreview}
+            accept="image/png, .jpeg"
+            className="hidden"
+            ref={fileInputRef}
+          />
+          <Button
+            className="ml-3  rounded-xl  bg-white h-11"
+            onClick={handleButtonClick}
+          >
+            <AiOutlineUpload size="25px" color="black" />
+          </Button>
+        </div>
+*/}
         <img
           src={
             process.env.NEXT_PUBLIC_ACCESLINK +
@@ -357,7 +351,11 @@ export default function OPCLAVA_resp({
         ) : (
           ""
         )}
-        <div className="grid grid-cols-4   md:grid-cols-6 gap-3 p-5">
+        {/**numeroColumnas */}
+        <div
+          //className={`grid grid-cols-${numeroColumnas} md:grid-cols-${numeroColumnas} gap-3 p-5`}
+          className={`grid grid-cols-${numeroColumnas} md:grid-cols-${numeroColumnas} gap-3 p-5`}
+        >
           {respuestas.map(
             ({
               r_id_repuesta,
@@ -365,7 +363,6 @@ export default function OPCLAVA_resp({
               r_correcta,
               r_estado,
               r_eliminado,
-              r_valor,
             }) => (
               <div
                 key={r_id_repuesta}
@@ -381,18 +378,18 @@ export default function OPCLAVA_resp({
                           r_id_repuesta
                         }
                         alt={r_id_repuesta}
-                        className="mt-3 h-auto w-auto mx-auto mb-6"
+                        className="mt-3  mx-auto mb-6"
                       />
                     </div>
-
+                    {/* 
                     <div className="w-full p-4">
                       <input
-                        className="w-full text-lg bg-blue-gray-50 font-semibold	text-blue-gray-800 text-center"
+                        className="w-full text-lg bg-blue-gray-50 font-semibold	text-blue-gray-800 "
                         disabled
-                        value={r_valor}
+                        value={r_opcion}
                       />
                     </div>
-
+                    */}
                     <div className="w-auto flex ml-2 mb-2">
                       <Chip
                         variant="ghost"
@@ -425,7 +422,7 @@ export default function OPCLAVA_resp({
           )}
           <div
             className="bg-green-600 shadow-2xl h-20 w-20 ml-6 mt-12 rounded-2xl cursor-pointer"
-            onClick={() => (setOpenNew(true), console.log(Claves))}
+            onClick={() => setOpenNew(true)}
           >
             <Tooltip content="Crear una respuesta">
               <PlusCircleIcon
@@ -435,6 +432,7 @@ export default function OPCLAVA_resp({
             </Tooltip>
           </div>
         </div>
+
         {/* 
         <div className="flex items-center">
           <Typography className="text-lg font-bold" color="black">

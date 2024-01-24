@@ -172,14 +172,23 @@ export default function Lista({ AbrirParticipantes, AbrirSecciones }) {
   //estado para el alert de copiar texto
   const [openAlertTexto, setOpenAlertTexto] = useState(false);
   return (
-    <Card className="h-full w-full mt-4">
+    <Card className="h-full w-full mt-4 rounded-none">
       {load ? <Loader /> : ""}
       {error1 ? <Errores_Test cerrar={cerrar1} id_test={idTes} /> : ""}
       <Crear abrir={openCreate} cerrar={cerrar} crear={crear} />
       {/* Para visualizar los detalles del test y poder seleccionar secciones, niveles y participantes*/}
       <Dialog open={openDetalles} size="xl" handler={handleOpenDetalles}>
-        <DialogHeader>
-          {" "}
+        <DialogBody className="font-semibold">
+          {/*Detalles del test: {detallesTest.r_descripcion}*/}
+          <Typography variant="h4" color="blue-gray">
+            Crear formulario
+          </Typography>
+          <IconButton
+            className="!absolute top-3 right-3 bg-transparent shadow-none"
+            onClick={() => handleOpenDetalles(false)}
+          >
+            <XCircleIcon className="w-11" color="orange" />
+          </IconButton>
           <div className="flex w-full flex-col gap-2">
             <Alert
               open={openAlertTexto}
@@ -189,10 +198,6 @@ export default function Lista({ AbrirParticipantes, AbrirSecciones }) {
               Enlace copiado
             </Alert>
           </div>
-        </DialogHeader>
-        <DialogBody className="font-semibold">
-          {/*Detalles del test: {detallesTest.r_descripcion}*/}
-
           <div className="font-bold text-black text-xl">
             {detallesTest.r_titulo_completo}
           </div>
@@ -393,6 +398,7 @@ export default function Lista({ AbrirParticipantes, AbrirSecciones }) {
             */}
           </div>
         </DialogBody>
+        {/* 
         <DialogFooter>
           <Button
             variant="gradient"
@@ -402,6 +408,7 @@ export default function Lista({ AbrirParticipantes, AbrirSecciones }) {
             <span>Cerrar</span>
           </Button>
         </DialogFooter>
+        */}
       </Dialog>
       <CardHeader floated={false} shadow={false} className="rounded-none">
         <div className="mb-8 flex items-center justify-between gap-8">

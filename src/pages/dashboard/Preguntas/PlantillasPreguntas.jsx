@@ -9,6 +9,7 @@ import {
 } from "@material-tailwind/react";
 import { CrearSeccion } from "@/pages/dashboard/OpcionesSecciones";
 import { Dialog_Error, Loader, Notification } from "@/widgets"; //Importar el componente
+import { useMaterialTailwindController, setOpenSidenav } from "@/context";
 
 //const TABLE_HEAD = ["Member", "Function", "Status", "Employed", ""];
 import { useEffect, useState } from "react";
@@ -23,6 +24,8 @@ export default function CrearPregunta({
   //AbrirSELCIMG,
   // AbrirSELCCLA,
 }) {
+  const [controller, dispatch] = useMaterialTailwindController();
+  const { sidenavColor, sidenavType, openSidenav } = controller;
   const [load, setLoader] = useState(false);
   const [error, setError] = useState(false);
   const [mensajeError, setMensajeError] = useState("");
@@ -92,34 +95,54 @@ export default function CrearPregunta({
     }
     */
   };
+  const sidenavTypes = {
+    dark: "bg-green-900 ",
+    white: "bg-white shadow-sm",
+    transparent: "bg-transparent",
+  };
+  const sidenavColors = {
+    white: "border-gray-500",
+    dark: "border-gray-600",
+    green: "border-lime-600",
+    orange: "border-orange-600",
+    red: "border-red-600",
+    pink: "border-pink-600",
+  };
+  const shadows = {
+    white: "shadow-gray-500",
+    dark: "shadow-gray-600",
+    green: "shadow-lime-600",
+    orange: "shadow-orange-600",
+    red: "shadow-red-600",
+    pink: "shadow-pink-600",
+  };
   return (
-    <Card className="h-full w-full mt-4">
+    <Card className="h-full w-full mt-4 rounded-none">
       {load ? <Loader /> : ""}
       <CrearSeccion abrir={openCreate} cerrar={cerrar} crear={crear} />
       <CardHeader floated={false} shadow={false} className="rounded-none">
-        <div className="mb-8 flex items-center justify-between gap-8">
-          <div className="mb-1 flex items-center justify-between gap-8">
-            <div>
-              <Typography variant="h5" color="blue-gray">
-                Plantillas
-              </Typography>
-              <Typography color="gray" className="mt-1 font-normal">
-                Lista de plantillas para {titulo_tipo}
-              </Typography>
-            </div>
-            <div className="flex shrink-0 flex-col gap-2 sm:flex-row">
-              <Button
-                variant="gradient"
-                size="sm"
-                color="orange"
-                onClick={() => cambiarPestañas("openPreguntas")}
-              >
-                Regresar
-              </Button>
-            </div>
+        <div className="mb-1 flex items-center justify-between gap-8">
+          <div>
+            <Typography variant="h5" color="blue-gray">
+              Plantillas
+            </Typography>
+            <Typography color="gray" className="mt-1 font-normal">
+              Lista de plantillas para {titulo_tipo}
+            </Typography>
           </div>
+          <div className="flex shrink-0 flex-col gap-2 sm:flex-row">
+            <Button
+              variant="gradient"
+              size="sm"
+              color="orange"
+              onClick={() => cambiarPestañas("openPreguntas")}
+            >
+              Regresar
+            </Button>
+          </div>
+        </div>
 
-          {/* 
+        {/* 
           <div className="flex shrink-0 flex-col gap-2 sm:flex-row">
             
             <Button variant="outlined" size="sm">
@@ -137,7 +160,6 @@ export default function CrearPregunta({
             
           </div>
           */}
-        </div>
         {/* 
         <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
           
@@ -172,7 +194,10 @@ export default function CrearPregunta({
             }) => (
               <div
                 key={r_id_tipo_pregunta}
-                className="bg-yellow-100 shadow-2xl rounded-2xl"
+                className={`bg-blue-gray-50 shadow-2xl rounded-none cursor-pointer hover:border-4 ${sidenavColors[sidenavColor]}  ${shadows[sidenavColor]}`}
+                onClick={() =>
+                  AbrirEditor(r_id_tipo_pregunta, r_icono, r_codigo)
+                }
               >
                 <div className="bg-zinc-900 text-black  rounded-2xl">
                   <div className="mx-auto">
@@ -194,7 +219,7 @@ export default function CrearPregunta({
                     </div>
                     <div className="w-full p-4">
                       <input
-                        className="w-full text-lg bg-yellow-100 font-semibold	text-blue-gray-800 "
+                        className="w-full text-lg bg-blue-gray-50 font-semibold	text-blue-gray-800 "
                         disabled
                         value={r_titulo}
                       />
@@ -202,19 +227,16 @@ export default function CrearPregunta({
                     <div className="m-4 text-blue-gray-800">
                       {r_descripcion}
                     </div>
+                    {/* 
                     <div className="p-2 flex justify-end">
                       <Tooltip content="Crear pregunta con esta plantilla">
-                        <button
-                          className="bg-zinc-50 p-2 bg-green-700 rounded-xl cursor-pointer font-bold text-white"
-                          onClick={() =>
-                            AbrirEditor(r_id_tipo_pregunta, r_icono, r_codigo)
-                          }
-                        >
-                          {/*  <ArrowRightCircleIcon className="w-7" color="white" />*/}
+                        <button className="bg-zinc-50 p-2 bg-green-700 rounded-xl cursor-pointer font-bold text-white">
+                          {/*  <ArrowRightCircleIcon className="w-7" color="white" />
                           Utilizar
                         </button>
                       </Tooltip>
                     </div>
+                    */}
                   </div>
                 </div>
               </div>

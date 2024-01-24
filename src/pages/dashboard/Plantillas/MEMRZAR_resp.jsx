@@ -187,7 +187,7 @@ export default function MEMRZAR_resp({
   };
 
   return (
-    <Card className="w-auto mt-6 mx-auto">
+    <Card className="w-auto mt-6 mx-auto rounded-none">
       {load ? <Loader /> : ""}
       {error && (
         <Dialog_Error

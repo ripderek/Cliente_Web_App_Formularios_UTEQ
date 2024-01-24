@@ -137,10 +137,14 @@ export function Navbar_app({ user_name, titulo }) {
 
           <Menu>
             <MenuHandler>
-              <IconButton variant="text" color="blue-gray">
-                <BellIcon className="h-5 w-5 text-blue-gray-500" />
+              <IconButton
+                variant="text"
+                color={sidenavType === "dark" ? "white" : "black"}
+              >
+                <BellIcon className="h-5 w-5 text-white" />
               </IconButton>
             </MenuHandler>
+            {/*
             <MenuList className="w-max border-0">
               <MenuItem className="flex items-center gap-3">
                 <Avatar
@@ -212,6 +216,7 @@ export function Navbar_app({ user_name, titulo }) {
                 </div>
               </MenuItem>
             </MenuList>
+ */}
           </Menu>
 
           <IconButton

@@ -69,7 +69,7 @@ export default function SeleccionarSecciones({ idTest_id, Regresar }) {
     Obtener_Secciones_Usuario();
   };
   return (
-    <Card className="h-full w-full mt-5">
+    <Card className="h-full w-full mt-5 rounded-none">
       <Notification
         mensaje="Seccion agregada"
         abrir={openAlert}

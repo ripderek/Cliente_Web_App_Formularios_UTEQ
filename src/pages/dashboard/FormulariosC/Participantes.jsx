@@ -234,7 +234,7 @@ export default function Participantes({ idTest_id, Regresar }) {
   //variable para almacenar el mensaje del error
   const [mensajeError, setMensajeError] = useState("");
   return (
-    <Card className="h-full w-full mt-5">
+    <Card className="h-full w-full mt-5 rounded-none">
       {load ? <Loader /> : ""}
       {crear_participantes ? <CrearParticipantes cerrar={cerrarCrear} /> : ""}
       {error ? (

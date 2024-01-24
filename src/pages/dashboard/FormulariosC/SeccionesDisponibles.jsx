@@ -25,6 +25,8 @@ import {
   XCircleIcon,
   PlusCircleIcon,
 } from "@heroicons/react/24/solid";
+import { useMaterialTailwindController, setOpenSidenav } from "@/context";
+
 const TABLE_HEAD = ["Nivel", "Numero de preguntas"];
 export default function SeccionesDisponibles({
   cerrar,
@@ -32,6 +34,8 @@ export default function SeccionesDisponibles({
   crear,
   idtest,
 }) {
+  const [controller, dispatch] = useMaterialTailwindController();
+  const { sidenavColor, sidenavType, openSidenav } = controller;
   const [load, setLoader] = useState(false);
   const [secciones, setSecciones] = useState([]);
   const [error, setError] = useState(false);
@@ -136,6 +140,27 @@ export default function SeccionesDisponibles({
   const cerrar1 = (valor) => {
     setError(valor);
   };
+  const sidenavTypes = {
+    dark: "bg-green-900 ",
+    white: "bg-white shadow-sm",
+    transparent: "bg-transparent",
+  };
+  const sidenavColors = {
+    white: "border-gray-500",
+    dark: "border-gray-600",
+    green: "border-lime-600",
+    orange: "border-orange-600",
+    red: "border-red-600",
+    pink: "border-pink-600",
+  };
+  const shadows = {
+    white: "shadow-gray-500",
+    dark: "shadow-gray-600",
+    green: "shadow-lime-600",
+    orange: "shadow-orange-600",
+    red: "shadow-red-600",
+    pink: "shadow-pink-600",
+  };
   return (
     <>
       {load ? <Loader /> : ""}
@@ -148,7 +173,7 @@ export default function SeccionesDisponibles({
       ) : (
         ""
       )}
-      <Dialog size="xxl" open={true} className="bg-transparent shadow-none">
+      <Dialog size="xl" open={true} className="bg-transparent shadow-none">
         <Card className="mx-auto w-full h-full">
           <CardBody className="flex flex-col gap-4">
             <Typography variant="h4" color="blue-gray">
@@ -169,53 +194,50 @@ export default function SeccionesDisponibles({
               Llene el formulario
             </Typography>
 */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-3 p-5">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 p-5">
               {secciones.map(({ r_titulo, r_id_seccion, r_num_niveles }) => (
                 <div
                   key={r_id_seccion}
-                  className="bg-blue-gray-50 shadow-2xl rounded-2xl"
+                  className={`bg-blue-gray-50 shadow-2xl rounded-none cursor-pointer hover:border-4 ${sidenavColors[sidenavColor]}  ${shadows[sidenavColor]}`}
+                  onClick={() => (
+                    handlerAgg(), ObtenerPreguntasNiveles(r_id_seccion)
+                  )}
                 >
-                  <div className="bg-zinc-900 text-black shadow-2xl rounded-2xl">
-                    <div className="mx-auto">
-                      <div className="text-center">
-                        <Avatar
-                          src={"/img/Home/materia_icon.png"}
-                          alt={r_titulo}
-                          size="xl"
-                          className="mt-3"
+                  <div className="mx-auto">
+                    <div className="text-center">
+                      <Avatar
+                        src={"/img/Home/materia_icon.png"}
+                        alt={r_titulo}
+                        size="xl"
+                        className="mt-3"
+                      />
+                    </div>
+                    <div className="w-full p-4">
+                      <input
+                        className="w-full text-lg bg-blue-gray-50 font-semibold	text-blue-gray-800 "
+                        disabled
+                        value={r_titulo}
+                      />
+                    </div>
+                    <div className="w-auto flex ml-2 mb-2">
+                      <Tooltip content="Niveles verificados">
+                        <Chip
+                          variant="ghost"
+                          size="sm"
+                          color="orange"
+                          value={"Niveles: " + r_num_niveles}
                         />
-                      </div>
-                      <div className="w-full p-4">
-                        <input
-                          className="w-full text-lg bg-blue-gray-50 font-semibold	text-blue-gray-800 "
-                          disabled
-                          value={r_titulo}
-                        />
-                      </div>
-                      <div className="w-auto flex ml-2 mb-2">
-                        <Tooltip content="Niveles verificados">
-                          <Chip
-                            variant="ghost"
-                            size="sm"
-                            color="orange"
-                            value={"Niveles: " + r_num_niveles}
-                          />
-                        </Tooltip>
-                      </div>
+                      </Tooltip>
+                    </div>
 
-                      <div className="p-2 flex justify-end">
-                        <Tooltip content="Agregar al test">
-                          <button
-                            className="bg-zinc-50 p-2 bg-green-700 rounded-xl cursor-pointer"
-                            onClick={() => (
-                              handlerAgg(),
-                              ObtenerPreguntasNiveles(r_id_seccion)
-                            )}
-                          >
-                            <PlusCircleIcon className="w-7" color="white" />
-                          </button>
-                        </Tooltip>
-                      </div>
+                    <div className="p-2 flex justify-end">
+                      {/* 
+                      <Tooltip content="Agregar al test">
+                        <button className="bg-zinc-50 p-2 bg-green-700 rounded-xl cursor-pointer">
+                          <PlusCircleIcon className="w-7" color="white" />
+                        </button>
+                      </Tooltip>
+                      */}
                     </div>
                   </div>
                 </div>

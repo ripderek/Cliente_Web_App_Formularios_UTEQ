@@ -195,7 +195,7 @@ export default function MULIMGT_resp({
   };
 
   return (
-    <Card className="w-auto mt-6 mx-auto">
+    <Card className="w-auto mt-6 mx-auto rounded-none">
       {load ? <Loader /> : ""}
       {error ? (
         <Dialog_Error
@@ -284,54 +284,12 @@ export default function MULIMGT_resp({
         </div>
       </CardHeader>
       <CardBody className="flex flex-col gap-4">
-        {/* */}
-
-        {/* 
-        <Typography className="text-lg font-bold" color="black">
-          Escriba el enunciado:
-        </Typography>
-        */}
         <textarea
           className="border p-2  rounded-sm font-bold"
           size="lg"
           value={data_user.r_enunciado}
         />
-        {/*
-        <div className="flex items-center">
-          <Typography className="text-lg font-bold" color="black">
-            Tiempo disponible para responder (segundos):
-          </Typography>
-          <input
-            className="ml-6 w-16 p-2 border  rounded-sm border-yellow-900 "
-            type="number"
-          />
-        </div>
-         
-        <Typography className="text-lg font-bold" color="black">
-          Imagen a Memorizar:
-        </Typography>
-        */}
-        {/*
-        <div className="mx-auto bg-yellow-800 p-2 rounded-xl">
-          <label htmlFor="fileInput" className="text-white font-bold ">
-            Subir Foto:
-          </label>
-          <input
-            type="file"
-            id="fileInput"
-            onChange={ImagePreview}
-            accept="image/png, .jpeg"
-            className="hidden"
-            ref={fileInputRef}
-          />
-          <Button
-            className="ml-3  rounded-xl  bg-white h-11"
-            onClick={handleButtonClick}
-          >
-            <AiOutlineUpload size="25px" color="black" />
-          </Button>
-        </div>
-*/}
+
         <img
           src={
             process.env.NEXT_PUBLIC_ACCESLINK +
@@ -381,15 +339,7 @@ export default function MULIMGT_resp({
                         className="mt-3  mx-auto mb-6"
                       />
                     </div>
-                    {/* 
-                    <div className="w-full p-4">
-                      <input
-                        className="w-full text-lg bg-blue-gray-50 font-semibold	text-blue-gray-800 "
-                        disabled
-                        value={r_opcion}
-                      />
-                    </div>
-                    */}
+
                     <div className="w-auto flex ml-2 mb-2">
                       <Chip
                         variant="ghost"
@@ -398,16 +348,7 @@ export default function MULIMGT_resp({
                         value={r_correcta ? "Correcta" : "Incorrecta"}
                       />
                     </div>
-                    {/* 
-                    <div className="w-auto flex ml-2 mb-2">
-                      <Chip
-                        variant="ghost"
-                        size="sm"
-                        color={r_estado ? "green" : "red"}
-                        value={r_estado ? "Habilitado" : "Inhabilitado"}
-                      />
-                    </div>
-*/}
+
                     <div className="p-2 flex justify-end">
                       <Tooltip content="Editar respuesta">
                         <button className="bg-zinc-50 p-2 bg-green-700 rounded-xl cursor-pointer">
@@ -432,26 +373,9 @@ export default function MULIMGT_resp({
             </Tooltip>
           </div>
         </div>
-
-        {/* 
-        <div className="flex items-center">
-          <Typography className="text-lg font-bold" color="black">
-            Tiempo disponible para memorizar la imagen (segundos):
-          </Typography>
-          <input
-            className="ml-6 w-16 p-2 border  rounded-sm border-yellow-900 "
-            type="number"
-          />
-        </div>
-        */}
       </CardBody>
 
-      <CardFooter className="pt-0">
-        {/*         <Button variant="gradient" fullWidth color="green">
-          Crear Pregunta
-        </Button>
-        */}
-      </CardFooter>
+      <CardFooter className="pt-0"></CardFooter>
     </Card>
   );
 }

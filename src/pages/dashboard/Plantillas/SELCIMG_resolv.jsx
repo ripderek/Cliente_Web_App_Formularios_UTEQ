@@ -143,7 +143,7 @@ export default function SELCIMG_resolv({
     }
   };
   return (
-    <Card className="w-auto rounded-none mx-auto">
+    <Card className="w-auto rounded-none mx-auto ">
       {tiempoAgotado && <TiempoAgotado />}
       {load && <Loader />}
       <Alert

@@ -79,7 +79,6 @@ export default function SELCCMA_resp({
         setIdPregunta(data.r_id_pregunta);
         cargarRespuestas(data.r_id_pregunta);
       } else {
-
         //alert("Obtener datos pregunta false" + id_pregunta);
         //alert("Editando por ID");
         //alert("Buscar por id_pregunta: " + id_pregunta);
@@ -312,16 +311,14 @@ export default function SELCCMA_resp({
             }) => (
               <div
                 key={r_id_repuesta}
-                className="bg-blue-gray-50 h-auto shadow-2xl rounded-none"
+                className="bg-gray-50 h-auto shadow-none rounded-none border-2 border-green-900"
               >
                 <div className="bg-zinc-900 text-black  rounded-2xl">
                   <div className="mx-auto">
-                    <div className="text-center mt-4 bg-blue-gray-50">
-                      <textarea
-                        className="border p-2 w-full  rounded-none font-bold bg-blue-gray-50"
-                        value={r_opcion}
-                      />
-                    </div>
+                    <textarea
+                      className="border p-2 w-full  rounded-none font-bold bg-gray-50 border-none"
+                      value={r_opcion}
+                    />
                     {/* 
                     <div className="w-full p-4">
                       <input
@@ -330,8 +327,7 @@ export default function SELCCMA_resp({
                         value={r_opcion}
                       />
                     </div>
-                    */}
-                    <div className="w-auto flex ml-2 mb-2">
+                     <div className="w-auto flex ml-2 mb-2">
                       <Chip
                         variant="ghost"
                         size="sm"
@@ -339,6 +335,8 @@ export default function SELCCMA_resp({
                         value={r_correcta ? "Correcta" : "Incorrecta"}
                       />
                     </div>
+                    */}
+
                     {/*
                     <div className="w-auto flex ml-2 mb-2">
                       <Chip
@@ -362,7 +360,7 @@ export default function SELCCMA_resp({
             )
           )}
           <div
-            className="bg-green-600 shadow-2xl h-20 w-20 ml-6 mt-12 rounded-2xl cursor-pointer"
+            className="bg-green-600 shadow-2xl h-20 w-20 mt-3 rounded-2xl cursor-pointer mx-auto"
             onClick={() => setOpenNew(true)}
           >
             <Tooltip content="Crear una respuesta">

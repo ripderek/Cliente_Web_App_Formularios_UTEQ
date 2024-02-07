@@ -23,6 +23,9 @@ export { default as OPCLAV2_resolv } from "@/pages/dashboard/Plantillas/OPCLAV2_
 export { default as MULIMGT } from "@/pages/dashboard/Plantillas/MULIMGT"
 export { default as MULIMGT_resp } from "@/pages/dashboard/Plantillas/MULIMGT_resp"
 export { default as MULIMGT_resolv } from "@/pages/dashboard/Plantillas/MULIMGT_resolv"
+export { default as SELCCMA } from "@/pages/dashboard/Plantillas/SELCCMA"
+export { default as SELCCMA_resp } from "@/pages/dashboard/Plantillas/SELCCMA_resp"
+export { default as SELCCMA_resolv } from "@/pages/dashboard/Plantillas/SELCCMA_resolv"
 
 
 //MULIMGT

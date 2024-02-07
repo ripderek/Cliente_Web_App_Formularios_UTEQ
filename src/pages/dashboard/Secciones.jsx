@@ -39,6 +39,8 @@ import {
   OPCLAV2_resp,
   MULIMGT,
   MULIMGT_resp,
+  SELCCMA,
+  SELCCMA_resp,
 } from "@/pages/dashboard/Plantillas";
 import {
   ListaPreguntas,
@@ -116,6 +118,8 @@ export default function Secciones() {
     openEditOPCLAV2: false,
     openMULIMGT: false,
     openEditMULIMGT: false,
+    openSELCCMA: false,
+    openEditSELCCMA: false,
   });
 
   const [tabInfo, setTabInfo] = useState({
@@ -137,6 +141,7 @@ export default function Secciones() {
     buscarEditOPCLAVA: true,
     buscarEditOPCLAV2: true,
     buscarEditMULIMGT: true,
+    buscarEditSELCCMA: true,
     //OPCLAV2
   });
 
@@ -426,6 +431,29 @@ export default function Secciones() {
           <MULIMGT_resp
             id_pregunta={tabInfo.idPregunta}
             buscar={tabInfo.buscarEditMULIMGT}
+            id_nivel={tabInfo.IDNivel}
+            AbrirPreguntas={AbrirPreguntas}
+            idni={tabInfo.IDNivel}
+            nombrenivel={tabInfo.nombre_nivel}
+            //
+          />
+        );
+        //SELCCMA
+      case tabs.openSELCCMA:
+        return (
+          <SELCCMA
+            cambiarPestañas={cambiarPestañas}
+            tipo_preg={tabInfo.IDTIPOPRE}
+            id_nivel={tabInfo.IDNivel}
+            icono={tabInfo.r_icono}
+            AbrirEditor={AbrirEditor}
+          />
+        );
+      case tabs.openEditSELCCMA:
+        return (
+          <SELCCMA_resp
+            id_pregunta={tabInfo.idPregunta}
+            buscar={tabInfo.buscarEditSELCCMA}
             id_nivel={tabInfo.IDNivel}
             AbrirPreguntas={AbrirPreguntas}
             idni={tabInfo.IDNivel}

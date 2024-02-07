@@ -60,7 +60,26 @@ export default function Index() {
             setLoader(false);
             //para abrir la nueva ruta en la misma pestana
             //Router.push("/dashboard/Home");
-
+            const response1 = await fetch(
+                process.env.NEXT_PUBLIC_ACCESLINK +
+                "users/Interfaz_Usuario/" +
+                result.data.id,
+                {
+                    method: "GET",
+                    headers: { "Content-Type": "application/json" },
+                    credentials: "include",
+                }
+            );
+            const data1 = await response1.json();
+            if (data1) {
+                //setSidenavColor(dispatch, data1.sidenavcolor);
+                //setFixedNavbar(dispatch, data1.fixednavbar);
+                //establecerlo en las cookies xd
+                cookies.set("sidenavcolor", data1.sidenavcolor, { path: "/" }); //enviar cokiee y almacenarla
+                cookies.set("fixednavbar", data1.fixednavbar, { path: "/" })
+                cookies.set("sidenavtype", data1.sidenavtype, { path: "/" })
+                cookies.set("transparentnavbar", data1.transparentnavbar, { path: "/" })
+            }
             //para abrir la nueva ventana del dashboard 
             // Para abrir una nueva ruta en la misma pestaña
             const nuevaRuta = "/dashboard/Home"; // Reemplaza con tu nueva ruta

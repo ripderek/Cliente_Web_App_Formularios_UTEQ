@@ -246,7 +246,7 @@ export default function ListaNiveles({
             ) => (
               <div
                 key={r_id_nivel}
-                className={`bg-blue-gray-50 shadow-2xl rounded-none cursor-pointer hover:border-4 ${sidenavColors[sidenavColor]}  ${shadows[sidenavColor]}`}
+                className={`bg-blue-gray-50 shadow-sm rounded-none cursor-pointer hover:border-4 ${sidenavColors[sidenavColor]}  ${shadows[sidenavColor]}`}
                 onClick={() => AbrirPreguntas(r_id_nivel, r_nivel)}
               >
                 <div className="bg-zinc-900 rounded-2xl">

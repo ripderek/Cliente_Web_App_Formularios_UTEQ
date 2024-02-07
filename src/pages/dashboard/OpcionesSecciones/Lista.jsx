@@ -178,7 +178,7 @@ export default function Lista({ AbrirNiveles }) {
             ({ r_titulo, r_id_seccion, r_descripcion, r_admin_seccion }) => (
               <div
                 key={r_id_seccion}
-                className={`bg-blue-gray-50 shadow-2xl rounded-none cursor-pointer hover:border-4 ${sidenavColors[sidenavColor]}  ${shadows[sidenavColor]}`}
+                className={`bg-blue-gray-50 shadow-sm rounded-none cursor-pointer hover:border-4 ${sidenavColors[sidenavColor]}  ${shadows[sidenavColor]}`}
                 onClick={() => AbrirNiveles(r_id_seccion, r_titulo)}
               >
                 <div className="bg-zinc-900 rounded-2xl">

@@ -171,13 +171,13 @@ export default function MULIMGT_resolv({
     //Router.push("/Inicio");
 
     //RegistrarPreguntaMultiples
-    alert("ProgresoPreguntaID: " + ProgresoPregunta);
+    //alert("ProgresoPreguntaID: " + ProgresoPregunta);
     setLoader(true);
     const haySeleccionado = respuestas.some(
       (respuesta) => respuesta.seleccionado
     );
     if (haySeleccionado) {
-      alert("Hay seleccionados");
+      // alert("Hay seleccionados");
       //como fue resuelta se envia el JSON con las repuestas
 
       try {

@@ -71,7 +71,11 @@ const TABLE_HEAD_Detalles = [
 ];
 //const TABLE_HEAD = ["Member", "Function", "Status", "Employed", ""];
 import { useEffect, useState } from "react";
-export default function Lista({ AbrirParticipantes, AbrirSecciones }) {
+export default function Lista({
+  AbrirParticipantes,
+  AbrirSecciones,
+  AbrirEstadisticas,
+}) {
   const [load, setLoader] = useState(false);
   const [error, setError] = useState(false);
   const [mensajeError, setMensajeError] = useState("");
@@ -349,6 +353,26 @@ export default function Lista({ AbrirParticipantes, AbrirSecciones }) {
               </tr>
             </tbody>
           </table>
+          {/*OPCIONES DE ESTADISTICAS */}
+          <table className="mt-4 w-full min-w-max table-auto text-left">
+            <thead>
+              <tr>
+                <th className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4">
+                  <div className="flex items-center gap-3">
+                    <div className="flex flex-col">
+                      <Button
+                        variant="gradient"
+                        color="orange"
+                        onClick={() => AbrirEstadisticas(idTes)}
+                      >
+                        <span>Estadisticas por pregunta</span>
+                      </Button>
+                    </div>
+                  </div>
+                </th>
+              </tr>
+            </thead>
+          </table>
           <div className="bg-blue-gray-100 p-6 rounded-2xl mt-3 flex flex-col md:flex-row md:items-center">
             <>
               <div className="md:w-2/3 mb-2 md:mb-0 md:mr-2">
@@ -358,7 +382,8 @@ export default function Lista({ AbrirParticipantes, AbrirSecciones }) {
                 className="md:w-1/3"
                 onClick={() =>
                   copiarTextoAlPortapapeles(
-                    "http://localhost:3000/Forms/" + detallesTest.r_token
+                    "http://aplicaciones.uteq.edu.ec:9005/Forms/" +
+                      detallesTest.r_token
                   )
                 }
               >

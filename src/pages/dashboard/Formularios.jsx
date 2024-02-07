@@ -24,6 +24,7 @@ import {
   Lista,
   Participantes,
   SeleccionarSecciones,
+  ListaPregunta,
 } from "@/pages/dashboard/FormulariosC";
 
 //export function BarraNavegacion2
@@ -81,16 +82,27 @@ export default function Formularios() {
     setIDtest(idT);
     setOpenSecciones(false);
     setSeleccionarSeccion(false);
+    setOpenEstadistica(false);
   };
   const Regresar = () => {
     setOpenParticiapntes(false);
     setOpenSecciones(true);
     setSeleccionarSeccion(false);
+    setOpenEstadistica(false);
   };
   //funcion para abrir el selector de secciones
   const [openSeleccionarSeccion, setSeleccionarSeccion] = useState(false);
   const AbrirSecciones = (idT) => {
     setSeleccionarSeccion(true);
+    setOpenSecciones(false);
+    setOpenParticiapntes(false);
+    setIDtest(idT);
+    setOpenEstadistica(false);
+  };
+  const [openEstadistica, setOpenEstadistica] = useState(false);
+  const AbrirEstadisticas = (idT) => {
+    setOpenEstadistica(true);
+    setSeleccionarSeccion(false);
     setOpenSecciones(false);
     setOpenParticiapntes(false);
     setIDtest(idT);
@@ -103,12 +115,16 @@ export default function Formularios() {
           <Lista
             AbrirParticipantes={AbrirParticipantes}
             AbrirSecciones={AbrirSecciones}
+            AbrirEstadisticas={AbrirEstadisticas}
           />
         );
       case openParticipantes:
         return <Participantes idTest_id={idTest} Regresar={Regresar} />;
       case openSeleccionarSeccion:
         return <SeleccionarSecciones idTest_id={idTest} Regresar={Regresar} />;
+      //para las estadisticas por preguntas
+      case openEstadistica:
+        return <ListaPregunta idTest_id={idTest} Regresar={Regresar} />;
       default:
         return null; // Otra opción por defecto si ninguna condición es verdadera
     }

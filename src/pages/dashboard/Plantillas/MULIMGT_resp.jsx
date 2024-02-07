@@ -55,12 +55,12 @@ export default function MULIMGT_resp({
   const obtener_datos_pregunta = async () => {
     //alert(id_pregunta + " " + buscar + " " + id_nivel);
     setLoader(true);
-    console.log(id_pregunta + "-" + buscar + "-" + id_nivel);
+    //console.log(id_pregunta + "-" + buscar + "-" + id_nivel);
     try {
-      alert(id_pregunta);
+      //alert(id_pregunta);
 
       if (buscar) {
-        alert("Buscando");
+        //alert("Buscando");
         const response = await fetch(
           process.env.NEXT_PUBLIC_ACCESLINK +
             "preguntas/SELCIMG_Datos_pregunta/" +
@@ -81,7 +81,7 @@ export default function MULIMGT_resp({
         //value={data_user.r_columnas_pc}
         setNumeroColumnas(data.r_columnas_pc);
       } else {
-        alert("Editando por ID");
+        //alert("Editando por ID");
         const response = await fetch(
           process.env.NEXT_PUBLIC_ACCESLINK +
             "preguntas/SELCIMG_Datos_pregunta_id_pregunta/" +
@@ -312,7 +312,7 @@ export default function MULIMGT_resp({
         {/**numeroColumnas */}
         <div
           //className={`grid grid-cols-${numeroColumnas} md:grid-cols-${numeroColumnas} gap-3 p-5`}
-          className={`grid grid-cols-${numeroColumnas} md:grid-cols-${numeroColumnas} gap-3 p-5`}
+          className={`grid sm:grid-cols-${numeroColumnas} grid-cols-${numeroColumnas} md:grid-cols-${numeroColumnas} gap-1 p-5`}
         >
           {respuestas.map(
             ({

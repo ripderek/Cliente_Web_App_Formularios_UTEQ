@@ -51,7 +51,7 @@ export function NavBarFormsLogin({ user_name, titulo, viewLogin, loginG }) {
         </a>
         {viewLogin ? (
           <div>
-            <div
+            {/*<div
               className="h-auto bg-white  flex items-center justify-center mt-4 cursor-pointer text-center rounded-none mx-auto w-full border-4 border-solid border-orange-500 "
               onClick={loginG}
             >
@@ -64,8 +64,8 @@ export function NavBarFormsLogin({ user_name, titulo, viewLogin, loginG }) {
               </div>
               <div className="ml-2 font-bold text-blue-gray-600 p-2 ">
                 Continuar con Google
-              </div>
             </div>
+        </div>*/}
           </div>
         ) : (
           ""

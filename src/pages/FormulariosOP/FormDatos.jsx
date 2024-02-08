@@ -4,6 +4,8 @@ import {
   Checkbox,
   Button,
   Typography,
+  Select,
+  Option,
 } from "@material-tailwind/react";
 import { Dialog_Error, Loader, Notification } from "@/widgets"; //Importar el componente
 import { useEffect, useState } from "react";
@@ -48,13 +50,28 @@ export default function FormDatos() {
     p_token_id_participante: cookies.get("id_user"),
     p_token_id_test: cookies.get("token_test"),
     p_facultad: "",
-    p_carrera: "",
-    p_semestre: "",
+    p_carrera: "Software",
+    p_semestre: "7",
   });
+
   const HandleChange = (e) => {
     SetRegistro({ ...registro_usuario_test, [e.target.name]: e.target.value });
     //console.log(registro_usuario_test);
   };
+
+  const [facultad, setFacultad] = useState("");
+
+  const handleFacultadChange = (e) => {
+    console.log("HOla aaidadiasjod jioa", e);
+    const value = e; // Obtiene el valor seleccionado del Select
+    setFacultad(value); // Actualiza el estado facultad con el valor seleccionado
+    // Actualiza también el estado registro_usuario_test con el valor seleccionado en p_facultad
+    SetRegistro((prevState) => ({
+      ...prevState,
+      p_facultad: value,
+    }));
+  };
+
   //funcion para registrar y enviar a otra ruta donde cargaran las secciones y las preguntas
   //variable para detectar un error y mostrar el error
   const [error, setError] = useState(false);
@@ -68,7 +85,21 @@ export default function FormDatos() {
     //process.env.NEXT_PUBLIC_ACCESLINK
     //Router.push("/Inicio");
     setLoader(true);
+
+    //console.log("facu"+registro_usuario_test.p_facultad);
+    //console.log("hola"+registro_usuario_test.p_carrera);
+    //console.log("hola"+registro_usuario_test.p_semestre);
+    //console.log("hola"+registro_usuario_test.p_token_id_participante);
+    //console.log("hola"+registro_usuario_test.p_carrera);
+
     try {
+
+        // Verificar que los campos no estén vacíos
+      if (!registro_usuario_test.p_facultad.trim()) {
+        // Si el campo nombresApellidos está vacío, muestra un mensaje de error
+        throw new Error("Debe seleccionar una facultad");
+      }
+
       //aqui hay que crear un procedimiento que genere todas las preguntas
       //que va a tener el usuario y las cree en una tabla
       const result = await axios.post(
@@ -85,7 +116,13 @@ export default function FormDatos() {
       setLoader(false);
       console.log(error);
       //colocar una alerta de error cuando no se pueda inciar sesion
-      setMensajeError(error.response.data.error);
+      if (error.response && error.response.data && error.response.data.error) {
+        // Si hay un error en la respuesta del servidor, mostrar el mensaje de error del servidor
+        setMensajeError(error.response.data.error);
+      } else {
+        // Si no hay un error específico del servidor, mostrar el mensaje de error general
+        setMensajeError(error.message);
+      }
       //alert(error.response.data.error);
       setError(true);
     }
@@ -140,6 +177,39 @@ export default function FormDatos() {
               Your Email
             </Typography>
             */}
+            <div className="flex w-75 flex-col gap-6">
+              <Select
+                color="blue"
+                label="Facultad"
+                onChange={handleFacultadChange} // Llama a la función handleFacultadChange en cada cambio
+                value={facultad} // Establece el valor del Select como la facultad seleccionada
+                name="p_facultad"
+              >
+                <Option value="Ciencias de la Ingeniería">
+                  Ciencias de la Ingeniería
+                </Option>
+                <Option value="Ciencias Agrarias y Forestales">
+                  Ciencias Agrarias y Forestales
+                </Option>
+                <Option value="Ciencias Empresariales">
+                  Ciencias Empresariales
+                </Option>
+                <Option value="Ciencias Pecuarias y Biológicas">
+                  Ciencias Pecuarias y Biológicas
+                </Option>
+                <Option value="Ciencias Sociales, Económicas y Financieras">
+                  Ciencias Sociales, Económicas y Financieras
+                </Option>
+                <Option value="Ciencias de la Industria y Producción">
+                  Ciencias de la Industria y Producción
+                </Option>
+                <Option value="Ciencias de la Salud">
+                  Ciencias de la Salud
+                </Option>
+              </Select>
+            </div>
+
+            {/*
             <Input
               size="lg"
               placeholder="Facultad"
@@ -160,6 +230,9 @@ export default function FormDatos() {
                 className: "before:content-none after:content-none",
               }}
             />
+            */}
+
+            {/*
             <div className="flex">
               <div className="flex-grow ">
                 <Typography
@@ -186,6 +259,7 @@ export default function FormDatos() {
                 />
               </div>
             </div>
+            */}
           </div>
           {/* 
           <Checkbox

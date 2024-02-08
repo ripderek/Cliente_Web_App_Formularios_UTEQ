@@ -12,13 +12,13 @@ export function NavBarForms() {
   const [controller, dispatch] = useMaterialTailwindController();
   const { fixedNavbar, openSidenav, sidenavColor } = controller;
   const cookies = new Cookies();
-  const [image, setimage] = useState("");
+  //const [image, setimage] = useState("");
   const [nombres, setNombre] = useState("");
   const [nombresS, setNombreS] = useState("");
 
   //nombres_completos
   useEffect(() => {
-    setimage(decodeURIComponent(cookies.get("foto_url")));
+    //setimage(decodeURIComponent(cookies.get("foto_url")));
     setNombre(decodeURIComponent(cookies.get("Nombres")));
     setNombreS(decodeURIComponent(cookies.get("Nombres")).substring(0, 15));
   }, []);
@@ -38,23 +38,26 @@ export function NavBarForms() {
             */}
         </a>
 
+        {/*
         <div className="md:invisible visible">
           <Tooltip content={nombresS}>
             <img
               className="h-14 rounded-none  border-orange-500 border-4 border-solid mt-4"
-              src={image}
+              //src={image}
               alt="User image"
             />
           </Tooltip>
         </div>
+        */}
 
+        {/*
         <div className="md:visible invisible h-0 md:h-auto">
           <div className="h-auto bg-white flex mt-1 cursor-pointer text-center rounded-none mx-auto w-full border-4 border-solid border-orange-500">
             <div className="flex items-center">
               <Tooltip content={nombres}>
                 <img
                   className="h-14 rounded-none border-orange-500 border-r-4 border-solid"
-                  src={image}
+                  //src={image}
                   alt="User image"
                 />
               </Tooltip>
@@ -64,6 +67,7 @@ export function NavBarForms() {
             </div>
           </div>
         </div>
+        */}
       </div>
     </nav>
   );

@@ -172,8 +172,6 @@ export default function Formulario() {
   const loginNormal = async () => {
     setLoader(true);
     try {
-      setLoader(true);
-
       const { nombresApellidos, correoInstitucional } = formData;
 
       // Verificar que los campos no estén vacíos
@@ -212,15 +210,14 @@ export default function Formulario() {
       //agregar una nueva cookie para identificar el id del formulario
       cookies.set("token_test", token, { path: "/" });
       //cookies.set("foto_url", foto, { path: "/" });
-      setLoader(false);
       //para abrir la nueva ruta en la misma pestana
       //antes de reenviar primero verificar si este usuario ya se encuentra registrado en el test
       const response = await fetch(
         process.env.NEXT_PUBLIC_ACCESLINK +
-          "test/VerificacionIngresoParticipante/" +
-          result.data.id +
-          "/" +
-          token,
+        "test/VerificacionIngresoParticipante/" +
+        result.data.id +
+        "/" +
+        token,
         {
           method: "GET",
           headers: { "Content-Type": "application/json" },
@@ -268,7 +265,7 @@ export default function Formulario() {
         viewLogin={EnableGoogle}
         loginG={loginNormal}
       />
-      {load ? <Loader /> : ""}
+      {load && <Loader />}
       {error ? (
         <Dialog_Error
           mensaje={mensajeError}
@@ -283,117 +280,55 @@ export default function Formulario() {
           {":(  "}Este formulario no existe{" "}
         </div>
       ) : (
-        <Card className="w-96 mx-auto mt-6 border-4 border-solid border-green-900 rounded-none">
-          <CardHeader floated={false} className="h-auto 	">
-            {/* 
-                    <img src="https://docs.material-tailwind.com/img/team-3.jpg" alt="profile-picture" />
-                    */}
-          </CardHeader> 
-          {/* 
-          <CardBody className="text-center">
-            <Typography variant="h4" color="blue-gray" className="mb-2">
-              {DataForm.r_titulo}
+        <>
+          <Card
+            color="transparent"
+            shadow={false}
+            className="mx-auto w-full max-w-[29rem] mt-3 shadow-xl p-6   text-center bg-white items-center justify-center mb-6 border-4 border-solid border-green-900 rounded-none"
+          >
+            <Typography variant="h4" color="blue-gray">
+              Registrar en el Test
             </Typography>
-            <Typography color="blue-gray" className="font-medium" textGradient>
-              {DataForm.r_descripcion}
+            <Typography color="gray" className="mt-1 font-normal">
+              Para continuar al test complete el siguiente formulario
             </Typography>
-          </CardBody> */}
-          {/* 
-          <CardFooter className="flex justify-center gap-7 pt-2">
-            <Tooltip content="Like">
-              <Typography
-                as="a"
-                href="#facebook"
-                variant="lead"
-                color="blue"
-                textGradient
+            <form className="mt-8 mb-2 w-80 max-w-screen-lg sm:w-96">
+              <div className="mb-1 flex flex-col gap-6">
+                <Input
+                  name="nombresApellidos"
+                  value={formData.nombresApellidos}
+                  onChange={handleChange}
+                  size="lg"
+                  placeholder="Nombres y apellidos"
+                  className=" !border-t-blue-gray-200 focus:!border-t-gray-900 rounded-none"
+                  labelProps={{
+                    className: "before:content-none after:content-none",
+                  }}
+                />
+                <Input
+                  size="lg"
+                  type="email"
+                  name="correoInstitucional"
+                  value={formData.correoInstitucional}
+                  onChange={handleChange}
+                  placeholder="Correo institucional"
+                  className=" !border-t-blue-gray-200 focus:!border-t-gray-900 rounded-none"
+                  labelProps={{
+                    className: "before:content-none after:content-none",
+                  }}
+                />
+              </div>
+              <Button
+                className="mt-6 rounded-none"
+                fullWidth
+                color="orange"
+                onClick={loginNormal}
               >
-                <i className="fab fa-facebook" />
-              </Typography>
-            </Tooltip>
-            <Tooltip content="Follow">
-              <Typography
-                as="a"
-                href="#twitter"
-                variant="lead"
-                color="light-blue"
-                textGradient
-              >
-                <i className="fab fa-twitter" />
-              </Typography>
-            </Tooltip>
-            <Tooltip content="Follow">
-              <Typography
-                as="a"
-                href="#instagram"
-                variant="lead"
-                color="purple"
-                textGradient
-              >
-                <i className="fab fa-instagram" />
-              </Typography>
-            </Tooltip>
-          </CardFooter> 
-          */}
-
-          <div className="mb-6">
-            {load ? <Loader /> : ""}
-            {error ? (
-              <Dialog_Error
-                mensaje={mensajeError}
-                titulo="Error al llenar el formulario"
-                cerrar={cerrar1}
-              />
-            ) : (
-              ""
-            )}
-            <Card
-              color="transparent"
-              shadow={false}
-              className="mx-auto w-full max-w-[29rem] mt-3 shadow-xl p-6   text-center bg-white items-center justify-center mb-6 border-4  rounded-none"
-            >
-              <Typography variant="h4" color="blue-gray">
-                Registrar en el Test
-              </Typography>
-              <Typography color="gray" className="mt-1 font-normal">
-                Para continuar al test complete el siguiente formulario
-              </Typography>
-              <form className="mt-8 mb-2 w-80 max-w-screen-lg sm:w-96">
-                <div className="mb-1 flex flex-col gap-6">
-                  <Input
-                    name="nombresApellidos"
-                    value={formData.nombresApellidos}
-                    onChange={handleChange}
-                    placeholder="Nombres y apellidos"
-                    className=" !border-t-blue-gray-200 focus:!border-t-gray-900 rounded-none"
-                    labelProps={{
-                      className: "before:content-none after:content-none",
-                    }}
-                  />
-                  <Input
-                    type="text"
-                    name="correoInstitucional"
-                    value={formData.correoInstitucional}
-                    onChange={handleChange}
-                    placeholder="Correo institucional"
-                    className=" !border-t-blue-gray-200 focus:!border-t-gray-900 rounded-none"
-                    labelProps={{
-                      className: "before:content-none after:content-none",
-                    }}
-                  />
-                </div>
-                <Button
-                  className="mt-6 rounded-none"
-                  fullWidth
-                  color="orange"
-                  onClick={loginNormal}
-                >
-                  Aceptar
-                </Button>
-              </form>
-            </Card>
-          </div>
-        </Card>
+                Aceptar
+              </Button>
+            </form>
+          </Card>
+        </>
       )}
     </>
   );

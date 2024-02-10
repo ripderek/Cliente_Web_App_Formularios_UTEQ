@@ -61,7 +61,7 @@ export default function EstadisticaPregunta({
   return (
     <>
       <Dialog open={openA} handler={cerrar} size="xxl">
-        <DialogHeader>
+        <DialogHeader className="bg-yellow-200">
           Estadistica
           <Button
             color="red"
@@ -75,11 +75,14 @@ export default function EstadisticaPregunta({
             </Typography>
           </Button>
         </DialogHeader>
+        <div className="p-2 border-4 border-orange-500 mr-6 ml-2 font-bold mt-2">
+          {pregunta}
+        </div>
+
         <DialogBody>
-          <div>{pregunta}</div>
           <BarChart
-            width={900}
-            height={500}
+            width={800}
+            height={400}
             data={histogramData}
             margin={{
               top: 5,
@@ -87,14 +90,14 @@ export default function EstadisticaPregunta({
               left: 20,
               bottom: 5,
             }}
-            className="mx-auto"
+            className="mx-auto mt-3"
           >
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="r_opcion" />
             <YAxis />
             <Tooltip />
             <Legend />
-            <Bar dataKey="cantidad" fill="#8884d8" />
+            <Bar dataKey="cantidad" fill="#02B92E" />
           </BarChart>
         </DialogBody>
         <DialogFooter></DialogFooter>

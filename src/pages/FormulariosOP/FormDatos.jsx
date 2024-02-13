@@ -116,7 +116,7 @@ export default function FormDatos() {
         }
       );
       console.log(result);
-      setLoader(false);
+      //setLoader(false);
       //si todo salio bien reenviar a otro formulario donde cargaran las secciones del test
       router.push("/FormulariosOP/Test");
     } catch (error) {
@@ -288,14 +288,18 @@ export default function FormDatos() {
             containerProps={{ className: "-ml-2.5" }}
           />
           */}
-          <Button
-            className="mt-6 rounded-none"
-            fullWidth
-            color="orange"
-            onClick={Registrar_Participante}
-          >
-            Aceptar
-          </Button>
+          {load ? (
+            ""
+          ) : (
+            <Button
+              className="mt-6 rounded-none"
+              fullWidth
+              color="orange"
+              onClick={Registrar_Participante}
+            >
+              Aceptar
+            </Button>
+          )}
         </form>
       </Card>
     </div>

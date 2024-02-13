@@ -16,6 +16,10 @@ import {
   Tooltip,
   Input,
   Button,
+  Dialog,
+  DialogHeader,
+  DialogBody,
+  DialogFooter,
 } from "@material-tailwind/react";
 import alertGradient from "@material-tailwind/react/theme/components/alert/alertGradient";
 import { Dialog_Error, Loader, Notification } from "@/widgets"; //Importar el componente
@@ -226,10 +230,32 @@ export default function Formulario() {
       );
       const data = await response.json();
       //si no encuentra verificado en el test entonces que se registre
-      if (data.r_verification) Router.push("/FormulariosOP/Test");
-      else Router.push("/FormulariosOP/Hola");
+      //if (data.r_verification) Router.push("/FormulariosOP/Test");
+      //else Router.push("/FormulariosOP/Hola");
       //console.log(result.data);
       setLoader(false);
+      console.log("Para Verificar");
+      console.log(data);
+      //si el test es abierto entonces verificar si ya esta registrado o para registrarse 
+      if (data.r_abierta) {
+        if (data.r_registrado) //si esta registrado entonces eviarlo  a Hola
+          RegistrarIngreso(result.data.id, token); // registrar tabla ingreso
+        else
+          Router.push("/FormulariosOP/Hola");//registrarse 
+
+      }
+      //si el test es cerrado verificar que este dentro de la lista 
+      else {
+        if (data.r_registrado) //si esta registrado entonces eviarlo  a Hola
+          if (data.r_accion === "Registrar")
+            Router.push("/FormulariosOP/Hola"); // registrar tabla ingreso
+          else
+            RegistrarIngreso(result.data.id, token); //registrarse
+        //            RegistrarIngreso(result.data.id, token); // registrar tabla ingreso
+
+        else
+          setNoAdmiitido(true);
+      }
     } catch (error) {
       console.log(error);
       setLoader(false);
@@ -246,6 +272,31 @@ export default function Formulario() {
       setError(true);
     }
   };
+  const RegistrarIngreso = async (tokenid, token) => {
+    setLoader(true);
+    try {
+      setLoader(true);
+      const result = await axios.post(
+        process.env.NEXT_PUBLIC_ACCESLINK + "test/RegistrarIngreso",
+        { user_id_token: tokenid, test_id_token: token, user_age: navigator.userAgent },
+        {
+          withCredentials: true,
+        }
+      );
+      setLoader(false);
+      Router.push("/FormulariosOP/Test"); // registrar tabla ingreso
+
+    } catch (error) {
+      console.log(error);
+      setLoader(false);
+      //colocar una alerta de error cuando no se pueda inciar sesion
+      //setError(true);
+      setMensajeError(error.response.data.error);
+      //alert(error.response.data.error);
+      setError(true);
+    }
+  };
+  const [noAdmitido, setNoAdmiitido] = useState(false);
 
   const cerrar1 = (valor) => {
     setError(valor);
@@ -259,6 +310,18 @@ export default function Formulario() {
   //para realizar la consulta sobre el estado del formulario se obtiene el token desde la URL
   return (
     <>
+      <Dialog open={noAdmitido} handler={() => setNoAdmiitido(!noAdmitido)}>
+        <DialogHeader>Acceso no permitido</DialogHeader>
+        <DialogBody>
+          El Test es cerrado y la cuenta con la cual desea ingresar no se encuentra en la lista. Contactese con un administrador.
+        </DialogBody>
+        <DialogFooter>
+
+          <Button variant="gradient" color="green" onClick={() => setNoAdmiitido(false)}>
+            <span>Aceptar</span>
+          </Button>
+        </DialogFooter>
+      </Dialog>
       <NavBarFormsLogin
         titulo={"Hola"}
         user_name={"user1"}
@@ -287,7 +350,7 @@ export default function Formulario() {
             className="mx-auto w-full max-w-[29rem] mt-3 shadow-xl p-6   text-center bg-white items-center justify-center mb-6 border-4 border-solid border-green-900 rounded-none"
           >
             <Typography variant="h4" color="blue-gray">
-              Registrar en el Test
+              Registrar en el Test: {DataForm.r_titulo}
             </Typography>
             <Typography color="gray" className="mt-1 font-normal">
               Para continuar al test complete el siguiente formulario

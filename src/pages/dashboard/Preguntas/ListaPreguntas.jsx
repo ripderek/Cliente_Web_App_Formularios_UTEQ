@@ -5,6 +5,11 @@ import {
   PlusCircleIcon,
   XCircleIcon,
   CheckCircleIcon,
+  AdjustmentsHorizontalIcon,
+  PresentationChartBarIcon,
+  DocumentTextIcon,
+  DocumentIcon,
+  DocumentMinusIcon,
 } from "@heroicons/react/24/solid";
 import {
   Card,
@@ -72,6 +77,8 @@ const TABLE_OPCIONES = [
 ];
 import { Dialog_Error, Loader, Notification } from "@/widgets"; //Importar el componente
 import { useEffect, useState } from "react";
+import axios from "axios";
+
 export default function ListaPreguntas({
   id_nivel,
   nivel,
@@ -166,78 +173,103 @@ export default function ListaPreguntas({
           AbrirEditor(tipo_pregunta_editar, idPregunta, false);
       }
     }
+    //si el valor es eliminar  eliminar
+    else if (value === "eliminar") {
+      setDeseaEliminar(true);
+    }
   };
+  const EliminarPregunta = async () => {
+    //process.env.NEXT_PUBLIC_ACCESLINK
+    //Router.push("/Inicio");
+    setLoader(true);
+    try {
+      const result = await axios.post(
+        process.env.NEXT_PUBLIC_ACCESLINK +
+          "preguntas/EliminarPregunta/" +
+          idPregunta,
+        "",
+        {
+          withCredentials: true,
+        }
+      );
+      setLoader(false);
+      setDeseaEliminar(false);
+      setOpenEditar(false);
+      ObtenerPreguntas();
+    } catch (error) {
+      setLoader(false);
+      alert("Error");
+      console.log(error);
+    }
+  };
+  const [DeseaEliminar, setDeseaEliminar] = useState(false);
   return (
     <Card className="h-full w-full mt-5 rounded-none">
       {load ? <Loader /> : ""}
       {/* Para editar una pregunta  */}
       <Dialog open={openEdtiar} handler={handleOpenEditar}>
+        <Dialog open={DeseaEliminar}>
+          <DialogHeader>Eliminar pregunta</DialogHeader>
+          <DialogBody>
+            ¿Esta seguro que desea eliminar la pregunta? Esta acción no se puede
+            revertir
+          </DialogBody>
+          <DialogFooter>
+            <Button
+              variant="text"
+              color="red"
+              onClick={() => setDeseaEliminar(false)}
+              className="mr-1"
+            >
+              <span>Cancelar</span>
+            </Button>
+            <Button
+              variant="gradient"
+              color="green"
+              onClick={() => EliminarPregunta()}
+            >
+              <span>Aceptar</span>
+            </Button>
+          </DialogFooter>
+        </Dialog>
         <DialogBody>
           <Typography variant="h4" color="blue-gray">
-            Tipos de editar
+            Opciones Pregunta
           </Typography>
           <div>
-            <table className="mt-4 w-full min-w-max table-auto text-left">
-              <thead>
-                <tr>
-                  <th className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4">
-                    <Typography
-                      variant="small"
-                      color="blue-gray"
-                      className="font-normal leading-none opacity-70"
-                    ></Typography>
-                  </th>
-                  <th className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4">
-                    <Typography
-                      variant="small"
-                      color="blue-gray"
-                      className="font-normal leading-none opacity-70"
-                    >
-                      Tipo edicion
-                    </Typography>
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {TABLE_OPCIONES.map(({ name, id, clave }, index) => {
-                  const isLast = index === preguntas.length - 1;
-                  const classes = isLast
-                    ? "p-4 cursor-pointer"
-                    : "p-4 cursor-pointer border-b border-blue-gray-50";
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-3 p-5">
+              {/* EDITAR RESPUESTAS */}
+              <div
+                key={0}
+                className={`bg-blue-gray-50  shadow-2xl rounded-none cursor-pointer border-4 border-green-900 hover:border-orange-600  `}
+                onClick={() => editar("respuesta")}
+              >
+                <div className="mx-auto">
+                  <div className="text-center">
+                    <DocumentTextIcon className="h-16 mx-auto" />
+                  </div>
+                  <div className="w-full p-4 text-center font-bold text-black text-xl">
+                    <span>Editar </span>
+                  </div>
+                </div>
+              </div>
 
-                  return (
-                    <tr key={id} onClick={() => editar(clave)}>
-                      <td className={classes}>
-                        <div className="flex flex-col">
-                          <Typography
-                            variant="small"
-                            color="blue-gray"
-                            className="font-normal"
-                          >
-                            {index + 1}
-                          </Typography>
-                        </div>
-                      </td>
-                      <td className={classes}>
-                        <div className="flex items-center gap-3">
-                          <div className="flex flex-col">
-                            <Tooltip content="Seleccionar Opcion">
-                              <Typography
-                                variant="small"
-                                color="blue-gray"
-                                className="font-normal"
-                              >
-                                {name}
-                              </Typography>
-                            </Tooltip>
-                          </div>
-                        </div>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
+              {/* Eliminar pregunta */}
+              <div
+                key={2}
+                className={`bg-blue-gray-50  shadow-2xl rounded-none cursor-pointer border-4 border-green-900 hover:border-orange-600  `}
+                onClick={() => editar("eliminar")}
+              >
+                <div className="mx-auto">
+                  <div className="text-center">
+                    <DocumentMinusIcon className="h-16 mx-auto" />
+                  </div>
+                  <div className="w-full p-4 text-center font-bold text-black text-xl">
+                    <span>Eliminar pregunta </span>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
           <IconButton
             className="!absolute top-3 right-3 bg-transparent shadow-none"
@@ -497,7 +529,7 @@ export default function ListaPreguntas({
                         </Typography>
                       </td>
                       <td className={classes}>
-                        <Tooltip content="Editar Pregunta">
+                        <Tooltip content="Opciones Pregunta">
                           <IconButton
                             variant="text"
                             onClick={() => (
@@ -506,7 +538,7 @@ export default function ListaPreguntas({
                               setIDPregunta(r_id_p)
                             )}
                           >
-                            <PencilIcon className="h-4 w-4" />
+                            <AdjustmentsHorizontalIcon className="h-4 w-4" />
                           </IconButton>
                         </Tooltip>
                       </td>

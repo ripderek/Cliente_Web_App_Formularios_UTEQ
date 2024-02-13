@@ -62,7 +62,7 @@ export default function FormDatos() {
   const [facultad, setFacultad] = useState("");
 
   const handleFacultadChange = (e) => {
-    console.log("HOla aaidadiasjod jioa", e);
+    //console.log("HOla aaidadiasjod jioa", e);
     const value = e; // Obtiene el valor seleccionado del Select
     setFacultad(value); // Actualiza el estado facultad con el valor seleccionado
     // Actualiza también el estado registro_usuario_test con el valor seleccionado en p_facultad
@@ -86,15 +86,8 @@ export default function FormDatos() {
     //Router.push("/Inicio");
     setLoader(true);
 
-    //console.log("facu"+registro_usuario_test.p_facultad);
-    //console.log("hola"+registro_usuario_test.p_carrera);
-    //console.log("hola"+registro_usuario_test.p_semestre);
-    //console.log("hola"+registro_usuario_test.p_token_id_participante);
-    //console.log("hola"+registro_usuario_test.p_carrera);
-
     try {
-
-        // Verificar que los campos no estén vacíos
+      // Verificar que los campos no estén vacíos
       if (!registro_usuario_test.p_facultad.trim()) {
         // Si el campo nombresApellidos está vacío, muestra un mensaje de error
         throw new Error("Debe seleccionar una facultad");
@@ -102,6 +95,7 @@ export default function FormDatos() {
 
       //aqui hay que crear un procedimiento que genere todas las preguntas
       //que va a tener el usuario y las cree en una tabla
+      console.log(registro_usuario_test);
       const result = await axios.post(
         process.env.NEXT_PUBLIC_ACCESLINK + "test/IngresoParticipanteTest",
         registro_usuario_test,
@@ -109,6 +103,19 @@ export default function FormDatos() {
           withCredentials: true,
         }
       );
+
+      const result2 = await axios.post(
+        process.env.NEXT_PUBLIC_ACCESLINK + "test/RegistrarIngreso",
+        {
+          user_id_token: cookies.get("id_user"),
+          test_id_token: cookies.get("token_test"),
+          user_age: navigator.userAgent,
+        },
+        {
+          withCredentials: true,
+        }
+      );
+      console.log(result);
       setLoader(false);
       //si todo salio bien reenviar a otro formulario donde cargaran las secciones del test
       router.push("/FormulariosOP/Test");
@@ -179,7 +186,7 @@ export default function FormDatos() {
             */}
             <div className="flex w-75 flex-col gap-6">
               <Select
-                color="blue"
+                color="green"
                 label="Facultad"
                 onChange={handleFacultadChange} // Llama a la función handleFacultadChange en cada cambio
                 value={facultad} // Establece el valor del Select como la facultad seleccionada

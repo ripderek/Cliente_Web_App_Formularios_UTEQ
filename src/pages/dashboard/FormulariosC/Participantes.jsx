@@ -271,99 +271,103 @@ export default function Participantes({ idTest_id, Regresar }) {
               </Button>
             </div>
           ) : (
-            <table className="mt-4 w-full min-w-max table-auto text-left">
-              <thead>
-                <tr>
-                  {TABLE_HEAD_Detalles.map((head) => (
-                    <th
-                      key={head}
-                      className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4"
-                    >
-                      <Typography
-                        variant="small"
-                        color="blue-gray"
-                        className="font-normal leading-none opacity-70"
+            <div className="overflow-y-auto h-96">
+              <table className="mt-4 w-full min-w-max table-auto text-left">
+                <thead>
+                  <tr>
+                    {TABLE_HEAD_Detalles.map((head) => (
+                      <th
+                        key={head}
+                        className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4"
                       >
-                        {head}
-                      </Typography>
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              {/* listaParticipantesCreados */}
-              <tbody>
-                {listaParticipantesCreados.map(
-                  (
-                    {
-                      r_id_participante,
-                      r_correo_institucional,
-                      r_nombres_apellidos,
-                      r_tipo_identificacion,
-                      r_identificacion,
-                      r_numero_celular,
-                    },
-                    index
-                  ) => {
-                    const isLast = index === ListaParticipantes.length - 1;
-                    const classes = isLast
-                      ? "p-4"
-                      : "p-4 border-b border-blue-gray-50";
+                        <Typography
+                          variant="small"
+                          color="blue-gray"
+                          className="font-normal leading-none opacity-70"
+                        >
+                          {head}
+                        </Typography>
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                {/* listaParticipantesCreados */}
+                <tbody>
+                  {listaParticipantesCreados.map(
+                    (
+                      {
+                        r_id_participante,
+                        r_correo_institucional,
+                        r_nombres_apellidos,
+                        r_tipo_identificacion,
+                        r_identificacion,
+                        r_numero_celular,
+                      },
+                      index
+                    ) => {
+                      const isLast = index === ListaParticipantes.length - 1;
+                      const classes = isLast
+                        ? "p-4"
+                        : "p-4 border-b border-blue-gray-50";
 
-                    return (
-                      <tr key={r_id_participante}>
-                        <td className={classes}>
-                          <div className="flex flex-col">
-                            <Typography
-                              variant="small"
-                              color="blue-gray"
-                              className="font-normal"
-                            >
-                              {index + 1}
-                            </Typography>
-                          </div>
-                        </td>
+                      return (
+                        <tr key={r_id_participante}>
+                          <td className={classes}>
+                            <div className="flex flex-col">
+                              <Typography
+                                variant="small"
+                                color="blue-gray"
+                                className="font-normal"
+                              >
+                                {index + 1}
+                              </Typography>
+                            </div>
+                          </td>
 
-                        <td className={classes}>
-                          <div className="flex flex-col">
-                            <Typography
-                              variant="small"
-                              color="blue-gray"
-                              className="font-normal"
-                            >
-                              {r_nombres_apellidos}
-                            </Typography>
-                          </div>
-                        </td>
-                        <td className={classes}>
-                          <div className="flex flex-col">
-                            <Typography
-                              variant="small"
-                              color="blue-gray"
-                              className="font-normal"
-                            >
-                              {r_correo_institucional}
-                            </Typography>
-                          </div>
-                        </td>
-                        <td className={classes}>
-                          <Tooltip content="Agregar al test">
-                            <IconButton
-                              variant="text"
-                              onClick={() => AgregarUserTest(r_id_participante)}
-                            >
-                              <PlusCircleIcon
-                                className="h-6 w-6"
-                                color="green"
-                              />
-                            </IconButton>
-                          </Tooltip>
-                        </td>
-                      </tr>
-                    );
-                  }
-                )}
-              </tbody>
-            </table>
+                          <td className={classes}>
+                            <div className="flex flex-col">
+                              <Typography
+                                variant="small"
+                                color="blue-gray"
+                                className="font-normal"
+                              >
+                                {r_nombres_apellidos}
+                              </Typography>
+                            </div>
+                          </td>
+                          <td className={classes}>
+                            <div className="flex flex-col">
+                              <Typography
+                                variant="small"
+                                color="blue-gray"
+                                className="font-normal"
+                              >
+                                {r_correo_institucional}
+                              </Typography>
+                            </div>
+                          </td>
+                          <td className={classes}>
+                            <Tooltip content="Agregar al test">
+                              <IconButton
+                                variant="text"
+                                onClick={() =>
+                                  AgregarUserTest(r_id_participante)
+                                }
+                              >
+                                <PlusCircleIcon
+                                  className="h-6 w-6"
+                                  color="green"
+                                />
+                              </IconButton>
+                            </Tooltip>
+                          </td>
+                        </tr>
+                      );
+                    }
+                  )}
+                </tbody>
+              </table>
+            </div>
           )}
         </DialogBody>
         <DialogFooter>

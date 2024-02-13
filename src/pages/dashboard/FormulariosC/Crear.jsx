@@ -77,6 +77,8 @@ export default function Crear({ abrir, cerrar, crear }) {
           p_ID_User_crea: seccion.p_ID_User_crea,
           p_Descripcion: seccion.p_Descripcion,
           p_Ingresos_Permitidos: 3,
+          p_cualquier_entrar: isChecked,
+          p_aleatoria: isChecked2,
         },
         {
           withCredentials: true,
@@ -110,11 +112,21 @@ export default function Crear({ abrir, cerrar, crear }) {
     // (aquí asumimos que tienes una función para manejar la solicitud al servidor)
     alert(fechaHoraInicioFormateada + "-" + fechaHoraCierreFormateada);
   };
+  //para saber si es abierto
+  const [isChecked, setIsChecked] = useState(false);
+  const handleChange = (event) => {
+    setIsChecked(event.target.checked);
+  };
+  //para saber si se genera aleatoriamente las preguntas
+  const [isChecked2, setIsChecked2] = useState(false);
 
+  const handleChange2 = (event) => {
+    setIsChecked2(event.target.checked);
+  };
   return (
     <>
       <Dialog
-        size="xs"
+        size="xl"
         open={abrir}
         handler={handleOpen}
         className="bg-transparent shadow-none"
@@ -130,8 +142,8 @@ export default function Crear({ abrir, cerrar, crear }) {
           ""
         )}
 
-        <Card className="mx-auto w-full max-w-[24rem]">
-          <CardBody className="flex flex-col gap-4">
+        <Card className="mx-auto w-full ">
+          <CardBody className="flex flex-col gap-4 overflow-y-auto h-96">
             <Typography variant="h4" color="blue-gray">
               Crear formulario
             </Typography>
@@ -192,6 +204,26 @@ export default function Crear({ abrir, cerrar, crear }) {
               onChange={setFechaHoraCierre}
               value={fechaHoraCierre}
             />
+            <div className="flex items-center">
+              <Typography className="text-lg font-bold" color="black">
+                ¿Cualquiera puede unirse?:
+              </Typography>
+              <Checkbox
+                color="green"
+                checked={isChecked}
+                onChange={handleChange}
+              />
+            </div>
+            <div className="flex items-center">
+              <Typography className="text-lg font-bold" color="black">
+                ¿Preguntas aleatorias?:
+              </Typography>
+              <Checkbox
+                color="green"
+                checked={isChecked2}
+                onChange={handleChange2}
+              />
+            </div>
           </CardBody>
           <CardFooter className="pt-0">
             <Button

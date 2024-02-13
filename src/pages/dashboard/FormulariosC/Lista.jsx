@@ -9,6 +9,14 @@ import {
   Bars3Icon,
   ClipboardDocumentCheckIcon,
   ClipboardIcon,
+  TrashIcon,
+  CogIcon,
+  Cog6ToothIcon,
+  AdjustmentsHorizontalIcon,
+  ChartBarIcon,
+  PresentationChartBarIcon,
+  UserIcon,
+  Square3Stack3DIcon,
 } from "@heroicons/react/24/solid";
 import {
   Card,
@@ -39,6 +47,7 @@ const TABLE_HEAD = [
   "",
   "Titulo",
   "Estado",
+  "Ingreso",
   "Suspenso",
   "Editar",
   "Detalles",
@@ -68,8 +77,29 @@ const TABLE_HEAD_Detalles = [
   "Estado Actual",
   "Suspendido",
   "Ingresos permitidos",
+  "Preguntas",
+  "Acceso",
 ];
 //const TABLE_HEAD = ["Member", "Function", "Status", "Employed", ""];
+const sidenavColors = {
+  white: "border-gray-500",
+  dark: "border-gray-600",
+  green: "border-lime-600",
+  orange: "border-orange-600",
+  red: "border-red-600",
+  pink: "border-pink-600",
+};
+const shadows = {
+  white: "shadow-gray-500",
+  dark: "shadow-gray-600",
+  green: "shadow-lime-600",
+  orange: "shadow-orange-600",
+  red: "shadow-red-600",
+  pink: "shadow-pink-600",
+};
+import { useMaterialTailwindController, setOpenSidenav } from "@/context";
+import axios from "axios";
+
 import { useEffect, useState } from "react";
 export default function Lista({
   AbrirParticipantes,
@@ -80,6 +110,8 @@ export default function Lista({
   const [error, setError] = useState(false);
   const [mensajeError, setMensajeError] = useState("");
   const [openAlert, setOpenAlert] = useState(false);
+  const [controller, dispatch] = useMaterialTailwindController();
+  const { sidenavColor, sidenavType, openSidenav } = controller;
   const crear = (value) => {
     setOpenAlert(value);
   };
@@ -175,6 +207,36 @@ export default function Lista({
   };
   //estado para el alert de copiar texto
   const [openAlertTexto, setOpenAlertTexto] = useState(false);
+  //funcion para eliminar el test skere modo diablo
+  //EliminarTest
+  const EliminarTest = async () => {
+    //process.env.NEXT_PUBLIC_ACCESLINK
+    //Router.push("/Inicio");
+    setLoader(true);
+    try {
+      const result = await axios.post(
+        process.env.NEXT_PUBLIC_ACCESLINK + "test/EliminarTest/" + idTes,
+        "",
+        {
+          withCredentials: true,
+        }
+      );
+      setLoader(false);
+      //agregar_seccion();
+      setOpenDetalles(false);
+      setDeseaEliminar(false);
+      Obtener_Secciones_Usuario();
+    } catch (error) {
+      setLoader(false);
+      console.log(error);
+      //colocar una alerta de error cuando no se pueda inciar sesion
+      setMensajeError(error.response.data.error);
+      //alert(error.response.data.error);
+      setError(true);
+    }
+  };
+  const [DeseaEliminar, setDeseaEliminar] = useState(false);
+
   return (
     <Card className="h-full w-full mt-4 rounded-none">
       {load ? <Loader /> : ""}
@@ -182,11 +244,33 @@ export default function Lista({
       <Crear abrir={openCreate} cerrar={cerrar} crear={crear} />
       {/* Para visualizar los detalles del test y poder seleccionar secciones, niveles y participantes*/}
       <Dialog open={openDetalles} size="xl" handler={handleOpenDetalles}>
+        <Dialog open={DeseaEliminar}>
+          <DialogHeader>Eliminar Test</DialogHeader>
+          <DialogBody>
+            ¿Esta seguro que desea eliminar el test? Esta acción no se puede
+            revertir
+          </DialogBody>
+          <DialogFooter>
+            <Button
+              variant="text"
+              color="red"
+              onClick={() => setDeseaEliminar(false)}
+              className="mr-1"
+            >
+              <span>Cancelar</span>
+            </Button>
+            <Button
+              variant="gradient"
+              color="green"
+              onClick={() => EliminarTest()}
+            >
+              <span>Aceptar</span>
+            </Button>
+          </DialogFooter>
+        </Dialog>
         <DialogBody className="font-semibold">
-          {/*Detalles del test: {detallesTest.r_descripcion}*/}
-          <Typography variant="h4" color="blue-gray">
-            Crear formulario
-          </Typography>
+          {/*Detalles del test: {detallesTest.r_descripcion}  idTes*/}
+
           <IconButton
             className="!absolute top-3 right-3 bg-transparent shadow-none"
             onClick={() => handleOpenDetalles(false)}
@@ -206,208 +290,22 @@ export default function Lista({
             {detallesTest.r_titulo_completo}
           </div>
           {detallesTest.r_descripcion}
-          <table className="mt-4 w-full min-w-max table-auto text-left">
-            <thead>
-              <tr>
-                {TABLE_HEAD_Detalles.map((head) => (
-                  <th
-                    key={head}
-                    className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4"
-                  >
-                    <Typography
-                      variant="small"
-                      color="blue-gray"
-                      className="font-normal leading-none opacity-70"
-                    >
-                      {head}
-                    </Typography>
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              <tr key={detallesTest.r_id_test}>
-                <td className={"p-4 border-b border-blue-gray-50"}>
-                  <div className="flex items-center gap-3">
-                    <div className="flex flex-col">
-                      <div className="flex flex-col">
-                        <Typography
-                          variant="small"
-                          color="blue-gray"
-                          className="font-normal"
-                        >
-                          <span className="font-bold">Inicio:</span>{" "}
-                          {detallesTest.r_fecha_incio}
-                        </Typography>
-                      </div>
-                      <div className="flex flex-col">
-                        <Typography
-                          variant="small"
-                          color="blue-gray"
-                          className="font-normal"
-                        >
-                          <span className="font-bold">Fin:</span>{" "}
-                          {detallesTest.r_fecha_fin}
-                        </Typography>
-                      </div>
-                    </div>
-                  </div>
-                </td>
-
-                <td className={"p-4 border-b border-blue-gray-50"}>
-                  <div className="w-max">
-                    <Chip
-                      variant="ghost"
-                      size="sm"
-                      value={detallesTest.r_estado}
-                      color={
-                        detallesTest.r_estado === "Erroneo"
-                          ? "red"
-                          : "blue-gray"
-                      }
-                    />
-                  </div>
-                </td>
-                <td className={"p-4 border-b border-blue-gray-50"}>
-                  <div className="w-max">
-                    <Chip
-                      variant="ghost"
-                      size="sm"
-                      value={detallesTest.r_suspendido ? "Si" : "No"}
-                      color={detallesTest.r_suspendido ? "red" : "blue-gray"}
-                    />
-                  </div>
-                </td>
-                <td className={"p-4 border-b border-blue-gray-50"}>
-                  <div className="w-max">
-                    <Chip
-                      variant="ghost"
-                      size="sm"
-                      value={detallesTest.r_ingresos_permitidos}
-                      color="amber"
-                    />
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-          {/* OPCIONES PARA AGREGAR SECCIONES Y PARTICIPANTES */}
-
-          <table className="mt-4 w-full min-w-max table-auto text-left">
-            <thead>
-              <tr>
-                <th className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4">
-                  <Typography
-                    variant="small"
-                    color="blue-gray"
-                    className="font-normal leading-none opacity-70"
-                  >
-                    Numero de participantes:
-                    <span className="font-bold">
-                      {detallesTest.r_numero_participantes}
-                    </span>
-                  </Typography>
-                </th>
-                <th className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4">
-                  <Typography
-                    variant="small"
-                    color="blue-gray"
-                    className="font-normal leading-none opacity-70"
-                  >
-                    Numero de secciones:{" "}
-                    <span className="font-bold">
-                      {detallesTest.r_numero_secciones}
-                    </span>
-                  </Typography>
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr key={detallesTest.r_id_test}>
-                <td className={"p-4 border-b border-blue-gray-50"}>
-                  <div className="flex items-center gap-3">
-                    <div className="flex flex-col">
-                      <Button
-                        variant="gradient"
-                        color="orange"
-                        onClick={() => AbrirParticipantes(idTes)}
-                      >
-                        <span>Agregar paticipantes</span>
-                      </Button>
-                    </div>
-                  </div>
-                </td>
-                <td className={"p-4 border-b border-blue-gray-50"}>
-                  <div className="flex items-center gap-3">
-                    <div className="flex flex-col">
-                      <Button
-                        variant="gradient"
-                        color="deep-orange"
-                        onClick={() => AbrirSecciones(idTes)}
-                      >
-                        <span>Agregar secciones</span>
-                      </Button>
-                    </div>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-          {/*OPCIONES DE ESTADISTICAS */}
-          <table className="mt-4 w-full min-w-max table-auto text-left">
-            <thead>
-              <tr>
-                <th className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4">
-                  <div className="flex items-center gap-3">
-                    <div className="flex flex-col">
-                      <Button
-                        variant="gradient"
-                        color="orange"
-                        onClick={() => AbrirEstadisticas(idTes)}
-                      >
-                        <span>Estadisticas por pregunta</span>
-                      </Button>
-                    </div>
-                  </div>
-                </th>
-              </tr>
-            </thead>
-          </table>
           <div className="bg-blue-gray-100 p-6 rounded-2xl mt-3 flex flex-col md:flex-row md:items-center">
-            <>
-              <div className="md:w-2/3 mb-2 md:mb-0 md:mr-2">
-                http://localhost:3000/Forms/{detallesTest.r_token}
-              </div>
-              <div
-                className="md:w-1/3"
-                onClick={() =>
-                  copiarTextoAlPortapapeles(
-                    "http://aplicaciones.uteq.edu.ec:9005/Forms/" +
-                      detallesTest.r_token
-                  )
-                }
-              >
-                <div className=" bg-white rounded-xl mx-auto  text-center cursor-pointer">
-                  Copiar enlace
-                  <IconButton variant="text" disabled>
-                    <ClipboardIcon className="h-4 w-4" />
-                  </IconButton>
-                </div>
-              </div>
-            </>
-            {/* 
-            {detallesTest.r_error  ? (
+            <></>
+
+            {detallesTest.r_error ? (
               <div>No puede compartir el enlace hasta que corrija el Test</div>
             ) : (
               <>
                 <div className="md:w-2/3 mb-2 md:mb-0 md:mr-2">
-                  http://localhost:3000/Forms/{detallesTest.r_token}
+                  https://encuesta.uteq.edu.ec:8000/Forms/{detallesTest.r_token}
                 </div>
                 <div
                   className="md:w-1/3"
                   onClick={() =>
                     copiarTextoAlPortapapeles(
-                      "http://localhost:3000/Forms/" + detallesTest.r_token
+                      "https://encuesta.uteq.edu.ec:8000/Forms/" +
+                        detallesTest.r_token
                     )
                   }
                 >
@@ -420,7 +318,275 @@ export default function Lista({
                 </div>
               </>
             )}
-            */}
+          </div>
+          <div className="overflow-y-scroll h-96">
+            <table className="mt-4 w-full min-w-max table-auto text-left">
+              <thead>
+                <tr>
+                  {TABLE_HEAD_Detalles.map((head) => (
+                    <th
+                      key={head}
+                      className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4"
+                    >
+                      <Typography
+                        variant="small"
+                        color="blue-gray"
+                        className="font-normal leading-none opacity-70"
+                      >
+                        {head}
+                      </Typography>
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                <tr key={detallesTest.r_id_test}>
+                  <td className={"p-4 border-b border-blue-gray-50"}>
+                    <div className="flex items-center gap-3">
+                      <div className="flex flex-col">
+                        <div className="flex flex-col">
+                          <Typography
+                            variant="small"
+                            color="blue-gray"
+                            className="font-normal"
+                          >
+                            <span className="font-bold">Inicio:</span>{" "}
+                            {detallesTest.r_fecha_incio}
+                          </Typography>
+                        </div>
+                        <div className="flex flex-col">
+                          <Typography
+                            variant="small"
+                            color="blue-gray"
+                            className="font-normal"
+                          >
+                            <span className="font-bold">Fin:</span>{" "}
+                            {detallesTest.r_fecha_fin}
+                          </Typography>
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+
+                  <td className={"p-4 border-b border-blue-gray-50"}>
+                    <div className="w-max">
+                      <Chip
+                        variant="ghost"
+                        size="sm"
+                        value={detallesTest.r_estado}
+                        color={
+                          detallesTest.r_estado === "Erroneo"
+                            ? "red"
+                            : "blue-gray"
+                        }
+                      />
+                    </div>
+                  </td>
+                  <td className={"p-4 border-b border-blue-gray-50"}>
+                    <div className="w-max">
+                      <Chip
+                        variant="ghost"
+                        size="sm"
+                        value={detallesTest.r_suspendido ? "Si" : "No"}
+                        color={detallesTest.r_suspendido ? "red" : "blue-gray"}
+                      />
+                    </div>
+                  </td>
+                  <td className={"p-4 border-b border-blue-gray-50"}>
+                    <div className="w-max">
+                      <Chip
+                        variant="ghost"
+                        size="sm"
+                        value={detallesTest.r_ingresos_permitidos}
+                        color="amber"
+                      />
+                    </div>
+                  </td>
+                  <td className={"p-4 border-b border-blue-gray-50"}>
+                    <div className="w-max">
+                      <Chip
+                        variant="ghost"
+                        size="sm"
+                        value={
+                          detallesTest.r_preguntas_aleatorias
+                            ? "Aleatorio"
+                            : "Secuencial"
+                        }
+                        color="amber"
+                      />
+                    </div>
+                  </td>
+                  <td className={"p-4 border-b border-blue-gray-50"}>
+                    <div className="w-max">
+                      <Chip
+                        variant="ghost"
+                        size="sm"
+                        value={detallesTest.r_abierta ? "Todos" : "Restringido"}
+                        color="amber"
+                      />
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            {/* OPCIONES PARA AGREGAR SECCIONES Y PARTICIPANTES */}
+            <table className="mt-4 w-full min-w-max table-auto text-left">
+              <thead>
+                <tr>
+                  <th className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4">
+                    <div className="flex items-center gap-3">
+                      <div className="flex items-center">
+                        <Cog6ToothIcon className="h-8 mr-2" />
+                        <span className="font-bold">Opciones básicas</span>
+                      </div>
+                    </div>
+                  </th>
+                </tr>
+              </thead>
+            </table>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 p-5">
+              <div
+                key={0}
+                className={`bg-blue-gray-50  shadow-2xl rounded-none cursor-pointer border-4 border-green-900 hover:border-orange-600  `}
+                onClick={() => AbrirParticipantes(idTes)}
+              >
+                <div className="mx-auto">
+                  <div className="text-center">
+                    <UserIcon className="h-16 mx-auto" />
+                  </div>
+                  <div className="w-full p-4 text-center font-bold text-black text-xl">
+                    <span>Participantes </span>
+                  </div>
+                  <div className="w-auto flex mb-3 ml-2">
+                    <Chip
+                      variant="ghost"
+                      size="sm"
+                      color="green"
+                      value={"Actuales: " + detallesTest.r_numero_participantes}
+                    />
+                  </div>
+                </div>
+              </div>
+              <div
+                key={1}
+                className={`bg-blue-gray-50  shadow-2xl rounded-none cursor-pointer border-4 border-green-900 hover:border-orange-600  `}
+                onClick={() => AbrirSecciones(idTes)}
+              >
+                <div className="mx-auto">
+                  <div className="text-center">
+                    <Square3Stack3DIcon className="h-16 mx-auto" />
+                  </div>
+                  <div className="w-full p-4 text-center font-bold text-black text-xl">
+                    <span>Secciones </span>
+                  </div>
+                  <div className="w-auto flex mb-3 ml-2">
+                    <Chip
+                      variant="ghost"
+                      size="sm"
+                      color="green"
+                      value={"Actuales: " + detallesTest.r_numero_secciones}
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+            {/*OPCIONES DE ESTADISTICAS */}
+            <table className="mt-4 w-full min-w-max table-auto text-left">
+              <thead>
+                <tr>
+                  <th className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4">
+                    <div className="flex items-center gap-3">
+                      <div className="flex items-center">
+                        <ChartBarIcon className="h-8 mr-2" />
+                        <span>Estadisticas</span>
+                      </div>
+                      {/**<Button
+                          variant="gradient"
+                          color="orange"
+                          onClick={() => AbrirEstadisticas(idTes)}
+                        >
+                          <span>Estadisticas por pregunta</span>
+                        </Button> */}
+                    </div>
+                  </th>
+                </tr>
+              </thead>
+            </table>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 p-5">
+              <div
+                key={0}
+                className={`bg-blue-gray-50  shadow-2xl rounded-none cursor-pointer border-4 border-green-900 hover:border-orange-600  `}
+                onClick={() => AbrirEstadisticas(idTes)}
+              >
+                <div className="mx-auto">
+                  <div className="text-center">
+                    <PresentationChartBarIcon className="h-16 mx-auto" />
+                  </div>
+                  <div className="w-full p-4 text-center font-bold text-black text-xl">
+                    <span>Por preguntas </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {/* OPCIONES AVANZADAS SKERE MODO DIABLO */}
+            <table className="mt-4 w-full min-w-max table-auto text-left">
+              <thead>
+                <tr>
+                  <th className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4">
+                    <div className="flex items-center gap-3">
+                      <div className="flex items-center">
+                        <CogIcon className="h-8 mr-2" />
+                        <span>Opciones Avanzadas</span>
+                      </div>
+                    </div>
+                  </th>
+                </tr>
+              </thead>
+            </table>
+
+            {/*OPCIONES DE ELIMINAR, EDITAR, SUSPENDER ETC */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 p-5">
+              <div
+                key={0}
+                className={`bg-blue-gray-50  shadow-2xl rounded-none cursor-pointer border-4 border-green-900 hover:border-orange-600  `}
+                onClick={() => setDeseaEliminar(true)}
+              >
+                <div className="mx-auto">
+                  <div className="text-center">
+                    <TrashIcon className="h-16 mx-auto" />
+                  </div>
+                  <div className="w-full p-4 text-center font-bold text-black text-xl">
+                    <span>Eliminar </span>
+                  </div>
+                </div>
+              </div>
+              <div
+                key={1}
+                className={`bg-blue-gray-50  shadow-2xl rounded-none cursor-pointer border-4 border-green-900 hover:border-orange-600  `}
+              >
+                <div className="mx-auto">
+                  <div className="text-center">
+                    <AdjustmentsHorizontalIcon className="h-16 mx-auto" />
+                  </div>
+                  <div className="w-full p-4 text-center font-bold text-black text-xl">
+                    <span>Editar </span>
+                  </div>
+                </div>
+              </div>
+              <div
+                key={2}
+                className={`bg-blue-gray-50  shadow-2xl rounded-none cursor-pointer border-4 border-green-900 hover:border-orange-600  `}
+              >
+                <div className="mx-auto">
+                  <div className="text-center">
+                    <XCircleIcon className="h-16 mx-auto" />
+                  </div>
+                  <div className="w-full p-4 text-center font-bold text-black text-xl">
+                    <span>Suspender </span>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </DialogBody>
         {/* 
@@ -519,6 +685,7 @@ export default function Lista({
                     r_ingresos_permitidos,
                     r_token,
                     r_error,
+                    r_abierta,
                   },
                   index
                 ) => {
@@ -582,6 +749,24 @@ export default function Lista({
                             value={r_estado}
                             color={r_estado === "Erroneo" ? "red" : "blue-gray"}
                           />
+                        </div>
+                      </td>
+                      <td className={classes}>
+                        <div className="w-max">
+                          <Tooltip
+                            content={
+                              r_abierta
+                                ? "Cualquiera que tenga el enlace puede entrar"
+                                : "Solo los de la lista pueden ingresar"
+                            }
+                          >
+                            <Chip
+                              variant="ghost"
+                              size="sm"
+                              value={r_abierta ? "Todos" : "Restringido"}
+                              color={r_abierta ? "green" : "blue-gray"}
+                            />
+                          </Tooltip>
                         </div>
                       </td>
                       <td className={classes}>

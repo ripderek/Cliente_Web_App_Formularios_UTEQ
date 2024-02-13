@@ -46,14 +46,18 @@ export default function ProgresoSecciones({
   const [load, setLoader] = useState(false);
   const cookies = new Cookies();
   const [dataTest, setDataTest] = useState([]);
+  //const [userAgent, setuserAgent] = useState("");
   useEffect(() => {
     if (siguiente) click(r_id_progreso_seccion_p, id_sec_p);
     else obtener_Progreso();
   }, []);
   //funcion para cargar las secciones que tiene el usuario obteniendo su id de la cookie
   const obtener_Progreso = async () => {
+    //auth/ObtenerIP
+
     setLoader(true);
     try {
+      /////////
       const response = await fetch(
         process.env.NEXT_PUBLIC_ACCESLINK +
           "test/ProgresoSeccionesParticipante/" +

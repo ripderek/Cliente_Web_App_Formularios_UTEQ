@@ -116,7 +116,7 @@ export default function FormDatos() {
         }
       );
       console.log(result);
-      setLoader(false);
+      //setLoader(false);
       //si todo salio bien reenviar a otro formulario donde cargaran las secciones del test
       router.push("/FormulariosOP/Test");
     } catch (error) {

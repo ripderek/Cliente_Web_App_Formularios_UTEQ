@@ -26,8 +26,10 @@ export { default as MULIMGT_resolv } from "@/pages/dashboard/Plantillas/MULIMGT_
 export { default as SELCCMA } from "@/pages/dashboard/Plantillas/SELCCMA"
 export { default as SELCCMA_resp } from "@/pages/dashboard/Plantillas/SELCCMA_resp"
 export { default as SELCCMA_resolv } from "@/pages/dashboard/Plantillas/SELCCMA_resolv"
+export { default as SELCCMA_edit } from "@/pages/dashboard/Plantillas/SELCCMA_edit"
+export { default as SELCCMA_edit_resp } from "@/pages/dashboard/Plantillas/SELCCMA_edit_resp"
 
-
+//SELCCMA_edit_resp
 //MULIMGT
 //OPCLAV2
 //MULTIMG_resolv.jsx

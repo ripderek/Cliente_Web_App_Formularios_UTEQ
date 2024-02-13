@@ -21,9 +21,6 @@ export default function CrearParticipantes({ cerrar }) {
   const [participante, setParticipante] = useState({
     p_correo_institucional: "",
     p_nombres_apellido: "",
-    p_tipo_identificacion: "",
-    p_identificacion: "",
-    p_celular: "",
   });
   const [load, setLoader] = useState(false);
   //variable para detectar un error y mostrar el error
@@ -102,57 +99,6 @@ export default function CrearParticipantes({ cerrar }) {
               label="Nombres y Apellidos"
               onChange={HandleChange}
               name="p_nombres_apellido"
-            />
-            <div className="w-72">
-              <Select label="Tipo Identificacion">
-                <Option
-                  name="p_tipo_identificacion"
-                  onClick={() =>
-                    setParticipante({
-                      ...participante,
-                      ["p_tipo_identificacion"]: "Cedula",
-                    })
-                  }
-                >
-                  Cedula
-                </Option>
-                <Option
-                  name="p_tipo_identificacion"
-                  onClick={() =>
-                    setParticipante({
-                      ...participante,
-                      ["p_tipo_identificacion"]: "Pasaporte",
-                    })
-                  }
-                >
-                  Pasaporte
-                </Option>
-                <Option
-                  name="p_tipo_identificacion"
-                  onClick={() =>
-                    setParticipante({
-                      ...participante,
-                      ["p_tipo_identificacion"]: "Ruc",
-                    })
-                  }
-                >
-                  Ruc
-                </Option>
-              </Select>
-            </div>
-            <Input
-              label="Identificacion"
-              type="number"
-              maxLength={10}
-              onChange={HandleChange}
-              name="p_identificacion"
-            />
-            <Input
-              label="Celular"
-              type="number"
-              maxLength={10}
-              onChange={HandleChange}
-              name="p_celular"
             />
           </CardBody>
           <CardFooter className="pt-0">

@@ -192,26 +192,29 @@ export default function FormDatos() {
                 value={facultad} // Establece el valor del Select como la facultad seleccionada
                 name="p_facultad"
               >
-                <Option value="Ciencias de la Ingeniería">
-                  Ciencias de la Ingeniería
+                <Option value="Facultad Ciencias de la Ingeniería">
+                  Facultad Ciencias de la Ingeniería
                 </Option>
-                <Option value="Ciencias Agrarias y Forestales">
-                  Ciencias Agrarias y Forestales
+                <Option value="Facultad Ciencias Agrarias y Forestales">
+                  Facultad Ciencias Agrarias y Forestales
                 </Option>
-                <Option value="Ciencias Empresariales">
-                  Ciencias Empresariales
+                <Option value="Facultad Ciencias Empresariales">
+                  Facultad Ciencias Empresariales
                 </Option>
-                <Option value="Ciencias Pecuarias y Biológicas">
-                  Ciencias Pecuarias y Biológicas
+                <Option value="Facultad Ciencias Pecuarias y Biológicas">
+                  Facultad Ciencias Pecuarias y Biológicas
                 </Option>
-                <Option value="Ciencias Sociales, Económicas y Financieras">
-                  Ciencias Sociales, Económicas y Financieras
+                <Option value="Facultad Ciencias Sociales, Económicas y Financieras">
+                  Facultad Ciencias Sociales, Económicas y Financieras
                 </Option>
-                <Option value="Ciencias de la Industria y Producción">
-                  Ciencias de la Industria y Producción
+                <Option value="Facultad Ciencias de la Industria y Producción">
+                  Facultad Ciencias de la Industria y Producción
                 </Option>
-                <Option value="Ciencias de la Salud">
-                  Ciencias de la Salud
+                <Option value="Facultad Ciencias de la Salud">
+                  Facultad Ciencias de la Salud
+                </Option>
+                <Option value="Facultad Ciencias de la Educación">
+                  Facultad Ciencias de la Educación
                 </Option>
               </Select>
             </div>

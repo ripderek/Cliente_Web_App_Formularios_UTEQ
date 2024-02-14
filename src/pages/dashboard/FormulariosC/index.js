@@ -6,6 +6,7 @@ export { default as SeleccionarSecciones } from '@/pages/dashboard/FormulariosC/
 export { default as AddSeccion } from '@/pages/dashboard/FormulariosC/AddSeccion'
 export { default as SeccionesDisponibles } from '@/pages/dashboard/FormulariosC/SeccionesDisponibles'
 export { default as ListaPregunta } from '@/pages/dashboard/FormulariosC/ListaPregunta'
+export { default as OpcionesParticipantes } from '@/pages/dashboard/FormulariosC/OpcionesParticipantes'
 
 
-//ListaPregunta
+//OpcionesParticipantes

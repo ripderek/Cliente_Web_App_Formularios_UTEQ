@@ -1,10 +1,8 @@
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import {
   PencilIcon,
-  UserPlusIcon,
   PlusCircleIcon,
-  XCircleIcon,
-  CheckCircleIcon,
+  AdjustmentsHorizontalIcon,
 } from "@heroicons/react/24/solid";
 import {
   Card,
@@ -74,6 +72,7 @@ import { Dialog_Error, Loader, Notification } from "@/widgets"; //Importar el co
 import { useEffect, useState } from "react";
 import { CrearParticipantes } from "@/pages/dashboard/Participantes";
 import axios from "axios";
+import { OpcionesParticipantes } from "@/pages/dashboard/FormulariosC";
 
 export default function Participantes({ idTest_id, Regresar }) {
   //funcion para listar los participantes de un test mediante el id test
@@ -233,8 +232,25 @@ export default function Participantes({ idTest_id, Regresar }) {
   const [error, setError] = useState(false);
   //variable para almacenar el mensaje del error
   const [mensajeError, setMensajeError] = useState("");
+  //abrir las opciones del participante
+  const [abrirOpciones, setAbrirOpciones] = useState(false);
+  const [id_Participante, setIdParticipante] = useState(0);
+  const abrir = (id) => {
+    setIdParticipante(id);
+    setAbrirOpciones(true);
+  };
+  const cerrar = () => {
+    setAbrirOpciones(false);
+  };
   return (
     <Card className="h-full w-full mt-5 rounded-none">
+      {abrirOpciones && (
+        <OpcionesParticipantes
+          cerrar={cerrar}
+          id_participante={id_Participante}
+        />
+      )}
+
       {load ? <Loader /> : ""}
       {crear_participantes ? <CrearParticipantes cerrar={cerrarCrear} /> : ""}
       {error ? (
@@ -527,9 +543,12 @@ export default function Participantes({ idTest_id, Regresar }) {
                         </Typography>
                       </td>
                       <td className={classes}>
-                        <Tooltip content="Editar Participante">
-                          <IconButton variant="text">
-                            <PencilIcon className="h-4 w-4" />
+                        <Tooltip content="Opciones">
+                          <IconButton
+                            variant="text"
+                            onClick={() => abrir(r_id_participante_test)}
+                          >
+                            <AdjustmentsHorizontalIcon className="h-4 w-4" />
                           </IconButton>
                         </Tooltip>
                       </td>

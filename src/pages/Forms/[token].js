@@ -283,7 +283,7 @@ export default function Formulario() {
           withCredentials: true,
         }
       );
-      setLoader(false);
+      //setLoader(false);
       Router.push("/FormulariosOP/Test"); // registrar tabla ingreso
 
     } catch (error) {

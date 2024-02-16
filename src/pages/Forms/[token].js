@@ -233,7 +233,7 @@ export default function Formulario() {
       //if (data.r_verification) Router.push("/FormulariosOP/Test");
       //else Router.push("/FormulariosOP/Hola");
       //console.log(result.data);
-      setLoader(false);
+      // setLoader(false);
       console.log("Para Verificar");
       console.log(data);
       //si el test es abierto entonces verificar si ya esta registrado o para registrarse 
@@ -288,6 +288,7 @@ export default function Formulario() {
 
     } catch (error) {
       console.log(error);
+      alert("Error")
       setLoader(false);
       //colocar una alerta de error cuando no se pueda inciar sesion
       //setError(true);

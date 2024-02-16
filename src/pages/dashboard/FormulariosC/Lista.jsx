@@ -17,6 +17,7 @@ import {
   PresentationChartBarIcon,
   UserIcon,
   Square3Stack3DIcon,
+  TableCellsIcon,
 } from "@heroicons/react/24/solid";
 import {
   Card,
@@ -99,6 +100,7 @@ const shadows = {
 };
 import { useMaterialTailwindController, setOpenSidenav } from "@/context";
 import axios from "axios";
+import { saveAs } from "file-saver";
 
 import { useEffect, useState } from "react";
 export default function Lista({
@@ -226,6 +228,40 @@ export default function Lista({
       setOpenDetalles(false);
       setDeseaEliminar(false);
       Obtener_Secciones_Usuario();
+    } catch (error) {
+      setLoader(false);
+      console.log(error);
+      //colocar una alerta de error cuando no se pueda inciar sesion
+      setMensajeError(error.response.data.error);
+      //alert(error.response.data.error);
+      setError(true);
+    }
+  };
+  const GenerarExcel = async () => {
+    //process.env.NEXT_PUBLIC_ACCESLINK
+    //Router.push("/Inicio");
+    setLoader(true);
+    try {
+      const result = await axios.post(
+        process.env.NEXT_PUBLIC_ACCESLINK +
+          "test/Generate_Excel_TODOS/" +
+          idTes,
+        "",
+        {
+          withCredentials: true,
+          responseType: "arraybuffer", // Indicar que la respuesta es un array de bytes
+        }
+      );
+      setLoader(false);
+      //agregar_seccion();
+      //setOpenDetalles(false);
+      //setDeseaEliminar(false);
+      //Obtener_Secciones_Usuario();
+      alert("Excel generado");
+      const blob = new Blob([result.data], {
+        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      });
+      saveAs(blob, "datos.xlsx");
     } catch (error) {
       setLoader(false);
       console.log(error);
@@ -524,6 +560,20 @@ export default function Lista({
                   </div>
                   <div className="w-full p-4 text-center font-bold text-black text-xl">
                     <span>Por preguntas </span>
+                  </div>
+                </div>
+              </div>
+              <div
+                key={1}
+                className={`bg-blue-gray-50  shadow-2xl rounded-none cursor-pointer border-4 border-green-900 hover:border-orange-600  `}
+                onClick={() => GenerarExcel()}
+              >
+                <div className="mx-auto">
+                  <div className="text-center">
+                    <TableCellsIcon className="h-16 mx-auto" />
+                  </div>
+                  <div className="w-full p-4 text-center font-bold text-black text-xl">
+                    <span>Generar Excel </span>
                   </div>
                 </div>
               </div>

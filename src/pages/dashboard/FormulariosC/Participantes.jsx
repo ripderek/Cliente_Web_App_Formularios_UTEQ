@@ -235,12 +235,14 @@ export default function Participantes({ idTest_id, Regresar }) {
   //abrir las opciones del participante
   const [abrirOpciones, setAbrirOpciones] = useState(false);
   const [id_Participante, setIdParticipante] = useState(0);
+  const [ParticipanteName, setPartiicpanteName] = useState("");
   const abrir = (id) => {
     setIdParticipante(id);
     setAbrirOpciones(true);
   };
   const cerrar = () => {
     setAbrirOpciones(false);
+    ObtenerListaParticipantes();
   };
   return (
     <Card className="h-full w-full mt-5 rounded-none">
@@ -248,6 +250,7 @@ export default function Participantes({ idTest_id, Regresar }) {
         <OpcionesParticipantes
           cerrar={cerrar}
           id_participante={id_Participante}
+          nombreParticipante={ParticipanteName}
         />
       )}
 
@@ -475,7 +478,10 @@ export default function Participantes({ idTest_id, Regresar }) {
                     : "p-4 border-b border-blue-gray-50";
 
                   return (
-                    <tr key={r_id_participante_test}>
+                    <tr
+                      key={r_id_participante_test}
+                      className="hover:bg-yellow-200"
+                    >
                       <td className={classes}>
                         <div className="flex flex-col">
                           <Typography
@@ -546,7 +552,10 @@ export default function Participantes({ idTest_id, Regresar }) {
                         <Tooltip content="Opciones">
                           <IconButton
                             variant="text"
-                            onClick={() => abrir(r_id_participante_test)}
+                            onClick={() => (
+                              setPartiicpanteName(r_nombres_apellidos),
+                              abrir(r_id_participante_test)
+                            )}
                           >
                             <AdjustmentsHorizontalIcon className="h-4 w-4" />
                           </IconButton>

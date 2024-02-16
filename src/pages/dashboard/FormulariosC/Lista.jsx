@@ -695,7 +695,7 @@ export default function Lista({
                     : "p-4 border-b border-blue-gray-50";
 
                   return (
-                    <tr key={r_id_test}>
+                    <tr key={r_id_test} className="hover:bg-yellow-200">
                       <td className={classes}>
                         <div className="flex flex-col">
                           <Typography

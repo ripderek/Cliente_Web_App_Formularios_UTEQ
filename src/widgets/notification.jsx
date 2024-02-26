@@ -7,7 +7,7 @@ export function Notification({ mensaje, abrir, crear }) {
     <Alert
       color="green"
       icon={<CheckCircleIcon className="h-10" />}
-      className="fixed bottom-1 right-8 z-40 w-auto rounded-none"
+      className="fixed bottom-1 right-8 z-40 w-auto "
       onClose={() => crear(false)}
       open={abrir}
     >

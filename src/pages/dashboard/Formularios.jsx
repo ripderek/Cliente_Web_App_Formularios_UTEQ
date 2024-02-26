@@ -6,6 +6,8 @@ import {
   Navbar_app,
   Configurator,
 } from "@/components/layout";
+import Head from "next/head";
+
 //rutas que va a tener la barra lateral
 import routes from "@/routes";
 import {
@@ -140,9 +142,11 @@ export default function Formularios() {
     red: "border-red-600",
     pink: "border-pink-600",
   };
-
   return (
     <div className=" min-h-screen bg-blue-gray-50/50">
+      <Head>
+        <title>Formularios</title>
+      </Head>
       {error ? (
         <Dialog_Error
           mensaje={mensajeError}
@@ -153,13 +157,14 @@ export default function Formularios() {
         ""
       )}
       {load ? <Loader /> : ""}
+
       <BarraNavegacion2
         routes={routes}
         brandImg={
           sidenavType === "dark" ? "/img/logo-ct.png" : "/img/logo-ct-dark.png"
         }
       />
-      <div className="p-4 xl:ml-80 ">
+      <div className="xl:ml-72 ">
         <Navbar_app
           user_name={data_user.r_user_name_ab}
           titulo={"Formularios"}

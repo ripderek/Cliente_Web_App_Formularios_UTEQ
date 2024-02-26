@@ -48,24 +48,7 @@ export const routes = [
             },
         ],
     },
-    {
-        title: "Opciones Usuario",
-        layout: "auth",
-        pages: [
-            {
-                icon: <InformationCircleIcon {...icon} />,
-                name: "Mis datos",
-                path: "/notifications",
-                //element: <Notifications />,
-            },
-            {
-                icon: <InformationCircleIcon {...icon} />,
-                name: "Mis reportes",
-                path: "/notifications",
-                //element: <Notifications />,
-            },
-        ],
-    },
+    /*
     {
         title: "Opciones de Super Usuario",
         layout: "superuser",
@@ -84,6 +67,7 @@ export const routes = [
             },
         ],
     },
+    */
 ];
 
 export default routes;

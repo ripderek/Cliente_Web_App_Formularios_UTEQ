@@ -10,6 +10,7 @@ import {
   DocumentTextIcon,
   DocumentIcon,
   DocumentMinusIcon,
+  ArrowLeftOnRectangleIcon,
 } from "@heroicons/react/24/solid";
 import {
   Card,
@@ -57,7 +58,6 @@ const TABLE_HEAD = [
   "Tipo Pregunta",
   "Estado",
   "Fecha Creacion",
-  "",
   "Obs",
 ];
 //para ver las opciones de edicion de las preguntas ya sea para los datos o la respuesta
@@ -204,7 +204,7 @@ export default function ListaPreguntas({
   };
   const [DeseaEliminar, setDeseaEliminar] = useState(false);
   return (
-    <Card className="h-full w-full mt-5 rounded-none">
+    <Card className="h-full w-full rounded-none">
       {load ? <Loader /> : ""}
       {/* Para editar una pregunta  */}
       <Dialog open={openEdtiar} handler={handleOpenEditar}>
@@ -232,10 +232,19 @@ export default function ListaPreguntas({
             </Button>
           </DialogFooter>
         </Dialog>
-        <DialogBody>
+        <DialogHeader className="bg-green-50">
           <Typography variant="h4" color="blue-gray">
             Opciones Pregunta
           </Typography>
+          <IconButton
+            className="!absolute top-3 right-3 bg-transparent shadow-none"
+            onClick={handleOpenEditar}
+          >
+            <XCircleIcon className="w-11" color="orange" />
+          </IconButton>
+        </DialogHeader>
+
+        <DialogBody>
           <div>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-3 p-5">
               {/* EDITAR RESPUESTAS */}
@@ -245,8 +254,11 @@ export default function ListaPreguntas({
                 onClick={() => editar("respuesta")}
               >
                 <div className="mx-auto">
-                  <div className="text-center">
-                    <DocumentTextIcon className="h-16 mx-auto" />
+                  <div className="text-center mt-2 ">
+                    <DocumentTextIcon
+                      className="h-16 mx-auto bg-white w-auto rounded-xl"
+                      color="green"
+                    />
                   </div>
                   <div className="w-full p-4 text-center font-bold text-black text-xl">
                     <span>Editar </span>
@@ -261,8 +273,11 @@ export default function ListaPreguntas({
                 onClick={() => editar("eliminar")}
               >
                 <div className="mx-auto">
-                  <div className="text-center">
-                    <DocumentMinusIcon className="h-16 mx-auto" />
+                  <div className="text-center mt-2 ">
+                    <DocumentMinusIcon
+                      className="h-16 mx-auto bg-white w-auto rounded-xl"
+                      color="red"
+                    />
                   </div>
                   <div className="w-full p-4 text-center font-bold text-black text-xl">
                     <span>Eliminar pregunta </span>
@@ -271,40 +286,24 @@ export default function ListaPreguntas({
               </div>
             </div>
           </div>
-          <IconButton
-            className="!absolute top-3 right-3 bg-transparent shadow-none"
-            onClick={handleOpenEditar}
-          >
-            <XCircleIcon className="w-11" color="orange" />
-          </IconButton>
         </DialogBody>
         <DialogFooter></DialogFooter>
       </Dialog>
       <Dialog open={open} handler={handleOpen}>
-        <DialogBody>
+        <DialogHeader className="bg-green-50">
           <Typography variant="h4" color="blue-gray">
             Tipos de preguntas
           </Typography>
+          <IconButton
+            className="!absolute top-3 right-3 bg-transparent shadow-none"
+            onClick={handleOpen}
+          >
+            <XCircleIcon className="w-11" color="orange" />
+          </IconButton>
+        </DialogHeader>
+        <DialogBody>
           <div>
-            <table className="mt-4 w-full min-w-max table-auto text-left">
-              <thead>
-                <tr>
-                  {TABLE_HEAD_1.map((head) => (
-                    <th
-                      key={head}
-                      className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4"
-                    >
-                      <Typography
-                        variant="small"
-                        color="blue-gray"
-                        className="font-normal leading-none opacity-70"
-                      >
-                        {head}
-                      </Typography>
-                    </th>
-                  ))}
-                </tr>
-              </thead>
+            <table className=" w-full min-w-max table-auto text-left">
               <tbody>
                 {tipospreguntas.map(({ r_id_maestro, r_titulo }, index) => {
                   const isLast = index === preguntas.length - 1;
@@ -315,6 +314,7 @@ export default function ListaPreguntas({
                   return (
                     <tr
                       key={r_id_maestro}
+                      className="hover:bg-orange-100"
                       onClick={() =>
                         AbrirPlantilla(r_id_maestro, r_titulo, id_nivel)
                       }
@@ -351,12 +351,6 @@ export default function ListaPreguntas({
               </tbody>
             </table>
           </div>
-          <IconButton
-            className="!absolute top-3 right-3 bg-transparent shadow-none"
-            onClick={handleOpen}
-          >
-            <XCircleIcon className="w-11" color="orange" />
-          </IconButton>
         </DialogBody>
         <DialogFooter>
           {/* 
@@ -377,14 +371,16 @@ export default function ListaPreguntas({
             </Typography>
           </div>
           <div className="flex shrink-0 flex-col gap-2 sm:flex-row">
-            <Button
-              variant="outlined"
-              size="sm"
-              color="orange"
-              onClick={() => AbrirNiveles(id_seccion, seccion)}
-            >
-              Ver niveles
-            </Button>
+            <Tooltip content="Regresar">
+              <Button
+                variant="outlined"
+                size="sm"
+                color="orange"
+                onClick={() => AbrirNiveles(id_seccion, seccion)}
+              >
+                <ArrowLeftOnRectangleIcon strokeWidth={2} className="h-6 w-6" />
+              </Button>
+            </Tooltip>
             <Button
               className="flex items-center gap-3"
               size="sm"
@@ -414,7 +410,7 @@ export default function ListaPreguntas({
           </div>
         </div>
       </CardHeader>
-      <CardBody className="overflow-scroll px-0">
+      <CardBody className="overflow-x-scroll px-0">
         {preguntas.length === 0 ? (
           <div className="mx-auto items-center text-center font-bold text-2xl">
             Este nivel no tiene preguntas
@@ -460,7 +456,15 @@ export default function ListaPreguntas({
                     : "p-4 border-b border-blue-gray-50";
 
                   return (
-                    <tr key={r_id_p}>
+                    <tr
+                      key={r_id_p}
+                      className="hover:bg-orange-100 cursor-pointer"
+                      onClick={() => (
+                        setOpenEditar(true),
+                        setTipoPreguntaEDitar(r_id_pregunta),
+                        setIDPregunta(r_id_p)
+                      )}
+                    >
                       <td className={classes}>
                         <div className="flex flex-col">
                           <Typography
@@ -528,20 +532,7 @@ export default function ListaPreguntas({
                           {r_fecha}
                         </Typography>
                       </td>
-                      <td className={classes}>
-                        <Tooltip content="Opciones Pregunta">
-                          <IconButton
-                            variant="text"
-                            onClick={() => (
-                              setOpenEditar(true),
-                              setTipoPreguntaEDitar(r_id_pregunta),
-                              setIDPregunta(r_id_p)
-                            )}
-                          >
-                            <AdjustmentsHorizontalIcon className="h-4 w-4" />
-                          </IconButton>
-                        </Tooltip>
-                      </td>
+
                       {r_error ? (
                         <td className={classes}>
                           <Tooltip content={r_error_detalle}>

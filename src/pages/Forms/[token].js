@@ -23,6 +23,7 @@ import {
 } from "@material-tailwind/react";
 import alertGradient from "@material-tailwind/react/theme/components/alert/alertGradient";
 import { Dialog_Error, Loader, Notification } from "@/widgets"; //Importar el componente
+import Head from "next/head";
 
 export default function Formulario() {
   const router = useRouter();
@@ -311,6 +312,9 @@ export default function Formulario() {
   //para realizar la consulta sobre el estado del formulario se obtiene el token desde la URL
   return (
     <>
+      <Head>
+        <title>Registrar en el formulario</title>
+      </Head>
       <Dialog open={noAdmitido} handler={() => setNoAdmiitido(!noAdmitido)}>
         <DialogHeader>Acceso no permitido</DialogHeader>
         <DialogBody>
@@ -348,13 +352,13 @@ export default function Formulario() {
           <Card
             color="transparent"
             shadow={false}
-            className="mx-auto w-full max-w-[29rem] mt-3 shadow-xl p-6   text-center bg-white items-center justify-center mb-6 border-4 border-solid border-green-900 rounded-none"
+            className="mx-auto w-full max-w-[27rem] mt-3 shadow-xl p-6   text-center bg-white items-center justify-center mb-6  rounded-none shadow-blue-gray-300"
           >
             <Typography variant="h4" color="blue-gray">
-              Registrar en el Test: {DataForm.r_titulo}
+              Registrar en el Formulario: {DataForm.r_titulo}
             </Typography>
             <Typography color="gray" className="mt-1 font-normal">
-              Para continuar al test complete el siguiente formulario
+              Para continuar al Formulario complete lo siguiente
             </Typography>
             <form className="mt-8 mb-2 w-80 max-w-screen-lg sm:w-96">
               <div className="mb-1 flex flex-col gap-6">
@@ -383,9 +387,8 @@ export default function Formulario() {
                 />
               </div>
               <Button
-                className="mt-6 rounded-none"
+                className="mt-6 rounded-none bg-light-green-900 hover:bg-orange-600 "
                 fullWidth
-                color="orange"
                 onClick={loginNormal}
               >
                 Aceptar

@@ -7,12 +7,13 @@ import {
   Input,
   Checkbox,
   Button,
+  Tooltip,
 } from "@material-tailwind/react";
 import { useRef, useState } from "react";
 import { AiOutlineUpload } from "react-icons/ai";
 import axios from "axios";
 import { Dialog_Error, Loader, Notification } from "@/widgets"; //Importar el componente
-
+import { ArrowLeftOnRectangleIcon } from "@heroicons/react/24/solid";
 export default function SELCIMG({
   tipo_preg,
   id_nivel,
@@ -75,7 +76,7 @@ export default function SELCIMG({
     }
   };
   return (
-    <Card className="w-auto mt-6 mx-auto rounded-none">
+    <Card className="w-auto mx-auto rounded-none">
       {load ? <Loader /> : ""}
       {error ? (
         <Dialog_Error
@@ -94,14 +95,16 @@ export default function SELCIMG({
             </Typography>
           </div>
           <div className="flex shrink-0 flex-col gap-2 sm:flex-row">
-            <Button
-              variant="gradient"
-              size="sm"
-              color="orange"
-              onClick={() => cambiarPestañas("openPreguntas")}
-            >
-              Regresar
-            </Button>
+            <Tooltip content="Regresar">
+              <Button
+                variant="outlined"
+                size="sm"
+                color="orange"
+                onClick={() => cambiarPestañas("openPreguntas")}
+              >
+                <ArrowLeftOnRectangleIcon strokeWidth={2} className="h-6 w-6" />
+              </Button>
+            </Tooltip>
           </div>
         </div>
       </CardHeader>

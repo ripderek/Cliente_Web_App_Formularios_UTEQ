@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { NavBarFormsLogin, NavBarForms } from "@/components/FormsLayout";
 import { ProgresoSecciones } from "@/pages/FormulariosOP";
+import Head from "next/head";
+
 import {
   MEMRZAR_resolv,
   SELCIMG_resolv,
@@ -258,8 +260,6 @@ export default function Test() {
     setOpenSELCCMA(false);
   };
 
-
-
   const [load, setLoader] = useState(false);
 
   //hacer una funcion que retorne el avance de las preguntas segun la seccion y devuelva la ultima pregunta
@@ -364,7 +364,7 @@ export default function Test() {
             ProgresoPregunta={id_progrso_pregunta}
           />
         );
-        //openSELCCMA
+      //openSELCCMA
       case openSELCCMA:
         return (
           <SELCCMA_resolv
@@ -388,6 +388,9 @@ export default function Test() {
   };
   return (
     <>
+      <Head>
+        <title>Formulario</title>
+      </Head>
       <NavBarForms />
       {/*
             Renderizar el componente del Switch

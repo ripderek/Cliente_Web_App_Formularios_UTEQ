@@ -13,6 +13,8 @@ import { useState, useEffect } from "react";
 import Lottie from "lottie-react";
 import anim from "../../public/anim/check.json";
 import { useGoogleLogin } from "@react-oauth/google";
+import { NavBarFormsLogin } from "@/components/FormsLayout";
+import Head from "next/head";
 //paguina para el login desde los administradores --> profesores
 export default function Index() {
     //Borrar cookies en caso de existir alguna
@@ -82,10 +84,10 @@ export default function Index() {
             }
             //para abrir la nueva ventana del dashboard 
             // Para abrir una nueva ruta en la misma pestaña
-            const nuevaRuta = "/dashboard/Home"; // Reemplaza con tu nueva ruta
-
-            const nuevaPestana = window.open(nuevaRuta, "_blank");
-
+            const nuevaRuta = "/dashboard/Home"; //
+            Router.push(nuevaRuta)
+            //const nuevaPestana = window.open(nuevaRuta, "_blank");
+            /*
             // Asegúrate de manejar el caso en el que window.open sea bloqueado por el navegador
             if (nuevaPestana) {
                 //hacer la interfaz cambie y que salga un mensaje de accedido con exito xd
@@ -95,7 +97,7 @@ export default function Index() {
                 // Puedes proporcionar un mensaje al usuario o tomar otras medidas
                 alert('La apertura de la nueva pestaña fue bloqueada por el navegador.');
             }
-
+            */
             //console.log(result.data);
 
         } catch (error) {
@@ -184,10 +186,9 @@ export default function Index() {
             }
             //para abrir la nueva ventana del dashboard 
             // Para abrir una nueva ruta en la misma pestaña
-            const nuevaRuta = "/dashboard/Home"; // Reemplaza con tu nueva ruta
-
-            const nuevaPestana = window.open(nuevaRuta, "_blank");
-
+            const nuevaRuta = "/dashboard/Home"; //
+            Router.push(nuevaRuta)
+            /*
             // Asegúrate de manejar el caso en el que window.open sea bloqueado por el navegador
             if (nuevaPestana) {
                 //hacer la interfaz cambie y que salga un mensaje de accedido con exito xd
@@ -197,7 +198,7 @@ export default function Index() {
                 // Puedes proporcionar un mensaje al usuario o tomar otras medidas
                 alert('La apertura de la nueva pestaña fue bloqueada por el navegador.');
             }
-
+            */
             //console.log(result.data);
         } catch (error) {
             console.log(error);
@@ -214,9 +215,23 @@ export default function Index() {
     }
     return (
         <div className=" w-full h-full ">
+            <Head>
+                <title>Inicio Sesion Formularios App</title>
+            </Head>
+            {/*NAVBAR  */}
+            <nav class="bg-green-900  border-b-8 border-orange-600  rounded-none">
+                <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-2">
+                    <img
+                        src="/img/Home/uteq_logo3.png"
+                        class="h-12"
+                        alt="Flowbite Logo"
+                    />
+
+                </div>
+            </nav>
             {load ? <Loader /> : ""}
             {error ? <Dialog_Error mensaje={mensajeError} titulo="Error Inicio de sesion" cerrar={cerrar} /> : ("")}
-            <Card color="transparent" shadow={false} className="mx-auto w-full max-w-[24rem] mt-10 shadow-xl p-6 hover:shadow-green-500 border-4 border-orange-900  border-solid text-center bg-white items-center justify-center rounded-none">
+            <Card color="transparent" shadow={false} className="mx-auto w-full max-w-[24rem] mt-4 shadow-xl p-6 rounded-none  border-solid text-center bg-white items-center justify-center shadow-blue-gray-200">
                 <div className="p-2 mx-auto">
                     <img
                         className="h-10"
@@ -255,11 +270,11 @@ export default function Index() {
                         />
                     </div>
 
-                    <Button className="mt-6 bg-light-green-900 font-bold " type="submit" fullWidth >
+                    <Button className="mt-6 bg-light-green-900 font-bold rounded-none hover:bg-orange-600" type="submit" fullWidth >
                         Aceptar
                     </Button>
                     <div
-                        className="h-auto bg-gray-200  flex items-center justify-center mt-4 cursor-pointer text-center rounded-lg mx-auto"
+                        className="h-auto bg-gray-200  flex items-center justify-center mt-4 cursor-pointer text-center rounded-none mx-auto hover:bg-orange-200  text-blue-gray-600"
                         onClick={login}
                     >
                         <div className="p-2">
@@ -269,7 +284,7 @@ export default function Index() {
                                 alt="User image"
                             />
                         </div>
-                        <div className="ml-2 font-bold text-blue-gray-600">
+                        <div className="ml-2 font-bold ">
                             Continuar con Google
                         </div>
                     </div>

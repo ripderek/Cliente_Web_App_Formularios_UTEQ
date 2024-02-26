@@ -1,6 +1,8 @@
 import {
   ArrowRightCircleIcon,
   PlusCircleIcon,
+  ExclamationTriangleIcon,
+  ArrowLeftOnRectangleIcon,
 } from "@heroicons/react/24/solid";
 import {
   Card,
@@ -106,7 +108,7 @@ export default function SeleccionarSecciones({ idTest_id, Regresar }) {
     Obtener_Secciones_Usuario();
   };
   return (
-    <Card className="h-full w-full mt-5 rounded-none">
+    <Card className="h-full w-full rounded-none">
       <Notification
         mensaje="Seccion agregada"
         abrir={openAlert}
@@ -135,14 +137,17 @@ export default function SeleccionarSecciones({ idTest_id, Regresar }) {
             </Typography>
           </div>
           <div className="flex shrink-0 flex-col gap-2 sm:flex-row">
-            <Button
-              variant="outlined"
-              size="sm"
-              color="orange"
-              onClick={Regresar}
-            >
-              Lista de Test
-            </Button>
+            <Tooltip content="Regresar">
+              <Button
+                variant="outlined"
+                size="sm"
+                color="orange"
+                onClick={Regresar}
+              >
+                <ArrowLeftOnRectangleIcon strokeWidth={2} className="h-6 w-6" />
+              </Button>
+            </Tooltip>
+
             {/* 
             <Button className="flex items-center gap-3" size="sm" color="green">
               <PlusCircleIcon strokeWidth={2} className="h-4 w-4" /> Agregar
@@ -152,7 +157,10 @@ export default function SeleccionarSecciones({ idTest_id, Regresar }) {
           </div>
         </div>
         {!infoTest.r_is_editable && (
-          <Alert color="amber">
+          <Alert
+            color="amber"
+            icon={<ExclamationTriangleIcon color="black" className="h-7 w-7" />}
+          >
             Las funciones de editar, eliminar y agregar secciones se han
             bloqueado debido a que el test se encuentra en desarrollo
           </Alert>

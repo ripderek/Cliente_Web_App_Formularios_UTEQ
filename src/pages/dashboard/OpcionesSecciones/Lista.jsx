@@ -115,7 +115,7 @@ export default function Lista({ AbrirNiveles }) {
     pink: "shadow-pink-600",
   };
   return (
-    <Card className="h-full w-full mt-4 rounded-none">
+    <Card className="h-full w-full  rounded-none">
       {load ? <Loader /> : ""}
       <CrearSeccion abrir={openCreate} cerrar={cerrar} crear={crear} />
       <CardHeader floated={false} shadow={false} className="rounded-none">
@@ -163,7 +163,7 @@ export default function Lista({ AbrirNiveles }) {
           </div>
         </div>
       </CardHeader>
-      <CardBody className="overflow-scroll px-0">
+      <CardBody className=" px-0">
         {secciones.length === 0 && (
           <Typography
             color="gray"

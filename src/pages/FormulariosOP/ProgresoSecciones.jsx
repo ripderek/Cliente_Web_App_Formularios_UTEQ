@@ -249,7 +249,7 @@ export default function ProgresoSecciones({
     <div>
       {load ? <Loader /> : ""}
       <Card className="h-full w-full rounded-none">
-        <CardBody className="overflow-scroll px-0">
+        <CardBody className="px-0">
           <Notification
             mensaje="Ya se encuentra completa"
             abrir={openAlert}
@@ -297,7 +297,7 @@ export default function ProgresoSecciones({
               }) => (
                 <div
                   key={r_id_progreso_seccion}
-                  className="bg-blue-gray-50 shadow-2xl rounded-none  border-orange-500 border-4 border-solid cursor-pointer  hover:shadow-yellow-900"
+                  className="bg-blue-gray-50 shadow-2xl rounded-none hover:border-green-500  border-orange-500 border-4 border-solid cursor-pointer  hover:shadow-yellow-900"
                   onClick={() =>
                     abrir(
                       r_estado_completado,
@@ -306,7 +306,7 @@ export default function ProgresoSecciones({
                     )
                   }
                 >
-                  <div className="bg-zinc-900 text-black shadow-2xl rounded-none">
+                  <div className="bg-zinc-900 text-black shadow-2xl rounded-xl">
                     <div className="mx-auto">
                       <div className="text-center">
                         <Avatar

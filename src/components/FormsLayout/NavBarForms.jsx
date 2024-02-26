@@ -23,12 +23,12 @@ export function NavBarForms() {
     setNombreS(decodeURIComponent(cookies.get("Nombres")).substring(0, 15));
   }, []);
   return (
-    <nav class="bg-green-900 rounded-none dark:bg-gray-900 border-4 border-solid border-orange-800 ">
-      <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
+    <nav class="bg-green-900 border-orange-600 border-b-8  rounded-none">
+      <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-2">
         <a class="flex items-center space-x-3 rtl:space-x-reverse">
           <img
             src="/img/Home/uteq_logo3.png"
-            class="h-14"
+            class="h-12"
             alt="Flowbite Logo"
           />
           {/* 

@@ -44,16 +44,7 @@ import { Crear, Errores_Test } from "@/pages/dashboard/FormulariosC";
 import { Dialog_Error, Loader, Notification } from "@/widgets"; //Importar el componente
 
 import Cookies from "universal-cookie";
-const TABLE_HEAD = [
-  "",
-  "Titulo",
-  "Estado",
-  "Ingreso",
-  "Suspenso",
-  "Editar",
-  "Detalles",
-  "Obs",
-];
+const TABLE_HEAD = ["", "Titulo", "Estado", "Ingreso", "Suspenso", "Obs"];
 const TABS = [
   {
     label: "Todo",
@@ -274,14 +265,14 @@ export default function Lista({
   const [DeseaEliminar, setDeseaEliminar] = useState(false);
 
   return (
-    <Card className="h-full w-full mt-4 rounded-none">
+    <Card className="h-full w-full  rounded-none">
       {load ? <Loader /> : ""}
       {error1 ? <Errores_Test cerrar={cerrar1} id_test={idTes} /> : ""}
       <Crear abrir={openCreate} cerrar={cerrar} crear={crear} />
       {/* Para visualizar los detalles del test y poder seleccionar secciones, niveles y participantes*/}
       <Dialog open={openDetalles} size="xl" handler={handleOpenDetalles}>
         <Dialog open={DeseaEliminar}>
-          <DialogHeader>Eliminar Test</DialogHeader>
+          <DialogHeader className="bg-green-50">Eliminar Test</DialogHeader>
           <DialogBody>
             ¿Esta seguro que desea eliminar el test? Esta acción no se puede
             revertir
@@ -326,15 +317,16 @@ export default function Lista({
             {detallesTest.r_titulo_completo}
           </div>
           {detallesTest.r_descripcion}
-          <div className="bg-blue-gray-100 p-6 rounded-2xl mt-3 flex flex-col md:flex-row md:items-center">
-            <></>
-
+          <div className="bg-green-100 p-6 rounded-2xl  flex flex-col md:flex-row md:items-center">
             {detallesTest.r_error ? (
               <div>No puede compartir el enlace hasta que corrija el Test</div>
             ) : (
               <>
-                <div className="md:w-2/3 mb-2 md:mb-0 md:mr-2">
-                  https://encuesta.uteq.edu.ec:8000/Forms/{detallesTest.r_token}
+                <div className="md:w-2/3 mb-2 md:mb-0 ">
+                  <div className="overflow-y-auto">
+                    https://encuesta.uteq.edu.ec:8000/Forms/
+                    {detallesTest.r_token}
+                  </div>
                 </div>
                 <div
                   className="md:w-1/3"
@@ -345,7 +337,7 @@ export default function Lista({
                     )
                   }
                 >
-                  <div className=" bg-white rounded-xl mx-auto  text-center cursor-pointer">
+                  <div className="w-auto bg-white rounded-xl mx-auto  text-center cursor-pointer">
                     Copiar enlace
                     <IconButton variant="text" disabled>
                       <ClipboardIcon className="h-4 w-4" />
@@ -356,115 +348,123 @@ export default function Lista({
             )}
           </div>
           <div className="overflow-y-scroll h-96">
-            <table className="mt-4 w-full min-w-max table-auto text-left">
-              <thead>
-                <tr>
-                  {TABLE_HEAD_Detalles.map((head) => (
-                    <th
-                      key={head}
-                      className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4"
-                    >
-                      <Typography
-                        variant="small"
-                        color="blue-gray"
-                        className="font-normal leading-none opacity-70"
+            {/* TABLA DETALLES DEL TEST  */}
+            <div className="overflow-y-auto">
+              <table className="mt-4 w-full min-w-max table-auto text-left">
+                <thead>
+                  <tr>
+                    {TABLE_HEAD_Detalles.map((head) => (
+                      <th
+                        key={head}
+                        className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4"
                       >
-                        {head}
-                      </Typography>
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                <tr key={detallesTest.r_id_test}>
-                  <td className={"p-4 border-b border-blue-gray-50"}>
-                    <div className="flex items-center gap-3">
-                      <div className="flex flex-col">
+                        <Typography
+                          variant="small"
+                          color="blue-gray"
+                          className="font-normal leading-none opacity-70"
+                        >
+                          {head}
+                        </Typography>
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr key={detallesTest.r_id_test}>
+                    <td className={"p-4 border-b border-blue-gray-50"}>
+                      <div className="flex items-center gap-3">
                         <div className="flex flex-col">
-                          <Typography
-                            variant="small"
-                            color="blue-gray"
-                            className="font-normal"
-                          >
-                            <span className="font-bold">Inicio:</span>{" "}
-                            {detallesTest.r_fecha_incio}
-                          </Typography>
-                        </div>
-                        <div className="flex flex-col">
-                          <Typography
-                            variant="small"
-                            color="blue-gray"
-                            className="font-normal"
-                          >
-                            <span className="font-bold">Fin:</span>{" "}
-                            {detallesTest.r_fecha_fin}
-                          </Typography>
+                          <div className="flex flex-col">
+                            <Typography
+                              variant="small"
+                              color="blue-gray"
+                              className="font-normal"
+                            >
+                              <span className="font-bold">Inicio:</span>{" "}
+                              {detallesTest.r_fecha_incio}
+                            </Typography>
+                          </div>
+                          <div className="flex flex-col">
+                            <Typography
+                              variant="small"
+                              color="blue-gray"
+                              className="font-normal"
+                            >
+                              <span className="font-bold">Fin:</span>{" "}
+                              {detallesTest.r_fecha_fin}
+                            </Typography>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </td>
+                    </td>
 
-                  <td className={"p-4 border-b border-blue-gray-50"}>
-                    <div className="w-max">
-                      <Chip
-                        variant="ghost"
-                        size="sm"
-                        value={detallesTest.r_estado}
-                        color={
-                          detallesTest.r_estado === "Erroneo"
-                            ? "red"
-                            : "blue-gray"
-                        }
-                      />
-                    </div>
-                  </td>
-                  <td className={"p-4 border-b border-blue-gray-50"}>
-                    <div className="w-max">
-                      <Chip
-                        variant="ghost"
-                        size="sm"
-                        value={detallesTest.r_suspendido ? "Si" : "No"}
-                        color={detallesTest.r_suspendido ? "red" : "blue-gray"}
-                      />
-                    </div>
-                  </td>
-                  <td className={"p-4 border-b border-blue-gray-50"}>
-                    <div className="w-max">
-                      <Chip
-                        variant="ghost"
-                        size="sm"
-                        value={detallesTest.r_ingresos_permitidos}
-                        color="amber"
-                      />
-                    </div>
-                  </td>
-                  <td className={"p-4 border-b border-blue-gray-50"}>
-                    <div className="w-max">
-                      <Chip
-                        variant="ghost"
-                        size="sm"
-                        value={
-                          detallesTest.r_preguntas_aleatorias
-                            ? "Aleatorio"
-                            : "Secuencial"
-                        }
-                        color="amber"
-                      />
-                    </div>
-                  </td>
-                  <td className={"p-4 border-b border-blue-gray-50"}>
-                    <div className="w-max">
-                      <Chip
-                        variant="ghost"
-                        size="sm"
-                        value={detallesTest.r_abierta ? "Todos" : "Restringido"}
-                        color="amber"
-                      />
-                    </div>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+                    <td className={"p-4 border-b border-blue-gray-50"}>
+                      <div className="w-max">
+                        <Chip
+                          variant="ghost"
+                          size="sm"
+                          value={detallesTest.r_estado}
+                          color={
+                            detallesTest.r_estado === "Erroneo"
+                              ? "red"
+                              : "blue-gray"
+                          }
+                        />
+                      </div>
+                    </td>
+                    <td className={"p-4 border-b border-blue-gray-50"}>
+                      <div className="w-max">
+                        <Chip
+                          variant="ghost"
+                          size="sm"
+                          value={detallesTest.r_suspendido ? "Si" : "No"}
+                          color={
+                            detallesTest.r_suspendido ? "red" : "blue-gray"
+                          }
+                        />
+                      </div>
+                    </td>
+                    <td className={"p-4 border-b border-blue-gray-50"}>
+                      <div className="w-max">
+                        <Chip
+                          variant="ghost"
+                          size="sm"
+                          value={detallesTest.r_ingresos_permitidos}
+                          color="amber"
+                        />
+                      </div>
+                    </td>
+                    <td className={"p-4 border-b border-blue-gray-50"}>
+                      <div className="w-max">
+                        <Chip
+                          variant="ghost"
+                          size="sm"
+                          value={
+                            detallesTest.r_preguntas_aleatorias
+                              ? "Aleatorio"
+                              : "Secuencial"
+                          }
+                          color="amber"
+                        />
+                      </div>
+                    </td>
+                    <td className={"p-4 border-b border-blue-gray-50"}>
+                      <div className="w-max">
+                        <Chip
+                          variant="ghost"
+                          size="sm"
+                          value={
+                            detallesTest.r_abierta ? "Todos" : "Restringido"
+                          }
+                          color="amber"
+                        />
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
             {/* OPCIONES PARA AGREGAR SECCIONES Y PARTICIPANTES */}
             <table className="mt-4 w-full min-w-max table-auto text-left">
               <thead>
@@ -745,7 +745,11 @@ export default function Lista({
                     : "p-4 border-b border-blue-gray-50";
 
                   return (
-                    <tr key={r_id_test} className="hover:bg-yellow-200">
+                    <tr
+                      key={r_id_test}
+                      className="hover:bg-orange-100 cursor-pointer"
+                      onClick={() => ObtnerDetallesTest(r_id_test)}
+                    >
                       <td className={classes}>
                         <div className="flex flex-col">
                           <Typography
@@ -829,6 +833,7 @@ export default function Lista({
                           />
                         </div>
                       </td>
+                      {/* 
                       <td className={classes}>
                         <Tooltip content="Editar test">
                           <IconButton variant="text">
@@ -836,6 +841,7 @@ export default function Lista({
                           </IconButton>
                         </Tooltip>
                       </td>
+                    
                       <td className={classes}>
                         <Tooltip content="Detalles del test">
                           <IconButton
@@ -846,6 +852,7 @@ export default function Lista({
                           </IconButton>
                         </Tooltip>
                       </td>
+                      */}
                       {r_error ? (
                         <td className={classes}>
                           <Tooltip content="El test contiene errores">

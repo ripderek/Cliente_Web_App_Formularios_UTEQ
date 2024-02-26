@@ -88,14 +88,16 @@ export default function OpcionesParticipantes({
     <div>
       <Dialog open={true} handler={cerrar} size="xl">
         {renderComponent()}
-        <DialogHeader>
-          Opciones participante
-          <IconButton
-            className="!absolute top-3 right-3 bg-transparent shadow-none"
-            onClick={cerrar}
-          >
-            <XCircleIcon className="w-11" color="orange" />
-          </IconButton>
+        <DialogHeader className="bg-green-50">
+          <div>
+            Opciones participante
+            <IconButton
+              className="!absolute top-3 right-3 bg-transparent shadow-none"
+              onClick={cerrar}
+            >
+              <XCircleIcon className="w-11" color="orange" />
+            </IconButton>
+          </div>
         </DialogHeader>
         <DialogBody>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 p-5">
@@ -105,8 +107,11 @@ export default function OpcionesParticipantes({
               onClick={() => cambiarPestañas(`open${"Ingresos"}`)}
             >
               <div className="mx-auto">
-                <div className="text-center">
-                  <ArrowRightOnRectangleIcon className="h-16 mx-auto" />
+                <div className="text-center mt-2 ">
+                  <ArrowRightOnRectangleIcon
+                    className="h-16 mx-auto bg-white w-auto rounded-xl"
+                    color="orange"
+                  />
                 </div>
                 <div className="w-full p-4 text-center font-bold text-black text-xl">
                   <span> Ingresos </span>
@@ -119,9 +124,13 @@ export default function OpcionesParticipantes({
               onClick={() => cambiarPestañas(`open${"Progreso"}`)}
             >
               <div className="mx-auto">
-                <div className="text-center">
-                  <AdjustmentsHorizontalIcon className="h-16 mx-auto" />
+                <div className="text-center mt-2 ">
+                  <AdjustmentsHorizontalIcon
+                    className="h-16 mx-auto bg-white w-auto rounded-xl"
+                    color="blue"
+                  />
                 </div>
+
                 <div className="w-full p-4 text-center font-bold text-black text-xl">
                   <span>Progreso </span>
                 </div>
@@ -133,9 +142,13 @@ export default function OpcionesParticipantes({
               onClick={() => cambiarPestañas(`open${"Eliminar"}`)}
             >
               <div className="mx-auto">
-                <div className="text-center">
-                  <XCircleIcon className="h-16 mx-auto" />
+                <div className="text-center mt-2 ">
+                  <XCircleIcon
+                    className="h-16 mx-auto bg-white w-auto rounded-xl"
+                    color="red"
+                  />
                 </div>
+
                 <div className="w-full p-4 text-center font-bold text-black text-xl">
                   <span>Expulsar </span>
                 </div>
@@ -146,9 +159,13 @@ export default function OpcionesParticipantes({
               className={`bg-blue-gray-50  shadow-2xl rounded-none cursor-pointer border-4 border-green-900 hover:border-orange-600  `}
             >
               <div className="mx-auto">
-                <div className="text-center">
-                  <ArrowPathIcon className="h-16 mx-auto" />
+                <div className="text-center mt-2 ">
+                  <ArrowPathIcon
+                    className="h-16 mx-auto bg-white w-auto rounded-xl"
+                    color="black"
+                  />
                 </div>
+
                 <div className="w-full p-4 text-center font-bold text-black text-xl">
                   <span>Reestablecer progreso </span>
                 </div>

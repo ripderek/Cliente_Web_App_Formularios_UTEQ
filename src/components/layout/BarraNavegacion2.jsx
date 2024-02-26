@@ -45,143 +45,120 @@ export function BarraNavegacion2({ routes, brandImg, brandName }) {
     <aside
       className={`${sidenavTypes[sidenavType]} ${
         openSidenav ? "translate-x-0" : "-translate-x-80"
-      } fixed inset-0 z-50 my-4 ml-4 h-[calc(100vh-32px)] w-72 rounded-none transition-transform duration-300 xl:translate-x-0 border-4 border-blue-gray-100 overflow-y-scroll ${
+      } fixed inset-0 z-50   w-72 rounded-none transition-transform duration-300 xl:translate-x-0 border-l-8 border-blue-gray-100 overflow-y-scroll ${
         sidenavColors[sidenavColor]
       }`}
     >
       {load ? <Loader /> : ""}
-
-      <div className={`relative `}>
-        <Card
-          className={`w-auto shadow-none mb-0 ${sidenavTypes[sidenavType]}`}
-        >
-          <CardHeader
-            floated={false}
-            className={`h-auto w-44 mx-auto text-center shadow-none${sidenavTypes[sidenavType]}`}
-          >
-            <img
-              src="/img/Home/UTEQ.png"
-              alt="Empresa logo"
-              className="w-auto"
-            />
-          </CardHeader>
-
-          <CardBody className="text-center">
-            <Typography
-              variant="h4"
-              color={sidenavType === "dark" ? "white" : "blue-gray"}
-              className="mb-2"
+      <div>
+        <aside className="">
+          <div>
+            <Card
+              className={`w-auto shadow-none  ${sidenavTypes[sidenavType]}`}
             >
-              Formularios APP
-            </Typography>
-            <Typography
-              color={sidenavType === "dark" ? "white" : "blue-gray"}
-              className="font-medium"
-            >
-              Extintor Team
-            </Typography>
-          </CardBody>
-          {/* 
-          <CardFooter className="flex justify-center gap-7 pt-2">
-           
-            <Tooltip content="Like">
-              <Typography
-                as="a"
-                href="#facebook"
-                variant="lead"
-                color="blue"
-                textGradient
+              <CardHeader
+                floated={false}
+                className={`h-auto w-44 mx-auto text-center shadow-none${sidenavTypes[sidenavType]}`}
               >
-                <i className="fab fa-facebook" />
-              </Typography>
-            </Tooltip>
-            <Tooltip content="Follow">
-              <Typography
-                as="a"
-                href="#twitter"
-                variant="lead"
-                color="light-blue"
-                textGradient
-              >
-                <i className="fab fa-twitter" />
-              </Typography>
-            </Tooltip>
-            <Tooltip content="Follow">
-              <Typography
-                as="a"
-                href="#instagram"
-                variant="lead"
-                color="purple"
-                textGradient
-              >
-                <i className="fab fa-instagram" />
-              </Typography>
-            </Tooltip>
-           
-          </CardFooter>
-           */}
-        </Card>
-        <IconButton
-          variant="text"
-          color="white"
-          size="sm"
-          ripple={false}
-          className="absolute right-0 top-0 grid rounded-br-none rounded-tl-none xl:hidden"
-          onClick={() => setOpenSidenav(dispatch, false)}
-        >
-          <XMarkIcon
-            strokeWidth={2.5}
-            className="h-6 w-6 font-bold"
-            color={sidenavColor}
-          />
-        </IconButton>
-      </div>
-      <div className="m-4 ">
-        {routes.map(({ layout, title, pages }, key) => (
-          <ul key={key} className="mb-4 flex flex-col gap-1 ">
-            {title && (
-              <li className="mx-3.5 mt-4 mb-2">
+                <img
+                  src="/img/Home/UTEQ.png"
+                  alt="Empresa logo"
+                  className="w-auto"
+                />
+              </CardHeader>
+
+              <CardBody className="text-center">
                 <Typography
-                  variant="small"
+                  variant="h4"
                   color={sidenavType === "dark" ? "white" : "blue-gray"}
-                  className="font-black uppercase opacity-75 "
                 >
-                  {title}
+                  Formularios APP
                 </Typography>
-              </li>
-            )}
-            {pages.map(({ icon, name, path }) => (
-              <li key={name}>
-                <Link href={`/${layout}${path}`} passHref>
-                  <Button
-                    as="a"
-                    variant={
-                      isActive(`/${layout}${path}`) ? "gradient" : "text"
-                    }
-                    color={
-                      isActive(`/${layout}${path}`)
-                        ? sidenavColor
-                        : sidenavType === "dark"
-                        ? "white"
-                        : "blue-gray"
-                    }
-                    className="flex items-center gap-4 px-4 capitalize"
-                    fullWidth
-                    onClick={() => setLoader(true)}
-                  >
-                    {icon}
+              </CardBody>
+            </Card>
+            <IconButton
+              variant="text"
+              color="white"
+              size="sm"
+              ripple={false}
+              className="absolute right-0 top-0 grid rounded-br-none rounded-tl-none xl:hidden"
+              onClick={() => setOpenSidenav(dispatch, false)}
+            >
+              <XMarkIcon
+                strokeWidth={2.5}
+                className="h-6 w-6 font-bold"
+                color={sidenavColor}
+              />
+            </IconButton>
+          </div>
+          <div className=" ">
+            {routes.map(({ layout, title, pages }, key) => (
+              <ul key={key} className=" flex flex-col gap-1 ">
+                {title && (
+                  <li className="mx-3.5">
                     <Typography
-                      color="inherit"
-                      className="font-medium capitalize"
+                      variant="small"
+                      color={sidenavType === "dark" ? "white" : "blue-gray"}
+                      className="font-black uppercase opacity-75 "
                     >
-                      {name}
+                      {title}
                     </Typography>
-                  </Button>
-                </Link>
-              </li>
+                  </li>
+                )}
+                {pages.map(({ icon, name, path }) => (
+                  <li key={name}>
+                    <Link href={`/${layout}${path}`} passHref>
+                      <Button
+                        as="a"
+                        variant={
+                          isActive(`/${layout}${path}`) ? "gradient" : "text"
+                        }
+                        color={
+                          isActive(`/${layout}${path}`)
+                            ? sidenavColor
+                            : sidenavType === "dark"
+                            ? "white"
+                            : "blue-gray"
+                        }
+                        className="flex items-center gap-2 rounded-none w-full capitalize"
+                        fullWidth
+                        onClick={() =>
+                          isActive == true ? setLoader(true) : ""
+                        }
+                      >
+                        {icon}
+                        <Typography
+                          color="inherit"
+                          className="font-medium capitalize"
+                        >
+                          {name}
+                        </Typography>
+                      </Button>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
             ))}
-          </ul>
-        ))}
+            <Card
+              className={`w-auto shadow-none mb-0 ${sidenavTypes[sidenavType]}`}
+            >
+              <CardBody className="text-center">
+                <Typography
+                  color={sidenavType === "dark" ? "white" : "blue-gray"}
+                  className="font-medium"
+                >
+                  Extintor Team
+                </Typography>
+                <Typography
+                  color={sidenavType === "dark" ? "white" : "blue-gray"}
+                  className="font-medium text-sm"
+                >
+                  V.2.0.1
+                </Typography>
+              </CardBody>
+            </Card>
+          </div>
+        </aside>
       </div>
     </aside>
   );

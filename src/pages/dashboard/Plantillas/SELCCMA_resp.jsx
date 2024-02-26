@@ -32,6 +32,7 @@ import {
   UsersIcon,
   XCircleIcon,
   TrashIcon,
+  ArrowLeftOnRectangleIcon,
 } from "@heroicons/react/24/solid";
 import { SELCCMA_edit, SELCCMA_edit_resp } from "@/pages/dashboard/Plantillas";
 export default function SELCCMA_resp({
@@ -310,14 +311,16 @@ export default function SELCCMA_resp({
             </Typography>
           </div>
           <div className="flex shrink-0 flex-col gap-2 sm:flex-row">
-            <Button
-              variant="gradient"
-              size="sm"
-              color="orange"
-              onClick={() => AbrirPreguntas(idni, nombrenivel)}
-            >
-              Regresar
-            </Button>
+            <Tooltip content="Regresar">
+              <Button
+                variant="outlined"
+                size="sm"
+                color="orange"
+                onClick={() => AbrirPreguntas(idni, nombrenivel)}
+              >
+                <ArrowLeftOnRectangleIcon strokeWidth={2} className="h-6 w-6" />
+              </Button>
+            </Tooltip>
           </div>
         </div>
       </CardHeader>

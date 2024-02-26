@@ -1,9 +1,26 @@
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import {
-  PencilIcon,
   PlusCircleIcon,
   AdjustmentsHorizontalIcon,
+  ChartBarSquareIcon,
+  ArrowLeftOnRectangleIcon,
 } from "@heroicons/react/24/solid";
+
+import {
+  BarraNavegacion2,
+  Navbar_app,
+  Configurator,
+} from "@/components/layout";
+//rutas que va a tener la barra lateral
+import routes from "@/routes";
+import {
+  useMaterialTailwindController,
+  setOpenConfigurator,
+  setSidenavColor,
+  setFixedNavbar,
+  setSidenavType,
+  setTransparentNavbar,
+} from "@/context";
 import {
   Card,
   CardHeader,
@@ -50,7 +67,6 @@ const TABLE_HEAD = [
   "Correo Institucional",
   "Supero Limite",
   "Fecha Agregado",
-  "Editar",
 ];
 //para ver las opciones de edicion de las preguntas ya sea para los datos o la respuesta
 const TABLE_OPCIONES = [
@@ -73,8 +89,17 @@ import { useEffect, useState } from "react";
 import { CrearParticipantes } from "@/pages/dashboard/Participantes";
 import axios from "axios";
 import { OpcionesParticipantes } from "@/pages/dashboard/FormulariosC";
-
+const sidenavColors = {
+  white: "border-gray-500",
+  dark: "border-gray-600",
+  green: "border-lime-600",
+  orange: "border-orange-600",
+  red: "border-red-600",
+  pink: "border-pink-600",
+};
 export default function Participantes({ idTest_id, Regresar }) {
+  const [controller, dispatch] = useMaterialTailwindController();
+  const { sidenavType, sidenavColor } = controller;
   //funcion para listar los participantes de un test mediante el id test
   const [load, setLoader] = useState(false);
   //estado para almacenar todos los niveles de una seccion
@@ -245,7 +270,7 @@ export default function Participantes({ idTest_id, Regresar }) {
     ObtenerListaParticipantes();
   };
   return (
-    <Card className="h-full w-full mt-5 rounded-none">
+    <Card className="h-full w-full rounded-none">
       {abrirOpciones && (
         <OpcionesParticipantes
           cerrar={cerrar}
@@ -400,7 +425,7 @@ export default function Participantes({ idTest_id, Regresar }) {
         </DialogFooter>
       </Dialog>
       <CardHeader floated={false} shadow={false} className="rounded-none">
-        <div className="mb-8 flex items-center justify-between gap-8">
+        <div className=" flex items-center justify-between gap-8">
           <div>
             <Typography variant="h5" color="blue-gray">
               Lista de participantes
@@ -409,34 +434,47 @@ export default function Participantes({ idTest_id, Regresar }) {
               Estos son los participantes en el test
             </Typography>
           </div>
+
           <div className="flex shrink-0 flex-col gap-2 sm:flex-row">
-            <Button
-              variant="outlined"
-              size="sm"
-              color="orange"
-              onClick={Regresar}
-            >
-              Lista de Test
-            </Button>
+            <Tooltip content="Regresar">
+              <Button
+                variant="outlined"
+                size="sm"
+                color="orange"
+                onClick={Regresar}
+              >
+                <ArrowLeftOnRectangleIcon strokeWidth={2} className="h-6 w-6" />
+              </Button>
+            </Tooltip>
+
             <Button
               className="flex items-center gap-3"
               size="sm"
               color="green"
               onClick={ObtenerListaParticipantes_creados}
             >
-              <PlusCircleIcon strokeWidth={2} className="h-4 w-4" /> Agregar
+              <PlusCircleIcon strokeWidth={2} className="h-6 w-6" /> Agregar
               Participante
+            </Button>
+            <Button
+              className="flex items-center gap-3"
+              size="sm"
+              color="blue"
+              onClick={ObtenerListaParticipantes_creados}
+            >
+              <ChartBarSquareIcon strokeWidth={2} className="h-6 w-6" />{" "}
+              Reportes
             </Button>
           </div>
         </div>
       </CardHeader>
-      <CardBody className="overflow-scroll px-0">
+      <CardBody className="overflow-x-scroll px-0">
         {ListaParticipantes.length === 0 ? (
           <div className="mx-auto items-center text-center font-bold text-2xl">
             Este test no contiene participantes
           </div>
         ) : (
-          <table className="mt-4 w-full min-w-max table-auto text-left">
+          <table className=" w-full min-w-max table-auto text-left">
             <thead>
               <tr>
                 {TABLE_HEAD.map((head) => (
@@ -480,7 +518,11 @@ export default function Participantes({ idTest_id, Regresar }) {
                   return (
                     <tr
                       key={r_id_participante_test}
-                      className="hover:bg-yellow-200"
+                      className="hover:bg-yellow-200 cursor-pointer"
+                      onClick={() => (
+                        setPartiicpanteName(r_nombres_apellidos),
+                        abrir(r_id_participante_test)
+                      )}
                     >
                       <td className={classes}>
                         <div className="flex flex-col">
@@ -548,6 +590,7 @@ export default function Participantes({ idTest_id, Regresar }) {
                           {r_fecha_add}
                         </Typography>
                       </td>
+                      {/* 
                       <td className={classes}>
                         <Tooltip content="Opciones">
                           <IconButton
@@ -561,6 +604,7 @@ export default function Participantes({ idTest_id, Regresar }) {
                           </IconButton>
                         </Tooltip>
                       </td>
+                      */}
                     </tr>
                   );
                 }
@@ -569,6 +613,7 @@ export default function Participantes({ idTest_id, Regresar }) {
           </table>
         )}
       </CardBody>
+
       <CardFooter className="flex items-center justify-between border-t border-blue-gray-50 p-4">
         <Typography variant="small" color="blue-gray" className="font-normal">
           Paguina 1 de 10

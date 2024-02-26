@@ -5,6 +5,7 @@ import {
   ArrowRightCircleIcon,
   UsersIcon,
   XCircleIcon,
+  ArrowLeftOnRectangleIcon,
 } from "@heroicons/react/24/solid";
 import {
   Card,
@@ -133,7 +134,7 @@ export default function ListaNiveles({
     pink: "shadow-pink-600",
   };
   return (
-    <Card className="h-full w-full mt-4 rounded-none">
+    <Card className="h-full w-full rounded-none">
       {load ? <Loader /> : ""}
       {error ? (
         <Dialog_Error
@@ -180,15 +181,16 @@ export default function ListaNiveles({
             </Typography>
           </div>
           <div className="flex shrink-0 flex-col gap-2 sm:flex-row">
-            <Button
-              variant="outlined"
-              size="sm"
-              color="orange"
-              onClick={() => AbrirSecciones()}
-              className=" w-auto"
-            >
-              Ver Secciones
-            </Button>
+            <Tooltip content="Regresar">
+              <Button
+                variant="outlined"
+                size="sm"
+                color="orange"
+                onClick={AbrirSecciones}
+              >
+                <ArrowLeftOnRectangleIcon strokeWidth={2} className="h-6 w-6" />
+              </Button>
+            </Tooltip>
             <Button
               className="flex items-center gap-3"
               size="sm"
@@ -229,7 +231,7 @@ export default function ListaNiveles({
           */}
         </div>
       </CardHeader>
-      <CardBody className="overflow-scroll px-0">
+      <CardBody className="px-0">
         {niveles.length == 0 ? (
           <div className="mx-auto items-center text-center font-bold text-2xl">
             Esta seccion no tiene niveles

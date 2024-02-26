@@ -52,8 +52,8 @@ export function Navbar_app({ user_name, titulo }) {
       color={fixedNavbar === false ? "transparent" : "blue"}
       className={`rounded-none transition-all  ${
         fixedNavbar
-          ? `sticky top-4 z-40 py-3 shadow-md border-4 shadow-blue-gray-500/5 ${sidenavTypes[sidenavType]} ${sidenavColors[sidenavColor]}`
-          : "px-0 py-1"
+          ? `sticky  z-40  shadow-md border-b-8 shadow-blue-gray-500/5 ${sidenavTypes[sidenavType]} ${sidenavColors[sidenavColor]}`
+          : "px-0 "
       }`}
       fullWidth
       blurred={fixedNavbar}

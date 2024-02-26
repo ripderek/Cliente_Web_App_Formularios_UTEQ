@@ -23,6 +23,7 @@ import { Crear, Errores_Test } from "@/pages/dashboard/FormulariosC";
 import { Dialog_Error, Loader, Notification } from "@/widgets"; //Importar el componente
 import { EstadisticaPregunta } from "@/pages/dashboard/Estadisticas";
 import Cookies from "universal-cookie";
+import { ArrowLeftOnRectangleIcon } from "@heroicons/react/24/solid";
 const TABLE_HEAD = ["", "Enunciado"];
 const TABS = [
   {
@@ -130,7 +131,7 @@ export default function ListaPregunta({
   };
   const [pre, setpre] = useState("");
   return (
-    <Card className="h-full w-full mt-4 rounded-none">
+    <Card className="h-full w-full rounded-none">
       {load ? <Loader /> : ""}
       {/* HACER UNO PARA VER  */}
       {EstadistricaPreun && (
@@ -146,7 +147,7 @@ export default function ListaPregunta({
       {/* Para visualizar los detalles del test y poder seleccionar secciones, niveles y participantes*/}
 
       <CardHeader floated={false} shadow={false} className="rounded-none">
-        <div className="mb-8 flex items-center justify-between gap-8">
+        <div className="flex items-center justify-between gap-8">
           <div>
             <Typography variant="h5" color="blue-gray">
               Lista de preguntas
@@ -161,24 +162,27 @@ export default function ListaPregunta({
               Todo
             </Button>
             */}
-            <Button
-              className="flex items-center gap-3"
-              size="sm"
-              color="green"
-              onClick={() => Regresar()}
-            >
-              {/*<PlusIcon strokeWidth={2} className="h-4 w-4" /> */} Regresar
-            </Button>
+
+            <Tooltip content="Regresar">
+              <Button
+                variant="outlined"
+                size="sm"
+                color="orange"
+                onClick={Regresar}
+              >
+                <ArrowLeftOnRectangleIcon strokeWidth={2} className="h-6 w-6" />
+              </Button>
+            </Tooltip>
           </div>
         </div>
       </CardHeader>
-      <CardBody className="overflow-scroll px-0">
+      <CardBody className="overflow-x-scroll px-0">
         {secciones.length === 0 ? (
           <div className="mx-auto items-center text-center font-bold text-2xl">
             Usted no tiene Formularios creados
           </div>
         ) : (
-          <table className="mt-4 w-full min-w-max table-auto text-left">
+          <table className=" w-full min-w-max table-auto text-left">
             <thead>
               <tr>
                 {TABLE_HEAD.map((head) => (

@@ -10,7 +10,7 @@ import {
 import { CrearSeccion } from "@/pages/dashboard/OpcionesSecciones";
 import { Dialog_Error, Loader, Notification } from "@/widgets"; //Importar el componente
 import { useMaterialTailwindController, setOpenSidenav } from "@/context";
-
+import { ArrowLeftOnRectangleIcon } from "@heroicons/react/24/solid";
 //const TABLE_HEAD = ["Member", "Function", "Status", "Employed", ""];
 import { useEffect, useState } from "react";
 export default function CrearPregunta({
@@ -117,7 +117,7 @@ export default function CrearPregunta({
     pink: "shadow-pink-600",
   };
   return (
-    <Card className="h-full w-full mt-4 rounded-none">
+    <Card className="h-full w-full rounded-none">
       {load ? <Loader /> : ""}
       <CrearSeccion abrir={openCreate} cerrar={cerrar} crear={crear} />
       <CardHeader floated={false} shadow={false} className="rounded-none">
@@ -131,14 +131,16 @@ export default function CrearPregunta({
             </Typography>
           </div>
           <div className="flex shrink-0 flex-col gap-2 sm:flex-row">
-            <Button
-              variant="gradient"
-              size="sm"
-              color="orange"
-              onClick={() => cambiarPestañas("openPreguntas")}
-            >
-              Regresar
-            </Button>
+            <Tooltip content="Regresar">
+              <Button
+                variant="outlined"
+                size="sm"
+                color="orange"
+                onClick={() => cambiarPestañas("openPreguntas")}
+              >
+                <ArrowLeftOnRectangleIcon strokeWidth={2} className="h-6 w-6" />
+              </Button>
+            </Tooltip>
           </div>
         </div>
 
@@ -182,7 +184,7 @@ export default function CrearPregunta({
         </div>
         */}
       </CardHeader>
-      <CardBody className="overflow-scroll px-0">
+      <CardBody className=" px-0">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3 p-5">
           {secciones.map(
             ({

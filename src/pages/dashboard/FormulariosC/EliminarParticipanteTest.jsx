@@ -54,7 +54,7 @@ export default function EliminarParticipanteTest({
     <>
       {load && <Loader />}
       <Dialog open={true} handler={cerrar}>
-        <DialogHeader>
+        <DialogHeader className="bg-green-50">
           Eliminar Participante.
           <IconButton
             className="!absolute top-3 right-3 bg-transparent shadow-none"

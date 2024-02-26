@@ -438,7 +438,7 @@ export default function Secciones() {
             //
           />
         );
-        //SELCCMA
+      //SELCCMA
       case tabs.openSELCCMA:
         return (
           <SELCCMA
@@ -495,7 +495,7 @@ export default function Secciones() {
           sidenavType === "dark" ? "/img/logo-ct.png" : "/img/logo-ct-dark.png"
         }
       />
-      <div className="p-4 xl:ml-80 ">
+      <div className="xl:ml-72 ">
         <Navbar_app user_name={data_user.r_user_name_ab} titulo={"Secciones"} />
         <Configurator />
         <IconButton

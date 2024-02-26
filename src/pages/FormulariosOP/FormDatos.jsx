@@ -149,7 +149,7 @@ export default function FormDatos() {
       <Card
         color="transparent"
         shadow={false}
-        className="mx-auto w-full max-w-[29rem] mt-3 shadow-xl p-6   text-center bg-white items-center justify-center mb-6 border-4 border-solid border-green-900 rounded-none"
+        className="mx-auto w-full max-w-[29rem] mt-3 shadow-xl p-6   text-center bg-white items-center justify-center mb-6  rounded-none"
       >
         <Typography variant="h4" color="blue-gray">
           Registrar en el Test
@@ -295,9 +295,8 @@ export default function FormDatos() {
             ""
           ) : (
             <Button
-              className="mt-6 rounded-none"
+              className="mt-6 rounded-none bg-light-green-900 font-bold rounded-none hover:bg-orange-600"
               fullWidth
-              color="orange"
               onClick={Registrar_Participante}
             >
               Aceptar

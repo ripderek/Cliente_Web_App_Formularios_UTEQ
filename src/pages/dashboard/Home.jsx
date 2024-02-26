@@ -8,6 +8,8 @@ import {
 } from "@material-tailwind/react";
 import { Cog6ToothIcon } from "@heroicons/react/24/solid";
 import { Dialog_Error, Loader } from "@/widgets";
+import Head from "next/head";
+
 import {
   BarraNavegacion2,
   Navbar_app,
@@ -90,6 +92,9 @@ export default function Home() {
 
   return (
     <div className=" min-h-screen bg-blue-gray-50/50">
+      <Head>
+        <title>Principal</title>
+      </Head>
       {error ? (
         <Dialog_Error
           mensaje={mensajeError}
@@ -106,7 +111,7 @@ export default function Home() {
           sidenavType === "dark" ? "/img/logo-ct.png" : "/img/logo-ct-dark.png"
         }
       />
-      <div className="p-4 xl:ml-80 ">
+      <div className="xl:ml-72 ">
         <Navbar_app user_name={data_user.r_user_name_ab} titulo={"Inicio"} />
         <Configurator />
         <IconButton
@@ -119,7 +124,7 @@ export default function Home() {
         >
           <Cog6ToothIcon className="h-5 w-5" />
         </IconButton>
-        <div>Aqui van los propos para abrir formularios hijos a mostrar</div>
+        <div>En construccion :)</div>
       </div>
     </div>
   );

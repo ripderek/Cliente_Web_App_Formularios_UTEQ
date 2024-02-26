@@ -31,6 +31,7 @@ import {
   PlusCircleIcon,
   UsersIcon,
   XCircleIcon,
+  ArrowLeftOnRectangleIcon,
 } from "@heroicons/react/24/solid";
 
 export default function SELCIMG_resp({
@@ -187,7 +188,7 @@ export default function SELCIMG_resp({
   };
 
   return (
-    <Card className="w-auto mt-6 mx-auto rounded-none">
+    <Card className="w-auto mx-auto rounded-none">
       {load ? <Loader /> : ""}
       {error ? (
         <Dialog_Error
@@ -264,14 +265,16 @@ export default function SELCIMG_resp({
           </div>
 
           <div className="flex shrink-0 flex-col gap-2 sm:flex-row">
-            <Button
-              variant="gradient"
-              size="sm"
-              color="orange"
-              onClick={() => AbrirPreguntas(idni, nombrenivel)}
-            >
-              Regresar
-            </Button>
+            <Tooltip content="Regresar">
+              <Button
+                variant="outlined"
+                size="sm"
+                color="orange"
+                onClick={() => AbrirPreguntas(idni, nombrenivel)}
+              >
+                <ArrowLeftOnRectangleIcon strokeWidth={2} className="h-6 w-6" />
+              </Button>
+            </Tooltip>
           </div>
         </div>
       </CardHeader>

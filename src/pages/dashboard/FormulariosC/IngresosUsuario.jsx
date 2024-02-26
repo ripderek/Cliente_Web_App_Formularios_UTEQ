@@ -52,7 +52,7 @@ export default function IngresosUsuario({
     <>
       {load && <Loader />}
       <Dialog open={true} handler={cerrar} size="xl">
-        <DialogHeader>
+        <DialogHeader className="bg-green-50">
           Ingresos
           <IconButton
             className="!absolute top-3 right-3 bg-transparent shadow-none"

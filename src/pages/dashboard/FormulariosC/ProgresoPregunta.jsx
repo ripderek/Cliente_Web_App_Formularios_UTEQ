@@ -7,7 +7,14 @@ import {
   DialogFooter,
   IconButton,
   Typography,
+  Tooltip,
 } from "@material-tailwind/react";
+import {
+  PlusCircleIcon,
+  AdjustmentsHorizontalIcon,
+  ChartBarSquareIcon,
+  ArrowLeftOnRectangleIcon,
+} from "@heroicons/react/24/solid";
 import { XCircleIcon } from "@heroicons/react/24/solid";
 import { Dialog_Error, Loader, Notification } from "@/widgets"; //Importar el componente
 const TABLE_HEAD = ["", "Enunciado", "Respuesta", "Tiempo"];
@@ -53,15 +60,20 @@ export default function ProgresoPregunta({
   return (
     <>
       {load && <Loader />}
-      <Button
-        color="green"
-        variant="gradient"
-        onClick={regresar}
-        className="!absolute top-2 right-2 bg-transparent shadow-none"
-      >
-        Regresar
-      </Button>
-      <div className="h-96 overflow-y-auto">
+
+      <Tooltip content="Regresar">
+        <Button
+          variant="outlined"
+          size="sm"
+          color="orange"
+          onClick={regresar}
+          className="!absolute top-2 right-2 bg-transparent shadow-none"
+        >
+          <ArrowLeftOnRectangleIcon strokeWidth={2} className="h-6 w-6" />
+        </Button>
+      </Tooltip>
+
+      <div className="h-96 overflow-y-auto mt-2">
         <table className="mt-4 w-full min-w-max table-auto text-left">
           <thead>
             <tr>

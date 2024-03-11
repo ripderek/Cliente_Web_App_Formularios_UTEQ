@@ -48,7 +48,11 @@ const shadows = {
   red: "shadow-red-600",
   pink: "shadow-pink-600",
 };
-export default function SeleccionarSecciones({ idTest_id, Regresar }) {
+export default function SeleccionarSecciones({
+  idTest_id,
+  Regresar,
+  TituloTest,
+}) {
   //funcion que obtenga las secciones disponibles para ser seleccionadas
   const [load, setLoader] = useState(false);
   const [secciones, setSecciones] = useState([]);
@@ -129,11 +133,15 @@ export default function SeleccionarSecciones({ idTest_id, Regresar }) {
       <CardHeader floated={false} shadow={false} className="rounded-none">
         <div className="mb-8 flex items-center justify-between gap-8">
           <div>
+            <Typography variant="h5" color="black">
+              {TituloTest}
+            </Typography>
             <Typography variant="h5" color="blue-gray">
               Lista de secciones
             </Typography>
             <Typography color="gray" className="mt-1 font-normal">
-              Estas secciones estan agregadas al test
+              Estas secciones estan agregadas al test:
+              <span className="font-bold">{" " + secciones.length}</span>
             </Typography>
           </div>
           <div className="flex shrink-0 flex-col gap-2 sm:flex-row">

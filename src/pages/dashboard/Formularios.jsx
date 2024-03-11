@@ -27,6 +27,7 @@ import {
   Participantes,
   SeleccionarSecciones,
   ListaPregunta,
+  ListaProgreso,
 } from "@/pages/dashboard/FormulariosC";
 
 //export function BarraNavegacion2
@@ -79,36 +80,54 @@ export default function Formularios() {
   //funcion para abrir los participantes de un test
   const [idTest, setIDtest] = useState(0);
   const [openParticipantes, setOpenParticiapntes] = useState(false);
-  const AbrirParticipantes = (idT) => {
+  const AbrirParticipantes = (idT, titulo) => {
     setOpenParticiapntes(true);
     setIDtest(idT);
     setOpenSecciones(false);
     setSeleccionarSeccion(false);
     setOpenEstadistica(false);
+    setOpenProgresos(false);
+    setTitulo(titulo);
   };
   const Regresar = () => {
     setOpenParticiapntes(false);
     setOpenSecciones(true);
     setSeleccionarSeccion(false);
     setOpenEstadistica(false);
+    setOpenProgresos(false);
   };
   //funcion para abrir el selector de secciones
   const [openSeleccionarSeccion, setSeleccionarSeccion] = useState(false);
-  const AbrirSecciones = (idT) => {
+  const AbrirSecciones = (idT, titulo) => {
     setSeleccionarSeccion(true);
     setOpenSecciones(false);
     setOpenParticiapntes(false);
     setIDtest(idT);
     setOpenEstadistica(false);
+    setOpenProgresos(false);
+    setTitulo(titulo);
   };
   const [openEstadistica, setOpenEstadistica] = useState(false);
-  const AbrirEstadisticas = (idT) => {
+  const AbrirEstadisticas = (idT, titulo) => {
     setOpenEstadistica(true);
     setSeleccionarSeccion(false);
     setOpenSecciones(false);
     setOpenParticiapntes(false);
     setIDtest(idT);
+    setOpenProgresos(false);
+    setTitulo(titulo);
   };
+  const [openProgresos, setOpenProgresos] = useState(false);
+  const AbrirProgresos = (idt, titulo) => {
+    setOpenEstadistica(false);
+    setSeleccionarSeccion(false);
+    setOpenSecciones(false);
+    setOpenParticiapntes(false);
+    setIDtest(idt);
+    setOpenProgresos(true);
+    setTitulo(titulo);
+  };
+  const [Titulo, setTitulo] = useState("");
   //funcion para renderizar los componentes segun un switch
   const renderComponent = () => {
     switch (true) {
@@ -118,15 +137,43 @@ export default function Formularios() {
             AbrirParticipantes={AbrirParticipantes}
             AbrirSecciones={AbrirSecciones}
             AbrirEstadisticas={AbrirEstadisticas}
+            AbrirProgresos={AbrirProgresos}
           />
         );
       case openParticipantes:
-        return <Participantes idTest_id={idTest} Regresar={Regresar} />;
+        return (
+          <Participantes
+            idTest_id={idTest}
+            Regresar={Regresar}
+            TituloTest={Titulo}
+          />
+        );
       case openSeleccionarSeccion:
-        return <SeleccionarSecciones idTest_id={idTest} Regresar={Regresar} />;
+        return (
+          <SeleccionarSecciones
+            idTest_id={idTest}
+            Regresar={Regresar}
+            TituloTest={Titulo}
+          />
+        );
       //para las estadisticas por preguntas
       case openEstadistica:
-        return <ListaPregunta idTest_id={idTest} Regresar={Regresar} />;
+        return (
+          <ListaPregunta
+            idTest_id={idTest}
+            Regresar={Regresar}
+            TituloTest={Titulo}
+          />
+        );
+      //ListaProgreso
+      case openProgresos:
+        return (
+          <ListaProgreso
+            idTest_id={idTest}
+            Regresar={Regresar}
+            TituloTest={Titulo}
+          />
+        );
       default:
         return null; // Otra opción por defecto si ninguna condición es verdadera
     }

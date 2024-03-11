@@ -18,6 +18,7 @@ import {
   UserIcon,
   Square3Stack3DIcon,
   TableCellsIcon,
+  ArrowTrendingUpIcon,
 } from "@heroicons/react/24/solid";
 import {
   Card,
@@ -98,6 +99,7 @@ export default function Lista({
   AbrirParticipantes,
   AbrirSecciones,
   AbrirEstadisticas,
+  AbrirProgresos,
 }) {
   const [load, setLoader] = useState(false);
   const [error, setError] = useState(false);
@@ -484,7 +486,9 @@ export default function Lista({
               <div
                 key={0}
                 className={`bg-blue-gray-50  shadow-2xl rounded-none cursor-pointer border-4 border-green-900 hover:border-orange-600  `}
-                onClick={() => AbrirParticipantes(idTes)}
+                onClick={() =>
+                  AbrirParticipantes(idTes, detallesTest.r_titulo_completo)
+                }
               >
                 <div className="mx-auto">
                   <div className="text-center">
@@ -506,7 +510,9 @@ export default function Lista({
               <div
                 key={1}
                 className={`bg-blue-gray-50  shadow-2xl rounded-none cursor-pointer border-4 border-green-900 hover:border-orange-600  `}
-                onClick={() => AbrirSecciones(idTes)}
+                onClick={() =>
+                  AbrirSecciones(idTes, detallesTest.r_titulo_completo)
+                }
               >
                 <div className="mx-auto">
                   <div className="text-center">
@@ -552,7 +558,9 @@ export default function Lista({
               <div
                 key={0}
                 className={`bg-blue-gray-50  shadow-2xl rounded-none cursor-pointer border-4 border-green-900 hover:border-orange-600  `}
-                onClick={() => AbrirEstadisticas(idTes)}
+                onClick={() =>
+                  AbrirEstadisticas(idTes, detallesTest.r_titulo_completo)
+                }
               >
                 <div className="mx-auto">
                   <div className="text-center">
@@ -574,6 +582,22 @@ export default function Lista({
                   </div>
                   <div className="w-full p-4 text-center font-bold text-black text-xl">
                     <span>Generar Excel </span>
+                  </div>
+                </div>
+              </div>
+              <div
+                key={2}
+                className={`bg-blue-gray-50  shadow-2xl rounded-none cursor-pointer border-4 border-green-900 hover:border-orange-600  `}
+                onClick={() =>
+                  AbrirProgresos(idTes, detallesTest.r_titulo_completo)
+                }
+              >
+                <div className="mx-auto">
+                  <div className="text-center">
+                    <ArrowTrendingUpIcon className="h-16 mx-auto" />
+                  </div>
+                  <div className="w-full p-4 text-center font-bold text-black text-xl">
+                    <span>Progresos</span>
                   </div>
                 </div>
               </div>
@@ -702,138 +726,150 @@ export default function Lista({
             Usted no tiene Formularios creados
           </div>
         ) : (
-          <table className="mt-4 w-full min-w-max table-auto text-left">
-            <thead>
-              <tr>
-                {TABLE_HEAD.map((head) => (
-                  <th
-                    key={head}
-                    className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4"
-                  >
-                    <Typography
-                      variant="small"
-                      color="blue-gray"
-                      className="font-normal leading-none opacity-70"
-                    >
-                      {head}
-                    </Typography>
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {secciones.map(
-                (
-                  {
-                    r_id_test,
-                    r_titulo,
-                    r_fecha_incio,
-                    r_fecha_fin,
-                    r_estado,
-                    r_suspendido,
-                    r_descripcion,
-                    r_ingresos_permitidos,
-                    r_token,
-                    r_error,
-                    r_abierta,
-                  },
-                  index
-                ) => {
-                  const isLast = index === secciones.length - 1;
-                  const classes = isLast
-                    ? "p-4"
-                    : "p-4 border-b border-blue-gray-50";
+          <>
+            <Typography
+              variant="small"
+              color="blue-gray"
+              className="font-normal leading-none opacity-70"
+            >
+              Numero de filas:
+              <span className="font-bold">{secciones.length}</span>
+            </Typography>
 
-                  return (
-                    <tr
-                      key={r_id_test}
-                      className="hover:bg-orange-100 cursor-pointer"
-                      onClick={() => ObtnerDetallesTest(r_id_test)}
+            <table className="mt-4 w-full min-w-max table-auto text-left">
+              <thead>
+                <tr>
+                  {TABLE_HEAD.map((head) => (
+                    <th
+                      key={head}
+                      className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4"
                     >
-                      <td className={classes}>
-                        <div className="flex flex-col">
-                          <Typography
-                            variant="small"
-                            color="blue-gray"
-                            className="font-normal"
-                          >
-                            {index + 1}
-                          </Typography>
-                        </div>
-                      </td>
-                      <td className={classes}>
-                        <div className="flex items-center gap-3">
+                      <Typography
+                        variant="small"
+                        color="blue-gray"
+                        className="font-normal leading-none opacity-70"
+                      >
+                        {head}
+                      </Typography>
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {secciones.map(
+                  (
+                    {
+                      r_id_test,
+                      r_titulo,
+                      r_fecha_incio,
+                      r_fecha_fin,
+                      r_estado,
+                      r_suspendido,
+                      r_descripcion,
+                      r_ingresos_permitidos,
+                      r_token,
+                      r_error,
+                      r_abierta,
+                    },
+                    index
+                  ) => {
+                    const isLast = index === secciones.length - 1;
+                    const classes = isLast
+                      ? "p-4"
+                      : "p-4 border-b border-blue-gray-50";
+
+                    return (
+                      <tr
+                        key={r_id_test}
+                        className="hover:bg-orange-100 cursor-pointer"
+                        onClick={() => ObtnerDetallesTest(r_id_test)}
+                      >
+                        <td className={classes}>
                           <div className="flex flex-col">
                             <Typography
                               variant="small"
                               color="blue-gray"
                               className="font-normal"
                             >
-                              {r_titulo}
+                              {index + 1}
                             </Typography>
+                          </div>
+                        </td>
+                        <td className={classes}>
+                          <div className="flex items-center gap-3">
                             <div className="flex flex-col">
                               <Typography
                                 variant="small"
                                 color="blue-gray"
                                 className="font-normal"
                               >
-                                <span className="font-bold">Inicio:</span>{" "}
-                                {r_fecha_incio}
+                                {r_titulo}
                               </Typography>
-                            </div>
-                            <div className="flex flex-col">
-                              <Typography
-                                variant="small"
-                                color="blue-gray"
-                                className="font-normal"
-                              >
-                                <span className="font-bold">Fin:</span>{" "}
-                                {r_fecha_fin}
-                              </Typography>
+                              <div className="flex flex-col">
+                                <Typography
+                                  variant="small"
+                                  color="blue-gray"
+                                  className="font-normal"
+                                >
+                                  <span className="font-bold">Inicio:</span>{" "}
+                                  {r_fecha_incio}
+                                </Typography>
+                              </div>
+                              <div className="flex flex-col">
+                                <Typography
+                                  variant="small"
+                                  color="blue-gray"
+                                  className="font-normal"
+                                >
+                                  <span className="font-bold">Fin:</span>{" "}
+                                  {r_fecha_fin}
+                                </Typography>
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      </td>
+                        </td>
 
-                      <td className={classes}>
-                        <div className="w-max">
-                          <Chip
-                            variant="ghost"
-                            size="sm"
-                            value={r_estado}
-                            color={r_estado === "Erroneo" ? "red" : "blue-gray"}
-                          />
-                        </div>
-                      </td>
-                      <td className={classes}>
-                        <div className="w-max">
-                          <Tooltip
-                            content={
-                              r_abierta
-                                ? "Cualquiera que tenga el enlace puede entrar"
-                                : "Solo los de la lista pueden ingresar"
-                            }
-                          >
+                        <td className={classes}>
+                          <div className="w-max">
                             <Chip
                               variant="ghost"
                               size="sm"
-                              value={r_abierta ? "Todos" : "Restringido"}
-                              color={r_abierta ? "green" : "blue-gray"}
+                              value={r_estado}
+                              color={
+                                r_estado === "Erroneo" ? "red" : "blue-gray"
+                              }
                             />
-                          </Tooltip>
-                        </div>
-                      </td>
-                      <td className={classes}>
-                        <div className="w-max">
-                          <Chip
-                            variant="ghost"
-                            size="sm"
-                            value={r_suspendido ? "Si" : "No"}
-                            color={r_suspendido ? "red" : "blue-gray"}
-                          />
-                        </div>
-                      </td>
-                      {/* 
+                          </div>
+                        </td>
+                        <td className={classes}>
+                          <div className="w-max">
+                            <Tooltip
+                              content={
+                                r_abierta
+                                  ? "Cualquiera que tenga el enlace puede entrar"
+                                  : "Solo los de la lista pueden ingresar"
+                              }
+                            >
+                              <Chip
+                                variant="ghost"
+                                size="sm"
+                                value={r_abierta ? "Todos" : "Restringido"}
+                                color={r_abierta ? "green" : "blue-gray"}
+                              />
+                            </Tooltip>
+                          </div>
+                        </td>
+                        <td className={classes}>
+                          <div className="w-max">
+                            <Chip
+                              variant="ghost"
+                              size="sm"
+                              value={r_suspendido ? "Si" : "No"}
+                              color={r_suspendido ? "red" : "blue-gray"}
+                            />
+                          </div>
+                        </td>
+                        {/* 
                       <td className={classes}>
                         <Tooltip content="Editar test">
                           <IconButton variant="text">
@@ -853,30 +889,30 @@ export default function Lista({
                         </Tooltip>
                       </td>
                       */}
-                      {r_error ? (
-                        <td className={classes}>
-                          <Tooltip content="El test contiene errores">
-                            <IconButton
-                              variant="outlined"
-                              onClick={() => (
-                                setError1(true), setIdTes(r_id_test)
-                              )}
-                            >
-                              <XCircleIcon color="red" className="h-8 w-8" />
+                        {r_error ? (
+                          <td className={classes}>
+                            <Tooltip content="El test contiene errores">
+                              <IconButton
+                                variant="outlined"
+                                onClick={() => (
+                                  setError1(true), setIdTes(r_id_test)
+                                )}
+                              >
+                                <XCircleIcon color="red" className="h-8 w-8" />
+                              </IconButton>
+                            </Tooltip>
+                          </td>
+                        ) : (
+                          <td className={classes}>
+                            <IconButton variant="outlined">
+                              <CheckCircleIcon
+                                color="green"
+                                className="h-8 w-8"
+                              />
                             </IconButton>
-                          </Tooltip>
-                        </td>
-                      ) : (
-                        <td className={classes}>
-                          <IconButton variant="outlined">
-                            <CheckCircleIcon
-                              color="green"
-                              className="h-8 w-8"
-                            />
-                          </IconButton>
-                        </td>
-                      )}
-                      {/*
+                          </td>
+                        )}
+                        {/*
                       
                       <td className={classes}>
                         <Typography
@@ -907,12 +943,13 @@ export default function Lista({
                         </td> 
                       )}
                       */}
-                    </tr>
-                  );
-                }
-              )}
-            </tbody>
-          </table>
+                      </tr>
+                    );
+                  }
+                )}
+              </tbody>
+            </table>
+          </>
         )}
       </CardBody>
       <CardFooter className="flex items-center justify-between border-t border-blue-gray-50 p-4">

@@ -4,6 +4,7 @@ import {
   AdjustmentsHorizontalIcon,
   ChartBarSquareIcon,
   ArrowLeftOnRectangleIcon,
+  ArrowPathIcon,
 } from "@heroicons/react/24/solid";
 
 import {
@@ -97,7 +98,7 @@ const sidenavColors = {
   red: "border-red-600",
   pink: "border-pink-600",
 };
-export default function Participantes({ idTest_id, Regresar }) {
+export default function Participantes({ idTest_id, Regresar, TituloTest }) {
   const [controller, dispatch] = useMaterialTailwindController();
   const { sidenavType, sidenavColor } = controller;
   //funcion para listar los participantes de un test mediante el id test
@@ -316,6 +317,16 @@ export default function Participantes({ idTest_id, Regresar }) {
             </div>
           ) : (
             <div className="overflow-y-auto h-96">
+              <Typography
+                variant="small"
+                color="blue-gray"
+                className="font-normal leading-none opacity-70"
+              >
+                Numero de filas:{" "}
+                <span className="font-bold">
+                  {listaParticipantesCreados.length}
+                </span>
+              </Typography>
               <table className="mt-4 w-full min-w-max table-auto text-left">
                 <thead>
                   <tr>
@@ -427,6 +438,9 @@ export default function Participantes({ idTest_id, Regresar }) {
       <CardHeader floated={false} shadow={false} className="rounded-none">
         <div className=" flex items-center justify-between gap-8">
           <div>
+            <Typography variant="h5" color="black">
+              {TituloTest}
+            </Typography>
             <Typography variant="h5" color="blue-gray">
               Lista de participantes
             </Typography>
@@ -465,6 +479,17 @@ export default function Participantes({ idTest_id, Regresar }) {
               <ChartBarSquareIcon strokeWidth={2} className="h-6 w-6" />{" "}
               Reportes
             </Button>
+            <Tooltip content="Refrescar">
+              <Button
+                variant="gradient"
+                size="sm"
+                color="green"
+                onClick={ObtenerListaParticipantes}
+                className="flex items-center gap-3"
+              >
+                <ArrowPathIcon strokeWidth={2} className="h-6 w-6" />
+              </Button>
+            </Tooltip>
           </div>
         </div>
       </CardHeader>
@@ -474,81 +499,90 @@ export default function Participantes({ idTest_id, Regresar }) {
             Este test no contiene participantes
           </div>
         ) : (
-          <table className=" w-full min-w-max table-auto text-left">
-            <thead>
-              <tr>
-                {TABLE_HEAD.map((head) => (
-                  <th
-                    key={head}
-                    className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4"
-                  >
-                    <Typography
-                      variant="small"
-                      color="blue-gray"
-                      className="font-normal leading-none opacity-70"
+          <>
+            <Typography
+              variant="small"
+              color="blue-gray"
+              className="font-normal leading-none opacity-70"
+            >
+              Numero de filas:
+              <span className="font-bold">{ListaParticipantes.length}</span>
+            </Typography>
+            <table className=" w-full min-w-max table-auto text-left">
+              <thead>
+                <tr>
+                  {TABLE_HEAD.map((head) => (
+                    <th
+                      key={head}
+                      className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4"
                     >
-                      {head}
-                    </Typography>
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {ListaParticipantes.map(
-                (
-                  {
-                    r_id_participante_test,
-                    r_fecha_add,
-                    r_supero_limite,
-                    r_estado_particpante,
-                    r_id_participante,
-                    r_correo_institucional,
-                    r_nombres_apellidos,
-                    r_tipo_identificacion,
-                    r_identificacion,
-                    r_numero_celular,
-                  },
-                  index
-                ) => {
-                  const isLast = index === ListaParticipantes.length - 1;
-                  const classes = isLast
-                    ? "p-4"
-                    : "p-4 border-b border-blue-gray-50";
+                      <Typography
+                        variant="small"
+                        color="blue-gray"
+                        className="font-normal leading-none opacity-70"
+                      >
+                        {head}
+                      </Typography>
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {ListaParticipantes.map(
+                  (
+                    {
+                      r_id_participante_test,
+                      r_fecha_add,
+                      r_supero_limite,
+                      r_estado_particpante,
+                      r_id_participante,
+                      r_correo_institucional,
+                      r_nombres_apellidos,
+                      r_tipo_identificacion,
+                      r_identificacion,
+                      r_numero_celular,
+                    },
+                    index
+                  ) => {
+                    const isLast = index === ListaParticipantes.length - 1;
+                    const classes = isLast
+                      ? "p-4"
+                      : "p-4 border-b border-blue-gray-50";
 
-                  return (
-                    <tr
-                      key={r_id_participante_test}
-                      className="hover:bg-yellow-200 cursor-pointer"
-                      onClick={() => (
-                        setPartiicpanteName(r_nombres_apellidos),
-                        abrir(r_id_participante_test)
-                      )}
-                    >
-                      <td className={classes}>
-                        <div className="flex flex-col">
-                          <Typography
-                            variant="small"
-                            color="blue-gray"
-                            className="font-normal"
-                          >
-                            {index + 1}
-                          </Typography>
-                        </div>
-                      </td>
-                      <td className={classes}>
-                        <div className="flex items-center gap-3">
-                          {/* 
-                    <Avatar src={img} alt={name} size="sm" />
-                    */}
+                    return (
+                      <tr
+                        key={r_id_participante_test}
+                        className="hover:bg-yellow-200 cursor-pointer"
+                        onClick={() => (
+                          setPartiicpanteName(r_nombres_apellidos),
+                          abrir(r_id_participante_test)
+                        )}
+                      >
+                        <td className={classes}>
                           <div className="flex flex-col">
                             <Typography
                               variant="small"
                               color="blue-gray"
                               className="font-normal"
                             >
-                              {r_nombres_apellidos}
+                              {index + 1}
                             </Typography>
+                          </div>
+                        </td>
+                        <td className={classes}>
+                          <div className="flex items-center gap-3">
                             {/* 
+                    <Avatar src={img} alt={name} size="sm" />
+                    */}
+                            <div className="flex flex-col">
+                              <Typography
+                                variant="small"
+                                color="blue-gray"
+                                className="font-normal"
+                              >
+                                {r_nombres_apellidos}
+                              </Typography>
+                              {/* 
                       <Typography
                         variant="small"
                         color="blue-gray"
@@ -557,40 +591,40 @@ export default function Participantes({ idTest_id, Regresar }) {
                         ""
                       </Typography>
                       */}
+                            </div>
                           </div>
-                        </div>
-                      </td>
-                      <td className={classes}>
-                        <div className="flex flex-col">
+                        </td>
+                        <td className={classes}>
+                          <div className="flex flex-col">
+                            <Typography
+                              variant="small"
+                              color="blue-gray"
+                              className="font-normal"
+                            >
+                              {r_correo_institucional}
+                            </Typography>
+                          </div>
+                        </td>
+                        <td className={classes}>
+                          <div className="w-max">
+                            <Chip
+                              variant="ghost"
+                              size="sm"
+                              value={r_supero_limite ? "Si" : "No"}
+                              color={r_supero_limite ? "red" : "blue-gray"}
+                            />
+                          </div>
+                        </td>
+                        <td className={classes}>
                           <Typography
                             variant="small"
                             color="blue-gray"
                             className="font-normal"
                           >
-                            {r_correo_institucional}
+                            {r_fecha_add}
                           </Typography>
-                        </div>
-                      </td>
-                      <td className={classes}>
-                        <div className="w-max">
-                          <Chip
-                            variant="ghost"
-                            size="sm"
-                            value={r_supero_limite ? "Si" : "No"}
-                            color={r_supero_limite ? "red" : "blue-gray"}
-                          />
-                        </div>
-                      </td>
-                      <td className={classes}>
-                        <Typography
-                          variant="small"
-                          color="blue-gray"
-                          className="font-normal"
-                        >
-                          {r_fecha_add}
-                        </Typography>
-                      </td>
-                      {/* 
+                        </td>
+                        {/* 
                       <td className={classes}>
                         <Tooltip content="Opciones">
                           <IconButton
@@ -605,12 +639,13 @@ export default function Participantes({ idTest_id, Regresar }) {
                         </Tooltip>
                       </td>
                       */}
-                    </tr>
-                  );
-                }
-              )}
-            </tbody>
-          </table>
+                      </tr>
+                    );
+                  }
+                )}
+              </tbody>
+            </table>
+          </>
         )}
       </CardBody>
 

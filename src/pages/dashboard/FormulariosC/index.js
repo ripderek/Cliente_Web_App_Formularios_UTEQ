@@ -12,6 +12,7 @@ export { default as ProgresoUsuario } from '@/pages/dashboard/FormulariosC/Progr
 export { default as ProgresoSecciones } from '@/pages/dashboard/FormulariosC/ProgresoSecciones'
 export { default as ProgresoPregunta } from '@/pages/dashboard/FormulariosC/ProgresoPregunta'
 export { default as EliminarParticipanteTest } from '@/pages/dashboard/FormulariosC/EliminarParticipanteTest'
+export { default as ListaProgreso } from '@/pages/dashboard/FormulariosC/ListaProgreso'
 
 
-//EliminarParticipanteTest
+//ListaProgreso

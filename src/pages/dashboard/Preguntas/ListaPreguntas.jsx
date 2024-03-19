@@ -11,6 +11,7 @@ import {
   DocumentIcon,
   DocumentMinusIcon,
   ArrowLeftOnRectangleIcon,
+  PencilSquareIcon
 } from "@heroicons/react/24/solid";
 import {
   Card,
@@ -255,7 +256,7 @@ export default function ListaPreguntas({
               >
                 <div className="mx-auto">
                   <div className="text-center mt-2 ">
-                    <DocumentTextIcon
+                    <PencilSquareIcon
                       className="h-16 mx-auto bg-white w-auto rounded-xl"
                       color="green"
                     />
@@ -280,7 +281,7 @@ export default function ListaPreguntas({
                     />
                   </div>
                   <div className="w-full p-4 text-center font-bold text-black text-xl">
-                    <span>Eliminar pregunta </span>
+                    <span>Eliminar </span>
                   </div>
                 </div>
               </div>
@@ -416,7 +417,16 @@ export default function ListaPreguntas({
             Este nivel no tiene preguntas
           </div>
         ) : (
-          <table className="mt-4 w-full min-w-max table-auto text-left">
+          <>
+          <Typography
+              variant="small"
+              color="blue-gray"
+              className="font-normal leading-none opacity-70"
+            >
+              Numero de preguntas:
+              <span className="font-bold">{preguntas.length}</span>
+            </Typography>
+            <table className="mt-4 w-full min-w-max table-auto text-left">
             <thead>
               <tr>
                 {TABLE_HEAD.map((head) => (
@@ -435,6 +445,7 @@ export default function ListaPreguntas({
                 ))}
               </tr>
             </thead>
+            
             <tbody>
               {preguntas.map(
                 (
@@ -557,6 +568,8 @@ export default function ListaPreguntas({
               )}
             </tbody>
           </table>
+          </>
+          
         )}
       </CardBody>
       <CardFooter className="flex items-center justify-between border-t border-blue-gray-50 p-4">

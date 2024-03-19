@@ -7,6 +7,8 @@ import {
   Configurator,
 } from "@/components/layout";
 //rutas que va a tener la barra lateral
+import Head from "next/head";
+
 import routes from "@/routes";
 import {
   useMaterialTailwindController,
@@ -489,6 +491,9 @@ export default function Secciones() {
         ""
       )}
       {load ? <Loader /> : ""}
+      <Head>
+        <title>Secciones</title>
+      </Head>
       <BarraNavegacion2
         routes={routes}
         brandImg={

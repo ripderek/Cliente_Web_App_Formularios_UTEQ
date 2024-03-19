@@ -230,7 +230,7 @@ export default function SELCCMA_resp({
     obtener_datos_pregunta();
   };
   return (
-    <Card className="w-auto mt-6 mx-auto rounded-none">
+    <Card className="w-auto mx-auto rounded-none">
       {editarPregunta && (
         <SELCCMA_edit idpregunta={idPreguntaEdit} cerrar={CerrarEdit} />
       )}
@@ -305,10 +305,20 @@ export default function SELCCMA_resp({
       </Dialog>
       <CardHeader floated={false} shadow={false} className="rounded-none">
         <div className="mb-1 flex items-center justify-between gap-8">
-          <div>
+          <div className="flex">
             <Typography variant="h4" color="orange">
               Pregunta:
             </Typography>
+            <div className=" ml-2 flex justify-end mb-0">
+                <Tooltip content="Editar pregunta">
+                  <button
+                    className="bg-zinc-50 p-2 bg-orange-500 rounded-xl cursor-pointer"
+                    onClick={() => setEditarPregunta(true)}
+                  >
+                    <PencilIcon className="w-4" color="white" />
+                  </button>
+                </Tooltip>
+              </div>
           </div>
           <div className="flex shrink-0 flex-col gap-2 sm:flex-row">
             <Tooltip content="Regresar">
@@ -325,13 +335,15 @@ export default function SELCCMA_resp({
         </div>
       </CardHeader>
       <CardBody className="flex flex-col gap-4">
-        <div className="bg-gray-50 h-auto shadow-none rounded-none border-2 border-orange-900">
+        <div className="bg-gray-50 h-auto shadow-none rounded-none border-2 ">
           <div className="bg-zinc-900 text-black  rounded-2xl">
             <div className="mx-auto">
               <textarea
                 className="border p-2 w-full  rounded-none font-bold bg-gray-50 border-none"
                 value={data_user.r_enunciado}
               />
+
+              {/* 
               <div className="p-2 flex justify-end mb-0">
                 <Tooltip content="Editar pregunta">
                   <button
@@ -342,6 +354,8 @@ export default function SELCCMA_resp({
                   </button>
                 </Tooltip>
               </div>
+*/}
+
             </div>
           </div>
         </div>

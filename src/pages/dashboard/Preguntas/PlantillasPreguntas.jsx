@@ -6,11 +6,17 @@ import {
   CardBody,
   CardFooter,
   Tooltip,
+  Chip,
 } from "@material-tailwind/react";
 import { CrearSeccion } from "@/pages/dashboard/OpcionesSecciones";
 import { Dialog_Error, Loader, Notification } from "@/widgets"; //Importar el componente
 import { useMaterialTailwindController, setOpenSidenav } from "@/context";
-import { ArrowLeftOnRectangleIcon } from "@heroicons/react/24/solid";
+import {
+  ArrowLeftOnRectangleIcon,
+  IdentificationIcon,
+  PhotoIcon,
+  ClockIcon,
+} from "@heroicons/react/24/solid";
 //const TABLE_HEAD = ["Member", "Function", "Status", "Employed", ""];
 import { useEffect, useState } from "react";
 export default function CrearPregunta({
@@ -185,6 +191,14 @@ export default function CrearPregunta({
         */}
       </CardHeader>
       <CardBody className=" px-0">
+        <Typography
+          variant="small"
+          color="blue-gray"
+          className="font-normal leading-none opacity-70 ml-5"
+        >
+          Numero de plantillas:
+          <span className="font-bold">{" " + secciones.length}</span>
+        </Typography>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3 p-5">
           {secciones.map(
             ({
@@ -193,16 +207,25 @@ export default function CrearPregunta({
               r_descripcion,
               r_icono,
               r_codigo,
+              r_enunciado_img,
+              r_opciones_img,
+              r_tiempo_enunciado,
+              r_tiempo_respuesta,
             }) => (
               <div
                 key={r_id_tipo_pregunta}
-                className={`bg-blue-gray-50 shadow-2xl rounded-none cursor-pointer hover:border-4 ${sidenavColors[sidenavColor]}  ${shadows[sidenavColor]}`}
+                className={`bg-blue-gray-50  rounded-none cursor-pointer hover:border-4 ${sidenavColors[sidenavColor]}  ${shadows[sidenavColor]}`}
                 onClick={() =>
                   AbrirEditor(r_id_tipo_pregunta, r_icono, r_codigo)
                 }
               >
                 <div className="bg-zinc-900 text-black  rounded-2xl">
                   <div className="mx-auto">
+                    <Chip
+                      className="w-20 text-center mt-1 ml-1"
+                      color="amber"
+                      value={r_codigo}
+                    />
                     <div className="text-center">
                       {/*src={
                                       process.env.NEXT_PUBLIC_ACCESLINK +
@@ -219,15 +242,60 @@ export default function CrearPregunta({
                         className="mt-3 h-52 w-auto mx-auto"
                       />
                     </div>
-                    <div className="w-full p-4">
+                    <div className="w-full p-2">
                       <input
                         className="w-full text-lg bg-blue-gray-50 font-semibold	text-blue-gray-800 "
                         disabled
                         value={r_titulo}
                       />
                     </div>
-                    <div className="m-4 text-blue-gray-800">
+
+                    <div className="m-2 text-blue-gray-800">
                       {r_descripcion}
+                    </div>
+                    <div className="flex">
+                      {/* Si el enunciado es de tipo imagen */}
+                      {r_enunciado_img && (
+                        <Tooltip content="Imagen enunciado">
+                          <Chip
+                            className="w-9 flex h-8 items-center text-center mb-1 ml-1"
+                            color="blue"
+                            icon={
+                              <IdentificationIcon className="mx-auto text-center" />
+                            }
+                          />
+                        </Tooltip>
+                      )}
+                      {/* Si las opciones de tipo imagen */}
+                      {r_opciones_img && (
+                        <Tooltip content="Imagen opcion">
+                          <Chip
+                            className="w-9 flex h-8 items-center text-center mb-1 ml-1"
+                            color="cyan"
+                            icon={<PhotoIcon className="mx-auto text-center" />}
+                          />
+                        </Tooltip>
+                      )}
+                      {/* Si el enunciado tiene tiempo */}
+                      {r_tiempo_enunciado && (
+                        <Tooltip content="Tiempo enunciado">
+                          <Chip
+                            className="w-9 flex h-8 items-center text-center mb-1 ml-1"
+                            color="light-green"
+                            icon={<ClockIcon className="mx-auto text-center" />}
+                          />
+                        </Tooltip>
+                      )}
+                       {/* Si las opciones tiene tiempo */}
+                       {r_tiempo_respuesta && (
+                        <Tooltip content="Tiempo opciones">
+                          <Chip
+                            className="w-9 flex h-8 items-center text-center mb-1 ml-1"
+                            color="indigo"
+                            icon={<ClockIcon className="mx-auto text-center" />}
+                          />
+                        </Tooltip>
+                      )}
                     </div>
                     {/* 
                     <div className="p-2 flex justify-end">

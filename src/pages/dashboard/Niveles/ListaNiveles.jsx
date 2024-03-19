@@ -239,7 +239,14 @@ export default function ListaNiveles({
         ) : (
           ""
         )}
-
+        <Typography
+              variant="small"
+              color="blue-gray"
+              className="font-normal leading-none opacity-70 ml-5"
+            >
+              Numero de niveles:
+              <span className="font-bold">{niveles.length}</span>
+            </Typography>
         <div className="grid grid-cols-2 md:grid-cols-7 gap-3 p-5">
           {niveles.map(
             (

@@ -164,6 +164,7 @@ export default function Lista({ AbrirNiveles }) {
         </div>
       </CardHeader>
       <CardBody className=" px-0">
+
         {secciones.length === 0 && (
           <Typography
             color="gray"
@@ -173,6 +174,14 @@ export default function Lista({ AbrirNiveles }) {
             Usted no se encuentra en ninguna sección
           </Typography>
         )}
+        <Typography
+              variant="small"
+              color="blue-gray"
+              className="font-normal leading-none opacity-70 ml-5"
+            >
+              Número de secciones:
+              <span className="font-bold">{secciones.length}</span>
+            </Typography>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3 p-5">
           {secciones.map(
             ({ r_titulo, r_id_seccion, r_descripcion, r_admin_seccion }) => (

@@ -532,76 +532,81 @@ export default function Lista({
                 </div>
               </div>
             </div>
-            {/*OPCIONES DE ESTADISTICAS */}
-            <table className="mt-4 w-full min-w-max table-auto text-left">
-              <thead>
-                <tr>
-                  <th className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4">
-                    <div className="flex items-center gap-3">
-                      <div className="flex items-center">
-                        <ChartBarIcon className="h-8 mr-2" />
-                        <span>Estadisticas</span>
-                      </div>
-                      {/**<Button
+            {detallesTest.r_tiene_progreso && (
+              <>
+                {/*OPCIONES DE ESTADISTICAS */}
+                <table className="mt-4 w-full min-w-max table-auto text-left">
+                  <thead>
+                    <tr>
+                      <th className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4">
+                        <div className="flex items-center gap-3">
+                          <div className="flex items-center">
+                            <ChartBarIcon className="h-8 mr-2" />
+                            <span>Estadisticas</span>
+                          </div>
+                          {/**<Button
                           variant="gradient"
                           color="orange"
                           onClick={() => AbrirEstadisticas(idTes)}
                         >
                           <span>Estadisticas por pregunta</span>
                         </Button> */}
+                        </div>
+                      </th>
+                    </tr>
+                  </thead>
+                </table>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3 p-5">
+                  <div
+                    key={0}
+                    className={`bg-blue-gray-50  shadow-2xl rounded-none cursor-pointer border-4 border-green-900 hover:border-orange-600  `}
+                    onClick={() =>
+                      AbrirEstadisticas(idTes, detallesTest.r_titulo_completo)
+                    }
+                  >
+                    <div className="mx-auto">
+                      <div className="text-center">
+                        <PresentationChartBarIcon className="h-16 mx-auto" />
+                      </div>
+                      <div className="w-full p-4 text-center font-bold text-black text-xl">
+                        <span>Por preguntas </span>
+                      </div>
                     </div>
-                  </th>
-                </tr>
-              </thead>
-            </table>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 p-5">
-              <div
-                key={0}
-                className={`bg-blue-gray-50  shadow-2xl rounded-none cursor-pointer border-4 border-green-900 hover:border-orange-600  `}
-                onClick={() =>
-                  AbrirEstadisticas(idTes, detallesTest.r_titulo_completo)
-                }
-              >
-                <div className="mx-auto">
-                  <div className="text-center">
-                    <PresentationChartBarIcon className="h-16 mx-auto" />
                   </div>
-                  <div className="w-full p-4 text-center font-bold text-black text-xl">
-                    <span>Por preguntas </span>
+                  <div
+                    key={1}
+                    className={`bg-blue-gray-50  shadow-2xl rounded-none cursor-pointer border-4 border-green-900 hover:border-orange-600  `}
+                    onClick={() => GenerarExcel()}
+                  >
+                    <div className="mx-auto">
+                      <div className="text-center">
+                        <TableCellsIcon className="h-16 mx-auto" />
+                      </div>
+                      <div className="w-full p-4 text-center font-bold text-black text-xl">
+                        <span>Generar Excel </span>
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </div>
-              <div
-                key={1}
-                className={`bg-blue-gray-50  shadow-2xl rounded-none cursor-pointer border-4 border-green-900 hover:border-orange-600  `}
-                onClick={() => GenerarExcel()}
-              >
-                <div className="mx-auto">
-                  <div className="text-center">
-                    <TableCellsIcon className="h-16 mx-auto" />
-                  </div>
-                  <div className="w-full p-4 text-center font-bold text-black text-xl">
-                    <span>Generar Excel </span>
+                  <div
+                    key={2}
+                    className={`bg-blue-gray-50  shadow-2xl rounded-none cursor-pointer border-4 border-green-900 hover:border-orange-600  `}
+                    onClick={() =>
+                      AbrirProgresos(idTes, detallesTest.r_titulo_completo)
+                    }
+                  >
+                    <div className="mx-auto">
+                      <div className="text-center">
+                        <ArrowTrendingUpIcon className="h-16 mx-auto" />
+                      </div>
+                      <div className="w-full p-4 text-center font-bold text-black text-xl">
+                        <span>Progresos</span>
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div
-                key={2}
-                className={`bg-blue-gray-50  shadow-2xl rounded-none cursor-pointer border-4 border-green-900 hover:border-orange-600  `}
-                onClick={() =>
-                  AbrirProgresos(idTes, detallesTest.r_titulo_completo)
-                }
-              >
-                <div className="mx-auto">
-                  <div className="text-center">
-                    <ArrowTrendingUpIcon className="h-16 mx-auto" />
-                  </div>
-                  <div className="w-full p-4 text-center font-bold text-black text-xl">
-                    <span>Progresos</span>
-                  </div>
-                </div>
-              </div>
-            </div>
+              </>
+            )}
+
             {/* OPCIONES AVANZADAS SKERE MODO DIABLO */}
             <table className="mt-4 w-full min-w-max table-auto text-left">
               <thead>

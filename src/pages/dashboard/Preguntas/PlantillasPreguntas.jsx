@@ -16,6 +16,8 @@ import {
   IdentificationIcon,
   PhotoIcon,
   ClockIcon,
+  MinusIcon,
+  ListBulletIcon,
 } from "@heroicons/react/24/solid";
 //const TABLE_HEAD = ["Member", "Function", "Status", "Employed", ""];
 import { useEffect, useState } from "react";
@@ -130,11 +132,12 @@ export default function CrearPregunta({
         <div className="mb-1 flex items-center justify-between gap-8">
           <div>
             <Typography variant="h5" color="blue-gray">
-              Plantillas
+              Lista de plantillas
             </Typography>
-            <Typography color="gray" className="mt-1 font-normal">
+
+            {/* <Typography color="gray" className="mt-1 font-normal">
               Lista de plantillas para {titulo_tipo}
-            </Typography>
+            </Typography> */}
           </div>
           <div className="flex shrink-0 flex-col gap-2 sm:flex-row">
             <Tooltip content="Regresar">
@@ -211,6 +214,7 @@ export default function CrearPregunta({
               r_opciones_img,
               r_tiempo_enunciado,
               r_tiempo_respuesta,
+              r_opcion_multiple,
             }) => (
               <div
                 key={r_id_tipo_pregunta}
@@ -286,8 +290,8 @@ export default function CrearPregunta({
                           />
                         </Tooltip>
                       )}
-                       {/* Si las opciones tiene tiempo */}
-                       {r_tiempo_respuesta && (
+                      {/* Si las opciones tiene tiempo */}
+                      {r_tiempo_respuesta && (
                         <Tooltip content="Tiempo opciones">
                           <Chip
                             className="w-9 flex h-8 items-center text-center mb-1 ml-1"
@@ -296,8 +300,28 @@ export default function CrearPregunta({
                           />
                         </Tooltip>
                       )}
+                      <Tooltip
+                        content={
+                          r_opcion_multiple ? "Opcion Multiple" : "Opcion Unica"
+                        }
+                      >
+                        <Chip
+                          className="w-9 flex h-8 items-center text-center mb-1 ml-1"
+                          color={r_opcion_multiple ? "green" : "yellow"}
+                          icon={
+                            r_opcion_multiple ? (
+                              <ListBulletIcon className="mx-auto text-center" />
+                            ) : (
+                              <MinusIcon className="mx-auto text-center" />
+                            )
+                          }
+                        />
+                      </Tooltip>
                     </div>
                     {/* 
+                    <ClockIcon className="mx-auto text-center" />
+                    MinusIcon,
+  ListBulletIcon
                     <div className="p-2 flex justify-end">
                       <Tooltip content="Crear pregunta con esta plantilla">
                         <button className="bg-zinc-50 p-2 bg-green-700 rounded-xl cursor-pointer font-bold text-white">

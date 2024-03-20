@@ -28,8 +28,10 @@ export { default as SELCCMA_resp } from "@/pages/dashboard/Plantillas/SELCCMA_re
 export { default as SELCCMA_resolv } from "@/pages/dashboard/Plantillas/SELCCMA_resolv"
 export { default as SELCCMA_edit } from "@/pages/dashboard/Plantillas/SELCCMA_edit"
 export { default as SELCCMA_edit_resp } from "@/pages/dashboard/Plantillas/SELCCMA_edit_resp"
+export { default as Editar_parametros_preguntas } from "@/pages/dashboard/Plantillas/Editar_parametros_preguntas"
+export { default as Editar_Respuestas_imagenes } from "@/pages/dashboard/Plantillas/Editar_Respuestas_imagenes"
 
-//SELCCMA_edit_resp
+//Editar_Respuestas_imagenes
 //MULIMGT
 //OPCLAV2
 //MULTIMG_resolv.jsx

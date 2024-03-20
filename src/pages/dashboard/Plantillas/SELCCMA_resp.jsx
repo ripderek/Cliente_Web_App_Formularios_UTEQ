@@ -310,15 +310,15 @@ export default function SELCCMA_resp({
               Pregunta:
             </Typography>
             <div className=" ml-2 flex justify-end mb-0">
-                <Tooltip content="Editar pregunta">
-                  <button
-                    className="bg-zinc-50 p-2 bg-orange-500 rounded-xl cursor-pointer"
-                    onClick={() => setEditarPregunta(true)}
-                  >
-                    <PencilIcon className="w-4" color="white" />
-                  </button>
-                </Tooltip>
-              </div>
+              <Tooltip content="Editar pregunta">
+                <button
+                  className="bg-zinc-50 p-2 bg-orange-500 rounded-xl cursor-pointer"
+                  onClick={() => setEditarPregunta(true)}
+                >
+                  <PencilIcon className="w-4" color="white" />
+                </button>
+              </Tooltip>
+            </div>
           </div>
           <div className="flex shrink-0 flex-col gap-2 sm:flex-row">
             <Tooltip content="Regresar">
@@ -355,7 +355,6 @@ export default function SELCCMA_resp({
                 </Tooltip>
               </div>
 */}
-
             </div>
           </div>
         </div>

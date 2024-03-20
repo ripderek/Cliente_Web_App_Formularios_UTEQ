@@ -11,7 +11,7 @@ import {
   DocumentIcon,
   DocumentMinusIcon,
   ArrowLeftOnRectangleIcon,
-  PencilSquareIcon
+  PencilSquareIcon,
 } from "@heroicons/react/24/solid";
 import {
   Card,
@@ -386,7 +386,8 @@ export default function ListaPreguntas({
               className="flex items-center gap-3"
               size="sm"
               color="green"
-              onClick={() => (handleOpen(), ObtenerTiposPReguntas())}
+              //onClick={() => (handleOpen(), ObtenerTiposPReguntas())}
+              onClick={() => AbrirPlantilla(1, "", id_nivel)}
             >
               <PlusCircleIcon strokeWidth={2} className="h-4 w-4" /> Crear
               Pregunta
@@ -418,7 +419,7 @@ export default function ListaPreguntas({
           </div>
         ) : (
           <>
-          <Typography
+            <Typography
               variant="small"
               color="blue-gray"
               className="font-normal leading-none opacity-70"
@@ -427,81 +428,81 @@ export default function ListaPreguntas({
               <span className="font-bold">{preguntas.length}</span>
             </Typography>
             <table className="mt-4 w-full min-w-max table-auto text-left">
-            <thead>
-              <tr>
-                {TABLE_HEAD.map((head) => (
-                  <th
-                    key={head}
-                    className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4"
-                  >
-                    <Typography
-                      variant="small"
-                      color="blue-gray"
-                      className="font-normal leading-none opacity-70"
+              <thead>
+                <tr>
+                  {TABLE_HEAD.map((head) => (
+                    <th
+                      key={head}
+                      className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4"
                     >
-                      {head}
-                    </Typography>
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            
-            <tbody>
-              {preguntas.map(
-                (
-                  {
-                    r_enunciado,
-                    r_fecha,
-                    r_tiempo_segundos,
-                    r_estado,
-                    r_id_pregunta,
-                    r_id_p,
-                    r_error,
-                    r_error_detalle,
-                  },
-                  index
-                ) => {
-                  const isLast = index === preguntas.length - 1;
-                  const classes = isLast
-                    ? "p-4"
-                    : "p-4 border-b border-blue-gray-50";
+                      <Typography
+                        variant="small"
+                        color="blue-gray"
+                        className="font-normal leading-none opacity-70"
+                      >
+                        {head}
+                      </Typography>
+                    </th>
+                  ))}
+                </tr>
+              </thead>
 
-                  return (
-                    <tr
-                      key={r_id_p}
-                      className="hover:bg-orange-100 cursor-pointer"
-                      onClick={() => (
-                        setOpenEditar(true),
-                        setTipoPreguntaEDitar(r_id_pregunta),
-                        setIDPregunta(r_id_p)
-                      )}
-                    >
-                      <td className={classes}>
-                        <div className="flex flex-col">
-                          <Typography
-                            variant="small"
-                            color="blue-gray"
-                            className="font-normal"
-                          >
-                            {index + 1}
-                          </Typography>
-                        </div>
-                      </td>
+              <tbody>
+                {preguntas.map(
+                  (
+                    {
+                      r_enunciado,
+                      r_fecha,
+                      r_tiempo_segundos,
+                      r_estado,
+                      r_id_pregunta,
+                      r_id_p,
+                      r_error,
+                      r_error_detalle,
+                    },
+                    index
+                  ) => {
+                    const isLast = index === preguntas.length - 1;
+                    const classes = isLast
+                      ? "p-4"
+                      : "p-4 border-b border-blue-gray-50";
 
-                      <td className={classes}>
-                        <div className="flex items-center gap-3 ">
-                          {/* 
-                          <Avatar src={img} alt={name} size="sm" />
-                          */}
-                          <div className="flex flex-col ">
+                    return (
+                      <tr
+                        key={r_id_p}
+                        className="hover:bg-orange-100 cursor-pointer"
+                        onClick={() => (
+                          setOpenEditar(true),
+                          setTipoPreguntaEDitar(r_id_pregunta),
+                          setIDPregunta(r_id_p)
+                        )}
+                      >
+                        <td className={classes}>
+                          <div className="flex flex-col">
                             <Typography
                               variant="small"
                               color="blue-gray"
                               className="font-normal"
                             >
-                              {r_enunciado.substring(0, 25)}
+                              {index + 1}
                             </Typography>
+                          </div>
+                        </td>
+
+                        <td className={classes}>
+                          <div className="flex items-center gap-3 ">
                             {/* 
+                          <Avatar src={img} alt={name} size="sm" />
+                          */}
+                            <div className="flex flex-col ">
+                              <Typography
+                                variant="small"
+                                color="blue-gray"
+                                className="font-normal"
+                              >
+                                {r_enunciado.substring(0, 25)}
+                              </Typography>
+                              {/* 
                             <Typography
                               variant="small"
                               color="blue-gray"
@@ -510,66 +511,65 @@ export default function ListaPreguntas({
                               ""
                             </Typography>
                             */}
+                            </div>
                           </div>
-                        </div>
-                      </td>
-                      <td className={classes}>
-                        <div className="flex flex-col">
+                        </td>
+                        <td className={classes}>
+                          <div className="flex flex-col">
+                            <Typography
+                              variant="small"
+                              color="blue-gray"
+                              className="font-normal"
+                            >
+                              {r_id_pregunta}
+                            </Typography>
+                          </div>
+                        </td>
+                        <td className={classes}>
+                          <div className="w-max">
+                            <Chip
+                              variant="ghost"
+                              size="sm"
+                              value={r_estado ? "Activo" : "Inactivo"}
+                              color={r_estado ? "green" : "blue-gray"}
+                            />
+                          </div>
+                        </td>
+                        <td className={classes}>
                           <Typography
                             variant="small"
                             color="blue-gray"
                             className="font-normal"
                           >
-                            {r_id_pregunta}
+                            {r_fecha}
                           </Typography>
-                        </div>
-                      </td>
-                      <td className={classes}>
-                        <div className="w-max">
-                          <Chip
-                            variant="ghost"
-                            size="sm"
-                            value={r_estado ? "Activo" : "Inactivo"}
-                            color={r_estado ? "green" : "blue-gray"}
-                          />
-                        </div>
-                      </td>
-                      <td className={classes}>
-                        <Typography
-                          variant="small"
-                          color="blue-gray"
-                          className="font-normal"
-                        >
-                          {r_fecha}
-                        </Typography>
-                      </td>
+                        </td>
 
-                      {r_error ? (
-                        <td className={classes}>
-                          <Tooltip content={r_error_detalle}>
+                        {r_error ? (
+                          <td className={classes}>
+                            <Tooltip content={r_error_detalle}>
+                              <IconButton variant="outlined">
+                                <XCircleIcon color="red" className="h-4 w-4" />
+                              </IconButton>
+                            </Tooltip>
+                          </td>
+                        ) : (
+                          <td className={classes}>
                             <IconButton variant="outlined">
-                              <XCircleIcon color="red" className="h-4 w-4" />
+                              <CheckCircleIcon
+                                color="green"
+                                className="h-4 w-4"
+                              />
                             </IconButton>
-                          </Tooltip>
-                        </td>
-                      ) : (
-                        <td className={classes}>
-                          <IconButton variant="outlined">
-                            <CheckCircleIcon
-                              color="green"
-                              className="h-4 w-4"
-                            />
-                          </IconButton>
-                        </td>
-                      )}
-                    </tr>
-                  );
-                }
-              )}
-            </tbody>
-          </table>
+                          </td>
+                        )}
+                      </tr>
+                    );
+                  }
+                )}
+              </tbody>
+            </table>
           </>
-          
         )}
       </CardBody>
       <CardFooter className="flex items-center justify-between border-t border-blue-gray-50 p-4">

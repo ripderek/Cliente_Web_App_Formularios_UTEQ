@@ -32,7 +32,12 @@ import {
   UsersIcon,
   XCircleIcon,
   ArrowLeftOnRectangleIcon,
+  TrashIcon,
 } from "@heroicons/react/24/solid";
+import {
+  Editar_parametros_preguntas,
+  Editar_Respuestas_imagenes,
+} from "@/pages/dashboard/Plantillas";
 
 export default function SELCIMG_resp({
   id_pregunta,
@@ -76,6 +81,7 @@ export default function SELCIMG_resp({
         console.log(data);
         setIdPregunta(data.r_id_pregunta);
         cargarRespuestas(data.r_id_pregunta);
+        SetidPreguntaEdit(data.r_id_pregunta);
       } else {
         //alert("Editando por ID");
         const response = await fetch(
@@ -93,6 +99,7 @@ export default function SELCIMG_resp({
         setLoader(false);
         setIdPregunta(data.r_id_pregunta);
         cargarRespuestas(data.r_id_pregunta);
+        SetidPreguntaEdit(data.r_id_pregunta);
       }
     } catch (error) {
       setLoader(false);
@@ -186,9 +193,69 @@ export default function SELCIMG_resp({
       setError(true);
     }
   };
-
+  //Para editar los parametros de las preguntas
+  const [editarPregunta, setEditarPregunta] = useState(false);
+  const [idPreguntaEdit, SetidPreguntaEdit] = useState(0);
+  const CerrarEdit = () => {
+    setEditarPregunta(false);
+    obtener_datos_pregunta();
+  };
+  //para editar las respuestas
+  const [editRespuesta, setEditRespuesta] = useState(false);
+  const [idRespuestaEdit, SetidRespuestaEdit] = useState(0);
+  const CerrarEditRespuesta = () => {
+    setEditRespuesta(false);
+    obtener_datos_pregunta();
+  };
+  const [EstadoCheckEdit, setEditEstadoCheck] = useState(false);
+  const [DeseaEliminar, setDeseaEliminar] = useState(false);
+  //Funcion para eliminar una respuesta
+  const EliminarRespuesta = async () => {
+    //process.env.NEXT_PUBLIC_ACCESLINK
+    //Router.push("/Inicio");
+    setLoader(true);
+    try {
+      const result = await axios.post(
+        process.env.NEXT_PUBLIC_ACCESLINK +
+          "preguntas/EliminarRespuesta/" +
+          idRespuestaEdit,
+        "",
+        {
+          withCredentials: true,
+        }
+      );
+      setLoader(false);
+      //agregar_seccion();
+      setDeseaEliminar(false);
+      obtener_datos_pregunta();
+    } catch (error) {
+      setLoader(false);
+      console.log(error);
+      //colocar una alerta de error cuando no se pueda inciar sesion
+      setMensajeError(error.response.data.error);
+      //alert(error.response.data.error);
+      setError(true);
+    }
+  };
   return (
     <Card className="w-auto mx-auto rounded-none">
+      {editarPregunta && (
+        <Editar_parametros_preguntas
+          idpregunta={idPreguntaEdit}
+          cerrar={CerrarEdit}
+          TieneTiempoEnunciado={false}
+          TieneTiempoRespuesta={true}
+        />
+      )}
+      {editRespuesta && (
+        <Editar_Respuestas_imagenes
+          cerrarEditarResp={() => (
+            setEditRespuesta(false), cargarRespuestas(IDPregunta)
+          )}
+          IdRespuestaEdit={idRespuestaEdit}
+          estadoCheck={EstadoCheckEdit}
+        />
+      )}
       {load ? <Loader /> : ""}
       {error ? (
         <Dialog_Error
@@ -199,6 +266,31 @@ export default function SELCIMG_resp({
       ) : (
         ""
       )}
+      {/* PARA ELIMINAR UNA RESPUESTA*/}
+      <Dialog open={DeseaEliminar}>
+        <DialogHeader>Eliminar respuesta</DialogHeader>
+        <DialogBody>
+          ¿Esta seguro que desea eliminar la respuesta? Esta acción no se puede
+          revertir
+        </DialogBody>
+        <DialogFooter>
+          <Button
+            variant="text"
+            color="red"
+            onClick={() => setDeseaEliminar(false)}
+            className="mr-1"
+          >
+            <span>Cancelar</span>
+          </Button>
+          <Button
+            variant="gradient"
+            color="green"
+            onClick={() => EliminarRespuesta()}
+          >
+            <span>Aceptar</span>
+          </Button>
+        </DialogFooter>
+      </Dialog>
       {/* Para agregar una opcion de respuesta a la pregunta con imagen*/}
       <Dialog open={openNew} handler={hanldeOpen}>
         <DialogBody>
@@ -258,12 +350,21 @@ export default function SELCIMG_resp({
       </Dialog>
       <CardHeader floated={false} shadow={false} className="rounded-none">
         <div className="mb-1 flex items-center justify-between gap-8">
-          <div>
+          <div className="flex">
             <Typography variant="h4" color="orange">
               Pregunta:
             </Typography>
+            <div className=" ml-2 flex justify-end mb-0">
+              <Tooltip content="Editar pregunta">
+                <button
+                  className="bg-zinc-50 p-2 bg-orange-500 rounded-xl cursor-pointer"
+                  onClick={() => setEditarPregunta(true)}
+                >
+                  <PencilIcon className="w-4" color="white" />
+                </button>
+              </Tooltip>
+            </div>
           </div>
-
           <div className="flex shrink-0 flex-col gap-2 sm:flex-row">
             <Tooltip content="Regresar">
               <Button
@@ -349,9 +450,9 @@ export default function SELCIMG_resp({
             }) => (
               <div
                 key={r_id_repuesta}
-                className="bg-blue-gray-50 h-auto shadow-2xl rounded-2xl"
+                className="bg-blue-gray-50 h-auto  rounded-none"
               >
-                <div className="bg-zinc-900 text-black  rounded-2xl">
+                <div className="bg-zinc-900 text-black  rounded-none">
                   <div className="mx-auto">
                     <div className="text-center">
                       <img
@@ -393,8 +494,26 @@ export default function SELCIMG_resp({
 */}
                     <div className="p-2 flex justify-end">
                       <Tooltip content="Editar respuesta">
-                        <button className="bg-zinc-50 p-2 bg-green-700 rounded-xl cursor-pointer">
-                          <PencilIcon className="w-7" color="white" />
+                        <button
+                          className="bg-zinc-50 p-2 bg-orange-500 rounded-xl cursor-pointer"
+                          onClick={() => (
+                            setEditEstadoCheck(r_correcta),
+                            SetidRespuestaEdit(r_id_repuesta),
+                            setEditRespuesta(true)
+                          )}
+                        >
+                          <PencilIcon className="w-4" color="white" />
+                        </button>
+                      </Tooltip>
+                      <Tooltip content="Eliminar respuesta">
+                        <button
+                          className="bg-zinc-50 p-2 bg-red-900 rounded-xl cursor-pointer ml-1"
+                          onClick={() => (
+                            SetidRespuestaEdit(r_id_repuesta),
+                            setDeseaEliminar(true)
+                          )}
+                        >
+                          <TrashIcon className="w-4" color="white" />
                         </button>
                       </Tooltip>
                     </div>
@@ -403,17 +522,6 @@ export default function SELCIMG_resp({
               </div>
             )
           )}
-          <div
-            className="bg-green-600 shadow-2xl h-20 w-20 ml-6 mt-12 rounded-2xl cursor-pointer"
-            onClick={() => setOpenNew(true)}
-          >
-            <Tooltip content="Crear una respuesta">
-              <PlusCircleIcon
-                color="white"
-                className="mx-auto items-center text-center"
-              />
-            </Tooltip>
-          </div>
         </div>
 
         {/* 
@@ -427,6 +535,19 @@ export default function SELCIMG_resp({
           />
         </div>
         */}
+        <CardBody className="mx-auto">
+          <div
+            className="bg-green-600 shadow-2xl h-20 w-20 ml-6  mx-auto rounded-2xl cursor-pointer"
+            onClick={() => setOpenNew(true)}
+          >
+            <Tooltip content="Crear una respuesta">
+              <PlusCircleIcon
+                color="white"
+                className="mx-auto items-center text-center"
+              />
+            </Tooltip>
+          </div>
+        </CardBody>
       </CardBody>
 
       <CardFooter className="pt-0">
@@ -434,6 +555,9 @@ export default function SELCIMG_resp({
           Crear Pregunta
         </Button>
         */}
+        <Typography className="text-sm font-bold opacity-30" color="blue-gray">
+          SelCIMG and MULTIMG_edit.... pregunta: {id_pregunta}
+        </Typography>
       </CardFooter>
     </Card>
   );

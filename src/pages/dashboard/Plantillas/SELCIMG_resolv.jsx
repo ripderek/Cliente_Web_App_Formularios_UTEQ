@@ -294,6 +294,9 @@ export default function SELCIMG_resolv({
             Crear Pregunta
           </Button>
           */}
+        <Typography className="text-sm font-bold opacity-30" color="blue-gray">
+          MULIMGT_edit.... pregunta: {id_pregunta}
+        </Typography>
       </CardFooter>
     </Card>
   );

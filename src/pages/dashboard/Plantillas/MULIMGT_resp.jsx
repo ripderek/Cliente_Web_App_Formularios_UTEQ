@@ -32,7 +32,12 @@ import {
   UsersIcon,
   XCircleIcon,
   ArrowLeftOnRectangleIcon,
+  TrashIcon,
 } from "@heroicons/react/24/solid";
+import {
+  Editar_parametros_preguntas,
+  Editar_Respuestas_imagenes,
+} from "@/pages/dashboard/Plantillas";
 
 export default function MULIMGT_resp({
   id_pregunta,
@@ -81,6 +86,7 @@ export default function MULIMGT_resp({
         cargarRespuestas(data.r_id_pregunta);
         //value={data_user.r_columnas_pc}
         setNumeroColumnas(data.r_columnas_pc);
+        SetidPreguntaEdit(data.r_id_pregunta);
       } else {
         //alert("Editando por ID");
         const response = await fetch(
@@ -99,6 +105,7 @@ export default function MULIMGT_resp({
         setIdPregunta(data.r_id_pregunta);
         cargarRespuestas(data.r_id_pregunta);
         setNumeroColumnas(data.r_columnas_pc);
+        SetidPreguntaEdit(data.r_id_pregunta);
 
         //value={data_user.r_columnas_pc}
       }
@@ -194,10 +201,127 @@ export default function MULIMGT_resp({
       setError(true);
     }
   };
+  //CAMBIAR LA IMAGEN DEL ENUNCIADO
+  //para editar la imagen del enunciado
+  //img preview
+  const [fileenunciado, setFileenunciado] = useState(null);
+  const [filePenunciado, setFilePenunciado] = useState();
+  const [filePenunciadoAUX, setFilePenunciadoAUX] = useState();
+  const [DeseaEliminar, setDeseaEliminar] = useState(false);
+  const ImagePreviewenunciado = (e) => {
+    try {
+      setFileenunciado(e.target.files[0]);
+      setFilePenunciado(URL.createObjectURL(e.target.files[0]));
+      setImagenCambiada(true);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const fileInputRefenunciado = useRef(null);
 
+  const handleButtonClickenunciado = () => {
+    if (fileInputRefenunciado.current) {
+      fileInputRefenunciado.current.click(); // Activa el input de tipo "file"
+    }
+  };
+  //Funcion para cambiar la imagen de una pregunta skere modo diablo
+  const CambiarImagenPregunta = async () => {
+    //process.env.NEXT_PUBLIC_ACCESLINK
+    //Router.push("/Inicio");
+    setLoader(true);
+    try {
+      const form = new FormData();
+      form.set("file", fileenunciado);
+      form.set("p_id_pregunta_creada", id_pregunta);
+
+      const result = await axios.post(
+        process.env.NEXT_PUBLIC_ACCESLINK +
+          "preguntas/ActualizarImagenPregunta",
+        form,
+        {
+          withCredentials: true,
+        }
+      );
+      setLoader(false);
+      obtener_datos_pregunta();
+      setFilePenunciadoAUX(filePenunciado);
+      setFilePenunciado(null);
+      setImagenCambiada(true);
+      //se manda 0 como id porque se desconoce el id de la pregunta que se creo, y se envia true como segundo parametro para que relize la busqueda de la ultima pregunta en la sigueinte ventana en un useEffect
+    } catch (error) {
+      console.log(error);
+      setLoader(false);
+      //colocar una alerta de error cuando no se pueda inciar sesion
+      setMensajeError(error.response.data.message);
+      //alert(error.response.data.error);
+      setError(true);
+    }
+  };
+  const [ImagenCambiad, setImagenCambiada] = useState(false);
+  //para editar los parametros de la pregunta
+  const [editarPregunta, setEditarPregunta] = useState(false);
+  const [idPreguntaEdit, SetidPreguntaEdit] = useState(0);
+  const CerrarEdit = () => {
+    setEditarPregunta(false);
+    obtener_datos_pregunta();
+  };
+  //para editar las respuestas
+  const [editRespuesta, setEditRespuesta] = useState(false);
+  const [idRespuestaEdit, SetidRespuestaEdit] = useState(0);
+  const CerrarEditRespuesta = () => {
+    setEditRespuesta(false);
+    obtener_datos_pregunta();
+  };
+  const [EstadoCheckEdit, setEditEstadoCheck] = useState(false);
+  //Funcion para eliminar una respuesta
+  const EliminarRespuesta = async () => {
+    //process.env.NEXT_PUBLIC_ACCESLINK
+    //Router.push("/Inicio");
+    setLoader(true);
+    try {
+      const result = await axios.post(
+        process.env.NEXT_PUBLIC_ACCESLINK +
+          "preguntas/EliminarRespuesta/" +
+          idRespuestaEdit,
+        "",
+        {
+          withCredentials: true,
+        }
+      );
+      setLoader(false);
+      //agregar_seccion();
+      setDeseaEliminar(false);
+      obtener_datos_pregunta();
+    } catch (error) {
+      setLoader(false);
+      console.log(error);
+      //colocar una alerta de error cuando no se pueda inciar sesion
+      setMensajeError(error.response.data.error);
+      //alert(error.response.data.error);
+      setError(true);
+    }
+  };
   return (
     <Card className="w-auto  mx-auto rounded-none">
       {load ? <Loader /> : ""}
+      {editarPregunta && (
+        <Editar_parametros_preguntas
+          idpregunta={idPreguntaEdit}
+          cerrar={CerrarEdit}
+          TieneTiempoEnunciado={true}
+          TieneTiempoRespuesta={true}
+        />
+      )}
+      {/* PARA EDITAR UNA REPUESTA */}
+      {editRespuesta && (
+        <Editar_Respuestas_imagenes
+          cerrarEditarResp={() => (
+            setEditRespuesta(false), cargarRespuestas(IDPregunta)
+          )}
+          IdRespuestaEdit={idRespuestaEdit}
+          estadoCheck={EstadoCheckEdit}
+        />
+      )}
       {error ? (
         <Dialog_Error
           mensaje={mensajeError}
@@ -207,6 +331,31 @@ export default function MULIMGT_resp({
       ) : (
         ""
       )}
+      {/* PARA ELIMINAR UNA RESPUESTA*/}
+      <Dialog open={DeseaEliminar}>
+        <DialogHeader>Eliminar respuesta</DialogHeader>
+        <DialogBody>
+          ¿Esta seguro que desea eliminar la respuesta? Esta acción no se puede
+          revertir
+        </DialogBody>
+        <DialogFooter>
+          <Button
+            variant="text"
+            color="red"
+            onClick={() => setDeseaEliminar(false)}
+            className="mr-1"
+          >
+            <span>Cancelar</span>
+          </Button>
+          <Button
+            variant="gradient"
+            color="green"
+            onClick={() => EliminarRespuesta()}
+          >
+            <span>Aceptar</span>
+          </Button>
+        </DialogFooter>
+      </Dialog>
       {/* Para agregar una opcion de respuesta a la pregunta con imagen*/}
       <Dialog open={openNew} handler={hanldeOpen}>
         <DialogBody>
@@ -266,12 +415,21 @@ export default function MULIMGT_resp({
       </Dialog>
       <CardHeader floated={false} shadow={false} className="rounded-none">
         <div className="mb-1 flex items-center justify-between gap-8">
-          <div>
+          <div className="flex">
             <Typography variant="h4" color="orange">
               Pregunta:
             </Typography>
+            <div className=" ml-2 flex justify-end mb-0">
+              <Tooltip content="Editar pregunta">
+                <button
+                  className="bg-zinc-50 p-2 bg-orange-500 rounded-xl cursor-pointer"
+                  onClick={() => setEditarPregunta(true)}
+                >
+                  <PencilIcon className="w-4" color="white" />
+                </button>
+              </Tooltip>
+            </div>
           </div>
-
           <div className="flex shrink-0 flex-col gap-2 sm:flex-row">
             <Tooltip content="Regresar">
               <Button
@@ -293,15 +451,71 @@ export default function MULIMGT_resp({
           value={data_user.r_enunciado}
         />
 
-        <img
-          src={
-            process.env.NEXT_PUBLIC_ACCESLINK +
-            "preguntas/Ver_ImagenPregunta/" +
-            data_user.r_id_pregunta
-          }
-          alt="Imagen"
-          className="mt-3 h-64 w-auto mx-auto"
-        />
+        {ImagenCambiad ? (
+          filePenunciado ? (
+            <img
+              src={filePenunciado}
+              alt="Imagen"
+              className="mt-3 h-64 w-auto mx-auto"
+            />
+          ) : (
+            <img
+              src={filePenunciadoAUX}
+              alt="Imagen"
+              className="mt-3 h-64 w-auto mx-auto"
+            />
+          )
+        ) : (
+          <img
+            src={
+              process.env.NEXT_PUBLIC_ACCESLINK +
+              "preguntas/Ver_ImagenPregunta/" +
+              data_user.r_id_pregunta
+            }
+            alt="Imagen"
+            className="mt-3 h-64 w-auto mx-auto"
+          />
+        )}
+
+        {/* SI LA IMAGEN CAMBIO ENTONCES MOSTRAR EL BOTON DE GUARDAR NUEVA IMAGEN */}
+        {filePenunciado ? (
+          <div className=" flex mx-auto">
+            <Button
+              className="bg-zinc-50 p-2 bg-green-600 rounded-xl cursor-pointer"
+              onClick={() => CambiarImagenPregunta()}
+            >
+              Guardar Cambio
+            </Button>
+            <Button
+              className="bg-zinc-50 p-2 ml-3 bg-red-700 rounded-xl cursor-pointer"
+              onClick={() => (
+                setFilePenunciado(null), setImagenCambiada(false)
+              )}
+            >
+              Cancelar Cambio
+            </Button>
+          </div>
+        ) : (
+          <div className="mx-auto bg-yellow-800 p-2 rounded-xl">
+            <label htmlFor="fileInput" className="text-white font-bold ">
+              Cambiar imagen:
+            </label>
+            <input
+              type="file"
+              id="fileInput"
+              onChange={ImagePreviewenunciado}
+              accept="image/png, .jpeg"
+              className="hidden"
+              ref={fileInputRefenunciado}
+            />
+            <Button
+              className="ml-3  rounded-xl  bg-white h-11"
+              onClick={handleButtonClickenunciado}
+            >
+              <AiOutlineUpload size="25px" color="black" />
+            </Button>
+          </div>
+        )}
         <Typography variant="h4" color="orange">
           Opciones:
         </Typography>
@@ -354,8 +568,26 @@ export default function MULIMGT_resp({
 
                     <div className="p-2 flex justify-end">
                       <Tooltip content="Editar respuesta">
-                        <button className="bg-zinc-50 p-2 bg-green-700 rounded-xl cursor-pointer">
-                          <PencilIcon className="w-7" color="white" />
+                        <button
+                          className="bg-zinc-50 p-2 bg-orange-500 rounded-xl cursor-pointer"
+                          onClick={() => (
+                            setEditEstadoCheck(r_correcta),
+                            SetidRespuestaEdit(r_id_repuesta),
+                            setEditRespuesta(true)
+                          )}
+                        >
+                          <PencilIcon className="w-4" color="white" />
+                        </button>
+                      </Tooltip>
+                      <Tooltip content="Eliminar respuesta">
+                        <button
+                          className="bg-zinc-50 p-2 bg-red-900 rounded-xl cursor-pointer ml-1"
+                          onClick={() => (
+                            SetidRespuestaEdit(r_id_repuesta),
+                            setDeseaEliminar(true)
+                          )}
+                        >
+                          <TrashIcon className="w-4" color="white" />
                         </button>
                       </Tooltip>
                     </div>
@@ -378,7 +610,11 @@ export default function MULIMGT_resp({
         </div>
       </CardBody>
 
-      <CardFooter className="pt-0"></CardFooter>
+      <CardFooter className="pt-0">
+        <Typography className="text-sm font-bold opacity-30" color="blue-gray">
+          MULIMGT_edit.... pregunta: {id_pregunta}
+        </Typography>
+      </CardFooter>
     </Card>
   );
 }

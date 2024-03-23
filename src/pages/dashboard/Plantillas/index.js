@@ -30,8 +30,9 @@ export { default as SELCCMA_edit } from "@/pages/dashboard/Plantillas/SELCCMA_ed
 export { default as SELCCMA_edit_resp } from "@/pages/dashboard/Plantillas/SELCCMA_edit_resp"
 export { default as Editar_parametros_preguntas } from "@/pages/dashboard/Plantillas/Editar_parametros_preguntas"
 export { default as Editar_Respuestas_imagenes } from "@/pages/dashboard/Plantillas/Editar_Respuestas_imagenes"
+export { default as SELCCLA_edit_resp } from "@/pages/dashboard/Plantillas/SELCCLA_edit_resp"
 
-//Editar_Respuestas_imagenes
+//SELCCLA_edit_resp
 //MULIMGT
 //OPCLAV2
 //MULTIMG_resolv.jsx

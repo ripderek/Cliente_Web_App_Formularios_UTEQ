@@ -27,7 +27,7 @@ import {
 } from "@heroicons/react/24/solid";
 import { data } from "autoprefixer";
 
-export default function SELCCMA_edit_resp({ cerrar, idpregunta, Numerico }) {
+export default function SELCCLA_edit_resp({ cerrar, idpregunta, Numerico }) {
   //obtener los datos de la preguta+
   //
   useEffect(() => {
@@ -54,6 +54,7 @@ export default function SELCCMA_edit_resp({ cerrar, idpregunta, Numerico }) {
       // SetidPreguntaEdit(idpregunta);
       setData_User(data);
       setLoader(false);
+      setIsChecked(data.r_correcta);
       //setIdPregunta(data.r_id_pregunta);
       //cargarRespuestas(data.r_id_pregunta);
     } catch (error) {
@@ -61,6 +62,9 @@ export default function SELCCMA_edit_resp({ cerrar, idpregunta, Numerico }) {
       console.log(error);
     }
   };
+  const [error, setError] = useState(false);
+  //variable para almacenar el mensaje del error
+  const [mensajeError, setMensajeError] = useState("");
   const [data_user, setData_User] = useState([]);
   //funncion para enviar a editar
   const EditarPregunta = async () => {
@@ -69,10 +73,15 @@ export default function SELCCMA_edit_resp({ cerrar, idpregunta, Numerico }) {
     setLoader(true);
     try {
       //console.log(data_user);
-
+      //enviar tambien el estado check
       const result = await axios.post(
-        process.env.NEXT_PUBLIC_ACCESLINK + "preguntas/EditaerRespuestaSELCCMA",
-        data_user,
+        process.env.NEXT_PUBLIC_ACCESLINK +
+          "preguntas/sp_editar_respuesta_selccla",
+        {
+          r_id_respuesta: data_user.r_id_respuesta,
+          r_opcion: data_user.r_opcion,
+          estado_correcta: isChecked,
+        },
         {
           withCredentials: true,
         }
@@ -84,14 +93,31 @@ export default function SELCCMA_edit_resp({ cerrar, idpregunta, Numerico }) {
       setLoader(false);
       console.log(error);
       //colocar una alerta de error cuando no se pueda inciar sesion
-      alert("Error");
+      setMensajeError(error.response.data.message);
+      //alert(error.response.data.error);
+      setError(true);
     }
+  };
+  //para el checkbox
+  const [isChecked, setIsChecked] = useState(false);
+
+  const handleChange = (event) => {
+    setIsChecked(event.target.checked);
+  };
+  const cerrar1 = (valor) => {
+    setError(valor);
   };
   return (
     <>
       <Dialog size="xl" open={true} handler={cerrar}>
         {load ? <Loader /> : ""}
-
+        {error && (
+          <Dialog_Error
+            mensaje={mensajeError}
+            titulo="Error al llenar el formulario"
+            cerrar={cerrar1}
+          />
+        )}
         <DialogBody className="flex flex-col gap-4">
           <Typography variant="h4" color="blue-gray">
             Editar respuesta
@@ -102,7 +128,6 @@ export default function SELCCMA_edit_resp({ cerrar, idpregunta, Numerico }) {
           >
             <XCircleIcon className="w-11" color="orange" />
           </IconButton>
-
           {Numerico ? (
             <div>
               <Input
@@ -125,6 +150,17 @@ export default function SELCCMA_edit_resp({ cerrar, idpregunta, Numerico }) {
               }
             />
           )}
+
+          <div className="flex items-center">
+            <Typography className="text-lg font-bold" color="black">
+              ¿Respuesta Correcta?:
+            </Typography>
+            <Checkbox
+              color="green"
+              checked={isChecked}
+              onChange={handleChange}
+            />
+          </div>
         </DialogBody>
         <DialogFooter className="pt-0">
           <Button variant="gradient" color="green" onClick={EditarPregunta}>

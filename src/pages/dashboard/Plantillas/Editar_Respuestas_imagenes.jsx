@@ -178,23 +178,21 @@ export default function Editar_Respuestas_imagenes({
           )}
           {/* SI LA IMAGEN CAMBIO ENTONCES MOSTRAR EL BOTON DE GUARDAR NUEVA IMAGEN */}
           {filePenunciado ? (
-            <div className="mx-auto items-center text-center">
-              <div className=" flex ">
-                <Button
-                  className="bg-zinc-50 p-2 bg-green-600 rounded-xl cursor-pointer mx-auto"
-                  onClick={() => CambiarImagenPregunta()}
-                >
-                  Guardar Cambio
-                </Button>
-                <Button
-                  className="bg-zinc-50 p-2  bg-red-700 rounded-xl cursor-pointer mx-auto"
-                  onClick={() => (
-                    setFilePenunciado(null), setImagenCambiada(false)
-                  )}
-                >
-                  Cancelar Cambio
-                </Button>
-              </div>
+            <div className="mx-auto items-center text-center mt-3">
+              <Button
+                className="bg-zinc-50 p-2 mr-5 bg-green-600 rounded-xl cursor-pointer mx-auto"
+                onClick={() => CambiarImagenPregunta()}
+              >
+                Guardar Cambio
+              </Button>
+              <Button
+                className="bg-zinc-50 p-2 ml-5 bg-red-700 rounded-xl cursor-pointer mx-auto"
+                onClick={() => (
+                  setFilePenunciado(null), setImagenCambiada(false)
+                )}
+              >
+                Cancelar Cambio
+              </Button>
             </div>
           ) : (
             <div className="mx-auto w-56 bg-yellow-800 p-2 rounded-xl">

@@ -21,7 +21,14 @@ import {
   PencilIcon,
   XCircleIcon,
   ArrowLeftOnRectangleIcon,
+  TrashIcon,
 } from "@heroicons/react/24/solid";
+import {
+  Editar_parametros_preguntas,
+  Editar_Respuestas_imagenes,
+  SELCCMA_edit_resp,
+  SELCCLA_edit_resp,
+} from "@/pages/dashboard/Plantillas";
 export default function INGRNUM_resp({
   id_pregunta,
   buscar,
@@ -33,6 +40,8 @@ export default function INGRNUM_resp({
   const [load, setLoader] = useState(false);
   const [data_user, setData_User] = useState([]);
   const [IDPregunta, setIdPregunta] = useState(0);
+  const [EstadoCheckEdit, setEditEstadoCheck] = useState(false);
+
   //funcion para buscar los datos de una pregunta como la foto, el enunciado.
   //si se envia a buscar entonces hay que devolver la ultima pregunta creada.
   useEffect(() => {
@@ -63,6 +72,7 @@ export default function INGRNUM_resp({
         console.log(data);
         setIdPregunta(data.r_id_pregunta);
         cargarRespuestas(data.r_id_pregunta);
+        SetidPreguntaEdit(data.r_id_pregunta);
       } else {
         //alert("Editando por ID");
         const response = await fetch(
@@ -80,6 +90,7 @@ export default function INGRNUM_resp({
         setLoader(false);
         setIdPregunta(data.r_id_pregunta);
         cargarRespuestas(data.r_id_pregunta);
+        SetidPreguntaEdit(data.r_id_pregunta);
       }
     } catch (error) {
       setLoader(false);
@@ -174,15 +185,101 @@ export default function INGRNUM_resp({
       setError(true);
     }
   };
+  //para editar los parametros de la pregunta
+  const [editarPregunta, setEditarPregunta] = useState(false);
+  const [idPreguntaEdit, SetidPreguntaEdit] = useState(0);
+  const CerrarEdit = () => {
+    setEditarPregunta(false);
+    obtener_datos_pregunta();
+  };
+  //para editar las respuestas
+  const [editRespuesta, setEditRespuesta] = useState(false);
+  const [idRespuestaEdit, SetidRespuestaEdit] = useState(0);
+  const CerrarEditRespuesta = () => {
+    setEditRespuesta(false);
+    obtener_datos_pregunta();
+  };
+  //PARA LA IMAGEN DEL ENUNCIADO SKERE MODO DIABLO
+  const [ImagenCambiad, setImagenCambiada] = useState(false);
+  //para editar la imagen del enunciado
+  //img preview
+  const [fileenunciado, setFileenunciado] = useState(null);
+  const [filePenunciado, setFilePenunciado] = useState();
+  const [filePenunciadoAUX, setFilePenunciadoAUX] = useState();
+  const [DeseaEliminar, setDeseaEliminar] = useState(false);
+  const ImagePreviewenunciado = (e) => {
+    try {
+      setFileenunciado(e.target.files[0]);
+      setFilePenunciado(URL.createObjectURL(e.target.files[0]));
+      setImagenCambiada(true);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const fileInputRefenunciado = useRef(null);
 
+  const handleButtonClickenunciado = () => {
+    if (fileInputRefenunciado.current) {
+      fileInputRefenunciado.current.click(); // Activa el input de tipo "file"
+    }
+  };
+  //Funcion para cambiar la imagen de una pregunta skere modo diablo
+  const CambiarImagenPregunta = async () => {
+    //process.env.NEXT_PUBLIC_ACCESLINK
+    //Router.push("/Inicio");
+    setLoader(true);
+    try {
+      const form = new FormData();
+      form.set("file", fileenunciado);
+      form.set("p_id_pregunta_creada", id_pregunta);
+
+      const result = await axios.post(
+        process.env.NEXT_PUBLIC_ACCESLINK +
+          "preguntas/ActualizarImagenPregunta",
+        form,
+        {
+          withCredentials: true,
+        }
+      );
+      setLoader(false);
+      obtener_datos_pregunta();
+      setFilePenunciadoAUX(filePenunciado);
+      setFilePenunciado(null);
+      setImagenCambiada(true);
+      //se manda 0 como id porque se desconoce el id de la pregunta que se creo, y se envia true como segundo parametro para que relize la busqueda de la ultima pregunta en la sigueinte ventana en un useEffect
+    } catch (error) {
+      console.log(error);
+      setLoader(false);
+      //colocar una alerta de error cuando no se pueda inciar sesion
+      setMensajeError(error.response.data.message);
+      //alert(error.response.data.error);
+      setError(true);
+    }
+  };
   return (
     <Card className="w-auto mx-auto rounded-none">
+      {editRespuesta && (
+        <SELCCLA_edit_resp
+          Numerico={"sssss"}
+          cerrar={() => (setEditRespuesta(false), cargarRespuestas(IDPregunta))}
+          idpregunta={idRespuestaEdit}
+          //estadoCheck={EstadoCheckEdit}
+        />
+      )}
       {load ? <Loader /> : ""}
       {error && (
         <Dialog_Error
           mensaje={mensajeError}
           titulo="Error al llenar el formulario"
           cerrar={cerrar1}
+        />
+      )}
+      {editarPregunta && (
+        <Editar_parametros_preguntas
+          idpregunta={idPreguntaEdit}
+          cerrar={CerrarEdit}
+          TieneTiempoEnunciado={false}
+          TieneTiempoRespuesta={true}
         />
       )}
       {/* Para agregar una opcion de respuesta a la pregunta con imagen*/}
@@ -244,12 +341,21 @@ export default function INGRNUM_resp({
       </Dialog>
       <CardHeader floated={false} shadow={false} className="rounded-none">
         <div className="mb-1 flex items-center justify-between gap-8">
-          <div>
+          <div className="flex">
             <Typography variant="h4" color="orange">
               Pregunta:
             </Typography>
+            <div className=" ml-2 flex justify-end mb-0">
+              <Tooltip content="Editar pregunta">
+                <button
+                  className="bg-zinc-50 p-2 bg-orange-500 rounded-xl cursor-pointer"
+                  onClick={() => setEditarPregunta(true)}
+                >
+                  <PencilIcon className="w-4" color="white" />
+                </button>
+              </Tooltip>
+            </div>
           </div>
-
           <div className="flex shrink-0 flex-col gap-2 sm:flex-row">
             <Tooltip content="Regresar">
               <Button
@@ -265,63 +371,80 @@ export default function INGRNUM_resp({
         </div>
       </CardHeader>
       <CardBody className="flex flex-col gap-4">
-        {/* */}
-
-        {/* 
-        <Typography className="text-lg font-bold" color="black">
-          Escriba el enunciado:
-        </Typography>
-        */}
         <textarea
           className="border p-2  rounded-sm font-bold"
           size="lg"
           value={data_user.r_enunciado}
         />
-        {/*
-        <div className="flex items-center">
-          <Typography className="text-lg font-bold" color="black">
-            Tiempo disponible para responder (segundos):
-          </Typography>
-          <input
-            className="ml-6 w-16 p-2 border  rounded-sm border-yellow-900 "
-            type="number"
+
+        {ImagenCambiad ? (
+          filePenunciado ? (
+            <img
+              src={filePenunciado}
+              alt="Imagen"
+              className="mt-3 h-64 w-auto mx-auto"
+            />
+          ) : (
+            <img
+              src={filePenunciadoAUX}
+              alt="Imagen"
+              className="mt-3 h-64 w-auto mx-auto"
+            />
+          )
+        ) : (
+          <img
+            src={
+              process.env.NEXT_PUBLIC_ACCESLINK +
+              "preguntas/Ver_ImagenPregunta/" +
+              data_user.r_id_pregunta
+            }
+            alt="Imagen"
+            className="mt-3 h-64 w-auto mx-auto"
           />
-        </div>
-         
-        <Typography className="text-lg font-bold" color="black">
-          Imagen a Memorizar:
-        </Typography>
-        */}
-        {/*
-        <div className="mx-auto bg-yellow-800 p-2 rounded-xl">
-          <label htmlFor="fileInput" className="text-white font-bold ">
-            Subir Foto:
-          </label>
-          <input
-            type="file"
-            id="fileInput"
-            onChange={ImagePreview}
-            accept="image/png, .jpeg"
-            className="hidden"
-            ref={fileInputRef}
-          />
-          <Button
-            className="ml-3  rounded-xl  bg-white h-11"
-            onClick={handleButtonClick}
-          >
-            <AiOutlineUpload size="25px" color="black" />
-          </Button>
-        </div>
-*/}
-        <img
-          src={
-            process.env.NEXT_PUBLIC_ACCESLINK +
-            "preguntas/Ver_ImagenPregunta/" +
-            data_user.r_id_pregunta
-          }
-          alt="Imagen"
-          className="mt-3 h-64 w-auto mx-auto"
-        />
+        )}
+
+        {/* SI LA IMAGEN CAMBIO ENTONCES MOSTRAR EL BOTON DE GUARDAR NUEVA IMAGEN */}
+        {filePenunciado ? (
+          <div className=" flex mx-auto">
+            <Button
+              className="bg-zinc-50 p-2 bg-green-600 rounded-xl cursor-pointer"
+              onClick={() => CambiarImagenPregunta()}
+            >
+              Guardar Cambio
+            </Button>
+            <Button
+              className="bg-zinc-50 p-2 ml-3 bg-red-700 rounded-xl cursor-pointer"
+              onClick={() => (
+                setFilePenunciado(null), setImagenCambiada(false)
+              )}
+            >
+              Cancelar Cambio
+            </Button>
+          </div>
+        ) : (
+          <div className="mx-auto bg-yellow-800 p-2 rounded-xl">
+            <label htmlFor="fileInput" className="text-white font-bold ">
+              Cambiar imagen:
+            </label>
+            <input
+              type="file"
+              id="fileInput"
+              onChange={ImagePreviewenunciado}
+              accept="image/png, .jpeg"
+              className="hidden"
+              ref={fileInputRefenunciado}
+            />
+            <Button
+              className="ml-3  rounded-xl  bg-white h-11"
+              onClick={handleButtonClickenunciado}
+            >
+              <AiOutlineUpload size="25px" color="black" />
+            </Button>
+          </div>
+        )}
+
+        {/* */}
+
         <Typography variant="h4" color="orange">
           Opciones:
         </Typography>
@@ -385,7 +508,14 @@ export default function INGRNUM_resp({
 */}
                     <div className="p-2 flex justify-end">
                       <Tooltip content="Editar respuesta">
-                        <button className="bg-zinc-50 p-2 bg-green-700 rounded-xl cursor-pointer">
+                        <button
+                          className="bg-zinc-50 p-2 bg-green-700 rounded-xl cursor-pointer"
+                          onClick={() => (
+                            setEditEstadoCheck(r_correcta),
+                            SetidRespuestaEdit(r_id_repuesta),
+                            setEditRespuesta(true)
+                          )}
+                        >
                           <PencilIcon className="w-7" color="white" />
                         </button>
                       </Tooltip>
@@ -428,6 +558,9 @@ export default function INGRNUM_resp({
           Crear Pregunta
         </Button>
         */}
+        <Typography className="text-sm font-bold opacity-30" color="blue-gray">
+          INGRNUM_edit.... pregunta: {id_pregunta}
+        </Typography>
       </CardFooter>
     </Card>
   );

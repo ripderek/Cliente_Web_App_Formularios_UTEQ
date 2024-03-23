@@ -32,7 +32,13 @@ import {
   UsersIcon,
   XCircleIcon,
   ArrowLeftOnRectangleIcon,
+  TrashIcon,
 } from "@heroicons/react/24/solid";
+import {
+  SELCCMA_edit,
+  SELCCLA_edit_resp,
+  Editar_parametros_preguntas,
+} from "@/pages/dashboard/Plantillas";
 
 export default function SELCCLA_resp({
   id_pregunta,
@@ -77,6 +83,7 @@ export default function SELCCLA_resp({
         console.log(data);
         setIdPregunta(data.r_id_pregunta);
         cargarRespuestas(data.r_id_pregunta);
+        SetidPreguntaEdit(data.r_id_pregunta);
       } else {
         //alert("Editando por ID");
         //alert("Buscar por id_pregunta: " + id_pregunta);
@@ -91,6 +98,8 @@ export default function SELCCLA_resp({
           }
         );
         const data = await response.json();
+        SetidPreguntaEdit(id_pregunta);
+
         setData_User(data);
         setLoader(false);
         setIdPregunta(data.r_id_pregunta);
@@ -173,12 +182,72 @@ export default function SELCCLA_resp({
       setError(true);
     }
   };
+  //NUEVO PARA PODER EDITAR TODA LA PREGUNTA
+  const [editRespuesta, setEditRespuesta] = useState(false);
+  const [idRespuestaEdit, SetidRespuestaEdit] = useState(0);
+  const [id_respuesta, setIdrespuesta] = useState(0);
+  const [DeseaEliminar, setDeseaEliminar] = useState(false);
+  const [editarPregunta, setEditarPregunta] = useState(false);
+  const [idPreguntaEdit, SetidPreguntaEdit] = useState(0);
+  const CerrarEdit = () => {
+    setEditarPregunta(false);
+    obtener_datos_pregunta();
+  };
   const [respuesta, setRespuesta] = useState("");
   const cerrar1 = (valor) => {
     setError(valor);
   };
+  const CerrarEditRespuesta = () => {
+    setEditRespuesta(false);
+    obtener_datos_pregunta();
+  };
+  //FUNCION PARA ELIMINAR UNA OPCION DE RESPUESTA
+  //para eliminar una respuesta
+  const EliminarRespuesta = async () => {
+    //process.env.NEXT_PUBLIC_ACCESLINK
+    //Router.push("/Inicio");
+    setLoader(true);
+    try {
+      const result = await axios.post(
+        process.env.NEXT_PUBLIC_ACCESLINK +
+          "preguntas/EliminarRespuesta/" +
+          id_respuesta,
+        "",
+        {
+          withCredentials: true,
+        }
+      );
+      setLoader(false);
+      //agregar_seccion();
+      setDeseaEliminar(false);
+      obtener_datos_pregunta();
+    } catch (error) {
+      setLoader(false);
+      console.log(error);
+      //colocar una alerta de error cuando no se pueda inciar sesion
+      setMensajeError(error.response.data.error);
+      //alert(error.response.data.error);
+      setError(true);
+    }
+  };
   return (
     <Card className="w-auto mx-auto rounded-none">
+      {/*Editar_parametros_preguntas */}
+      {/*  <SELCCMA_edit idpregunta={idPreguntaEdit} cerrar={CerrarEdit} />*/}
+      {editarPregunta && (
+        <Editar_parametros_preguntas
+          idpregunta={idPreguntaEdit}
+          cerrar={CerrarEdit}
+          TieneTiempoEnunciado={false}
+          TieneTiempoRespuesta={true}
+        />
+      )}
+      {editRespuesta && (
+        <SELCCLA_edit_resp
+          idpregunta={idRespuestaEdit}
+          cerrar={CerrarEditRespuesta}
+        />
+      )}
       {load ? <Loader /> : ""}
       {error ? (
         <Dialog_Error
@@ -189,6 +258,31 @@ export default function SELCCLA_resp({
       ) : (
         ""
       )}
+      {/* Para eliminar una opcion de respuesta */}
+      <Dialog open={DeseaEliminar}>
+        <DialogHeader>Eliminar respuesta</DialogHeader>
+        <DialogBody>
+          ¿Esta seguro que desea eliminar la respuesta? Esta acción no se puede
+          revertir
+        </DialogBody>
+        <DialogFooter>
+          <Button
+            variant="text"
+            color="red"
+            onClick={() => setDeseaEliminar(false)}
+            className="mr-1"
+          >
+            <span>Cancelar</span>
+          </Button>
+          <Button
+            variant="gradient"
+            color="green"
+            onClick={() => EliminarRespuesta()}
+          >
+            <span>Aceptar</span>
+          </Button>
+        </DialogFooter>
+      </Dialog>
       {/* Para agregar una opcion de respuesta a la pregunta con imagen*/}
       <Dialog open={openNew} handler={hanldeOpen}>
         <DialogBody className="w-full">
@@ -230,10 +324,20 @@ export default function SELCCLA_resp({
       </Dialog>
       <CardHeader floated={false} shadow={false} className="rounded-none">
         <div className="mb-1 flex items-center justify-between gap-8">
-          <div>
+          <div className="flex">
             <Typography variant="h4" color="orange">
               Pregunta:
             </Typography>
+            <div className=" ml-2 flex justify-end mb-0">
+              <Tooltip content="Editar pregunta">
+                <button
+                  className="bg-zinc-50 p-2 bg-orange-500 rounded-xl cursor-pointer"
+                  onClick={() => setEditarPregunta(true)}
+                >
+                  <PencilIcon className="w-4" color="white" />
+                </button>
+              </Tooltip>
+            </div>
           </div>
           <div className="flex shrink-0 flex-col gap-2 sm:flex-row">
             <Tooltip content="Regresar">
@@ -320,47 +424,44 @@ export default function SELCCLA_resp({
             }) => (
               <div
                 key={r_id_repuesta}
-                className="bg-blue-gray-50 h-auto shadow-2xl rounded-none"
+                className="bg-gray-50 h-auto shadow-none rounded-none border-2 border-green-900"
               >
                 <div className="bg-zinc-900 text-black  rounded-2xl">
                   <div className="mx-auto">
-                    <div className="text-center mt-4 bg-blue-gray-50">
-                      <textarea
-                        className="border p-2 w-full  rounded-none font-bold bg-blue-gray-50"
-                        value={r_opcion}
-                      />
-                    </div>
-                    {/* 
-                    <div className="w-full p-4">
-                      <input
-                        className="w-full text-lg bg-blue-gray-50 font-semibold	text-blue-gray-800 "
-                        disabled
-                        value={r_opcion}
-                      />
-                    </div>
-                    */}
-                    <div className="w-auto flex ml-2 mb-2">
-                      <Chip
-                        variant="ghost"
-                        size="sm"
-                        color={r_correcta ? "green" : "red"}
-                        value={r_correcta ? "Correcta" : "Incorrecta"}
-                      />
-                    </div>
-                    {/*
-                    <div className="w-auto flex ml-2 mb-2">
-                      <Chip
-                        variant="ghost"
-                        size="sm"
-                        color={r_estado ? "green" : "red"}
-                        value={r_estado ? "Habilitado" : "Inhabilitado"}
-                      />
-                    </div>
- */}
+                    <textarea
+                      className="border p-2 w-full  rounded-none font-bold bg-gray-50 border-none"
+                      value={r_opcion}
+                    />
+
                     <div className="p-2 flex justify-end mb-0">
+                      <div className="w-auto flex ml-2 mr-4 mb-2">
+                        <Chip
+                          variant="ghost"
+                          size="sm"
+                          color={r_correcta ? "green" : "red"}
+                          value={r_correcta ? "Correcta" : "Incorrecta"}
+                        />
+                      </div>
                       <Tooltip content="Editar respuesta">
-                        <button className="bg-zinc-50 p-2 bg-green-700 rounded-xl cursor-pointer">
+                        <button
+                          className="bg-zinc-50 p-2 bg-orange-500 rounded-xl cursor-pointer"
+                          onClick={() => (
+                            SetidRespuestaEdit(r_id_repuesta),
+                            setEditRespuesta(true)
+                          )}
+                        >
                           <PencilIcon className="w-4" color="white" />
+                        </button>
+                      </Tooltip>
+                      <Tooltip content="Eliminar respuesta">
+                        <button
+                          className="bg-zinc-50 p-2 bg-red-900 rounded-xl cursor-pointer ml-1"
+                          onClick={() => (
+                            setIdrespuesta(r_id_repuesta),
+                            setDeseaEliminar(true)
+                          )}
+                        >
+                          <TrashIcon className="w-4" color="white" />
                         </button>
                       </Tooltip>
                     </div>
@@ -370,7 +471,7 @@ export default function SELCCLA_resp({
             )
           )}
           <div
-            className="bg-green-600 shadow-2xl h-20 w-20 ml-6 mt-12 rounded-2xl cursor-pointer"
+            className="bg-green-600 shadow-2xl h-20 w-20 mt-3 rounded-2xl cursor-pointer mx-auto"
             onClick={() => setOpenNew(true)}
           >
             <Tooltip content="Crear una respuesta">
@@ -400,6 +501,9 @@ export default function SELCCLA_resp({
           Crear Pregunta
         </Button>
         */}
+        <Typography className="text-sm font-bold opacity-30" color="blue-gray">
+          SELCCLA_edit.... pregunta: {id_pregunta}
+        </Typography>
       </CardFooter>
     </Card>
   );

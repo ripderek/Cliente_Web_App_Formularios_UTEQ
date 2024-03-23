@@ -25,8 +25,10 @@ import {
   ArrowLeftOnRectangleIcon,
   TrashIcon,
 } from "@heroicons/react/24/solid";
-import { Editar_parametros_preguntas } from "@/pages/dashboard/Plantillas";
-import { Editar_Respuestas_imagenes } from "@/pages/dashboard/Plantillas";
+import {
+  Editar_parametros_preguntas,
+  Editar_Respuestas_imagenes,
+} from "@/pages/dashboard/Plantillas";
 
 export default function MEMRZAR_resp({
   id_pregunta,

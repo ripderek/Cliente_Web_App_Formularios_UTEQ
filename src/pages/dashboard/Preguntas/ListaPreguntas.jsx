@@ -12,6 +12,8 @@ import {
   DocumentMinusIcon,
   ArrowLeftOnRectangleIcon,
   PencilSquareIcon,
+  Cog6ToothIcon,
+  TrashIcon,
 } from "@heroicons/react/24/solid";
 import {
   Card,
@@ -204,10 +206,37 @@ export default function ListaPreguntas({
     }
   };
   const [DeseaEliminar, setDeseaEliminar] = useState(false);
+  //abrir la configuracion del nivel
+  const [AbrirConfig, setAbrirConfig] = useState(false);
+  const [DeseaEliminarNivel, setDeseaEliminarNivel] = useState(false);
+  //Funcion para eliminar un nivel y sus preguntas
+  const EliminarNivel = async () => {
+    //process.env.NEXT_PUBLIC_ACCESLINK
+    //Router.push("/Inicio");
+    setLoader(true);
+    try {
+      const result = await axios.post(
+        process.env.NEXT_PUBLIC_ACCESLINK +
+          "preguntas/Eliminar_Nivel_and_edit_numbers_levels",
+        { p_id_nivel: id_nivel, p_id_seccion: id_seccion },
+
+        {
+          withCredentials: true,
+        }
+      );
+      setLoader(false);
+      setDeseaEliminarNivel(false);
+      AbrirNiveles(id_seccion, seccion);
+    } catch (error) {
+      setLoader(false);
+      alert("Error");
+      console.log(error);
+    }
+  };
   return (
     <Card className="h-full w-full rounded-none">
       {load ? <Loader /> : ""}
-      {/* Para editar una pregunta  */}
+      {/* Para eliminar una pregunta  */}
       <Dialog open={openEdtiar} handler={handleOpenEditar}>
         <Dialog open={DeseaEliminar}>
           <DialogHeader>Eliminar pregunta</DialogHeader>
@@ -361,6 +390,71 @@ export default function ListaPreguntas({
           */}
         </DialogFooter>
       </Dialog>
+      {/* DIALOG PARA ABRIR LA CONFIGURACION DEL NIVEL  */}
+      <Dialog open={AbrirConfig} handler={() => setAbrirConfig(false)}>
+        <Dialog open={DeseaEliminarNivel}>
+          <DialogHeader>Eliminar nivel</DialogHeader>
+          <DialogBody>
+            ¿Esta seguro que desea eliminar el nivel? Esta acción no se puede
+            revertir
+          </DialogBody>
+          <DialogFooter>
+            <Button
+              variant="text"
+              color="red"
+              onClick={() => setDeseaEliminarNivel(false)}
+              className="mr-1"
+            >
+              <span>Cancelar</span>
+            </Button>
+            <Button
+              variant="gradient"
+              color="green"
+              onClick={() => EliminarNivel()}
+            >
+              <span>Aceptar</span>
+            </Button>
+          </DialogFooter>
+        </Dialog>
+
+        <DialogHeader className="bg-green-50">
+          <Typography variant="h4" color="blue-gray">
+            Configuracion
+          </Typography>
+          <IconButton
+            className="!absolute top-3 right-3 bg-transparent shadow-none"
+            onClick={() => setAbrirConfig(false)}
+          >
+            <XCircleIcon className="w-11" color="orange" />
+          </IconButton>
+        </DialogHeader>
+
+        <DialogBody>
+          <div>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-3 p-5">
+              {/* Eliminar nivel */}
+              <div
+                key={2}
+                className={`bg-blue-gray-50  shadow-2xl rounded-none cursor-pointer border-4 border-green-900 hover:border-orange-600  `}
+                onClick={() => setDeseaEliminarNivel(true)}
+              >
+                <div className="mx-auto">
+                  <div className="text-center mt-2 ">
+                    <TrashIcon
+                      className="h-16 mx-auto bg-white w-auto rounded-xl"
+                      color="red"
+                    />
+                  </div>
+                  <div className="w-full p-4 text-center font-bold text-black text-xl">
+                    <span>Eliminar Nivel </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </DialogBody>
+        <DialogFooter></DialogFooter>
+      </Dialog>
       <CardHeader floated={false} shadow={false} className="rounded-none">
         <div className="mb-8 flex items-center justify-between gap-8">
           <div>
@@ -392,6 +486,18 @@ export default function ListaPreguntas({
               <PlusCircleIcon strokeWidth={2} className="h-4 w-4" /> Crear
               Pregunta
             </Button>
+            <Tooltip content="Configuracion">
+              <Button
+                className="flex items-center gap-3"
+                size="sm"
+                color="red"
+                onClick={() => setAbrirConfig(true)}
+                //onClick={() => (handleOpen(), ObtenerTiposPReguntas())}
+                //onClick={() => AbrirPlantilla(1, "", id_nivel)}
+              >
+                <Cog6ToothIcon strokeWidth={2} className="h-4 w-4" />
+              </Button>
+            </Tooltip>
           </div>
         </div>
         <div className="flex flex-col items-center justify-between gap-4 md:flex-row">

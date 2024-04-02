@@ -29,6 +29,7 @@ import {
   DialogHeader,
   DialogBody,
   DialogFooter,
+  Checkbox,
 } from "@material-tailwind/react";
 import { Dialog_Error, Loader, Notification } from "@/widgets"; //Importar el componente
 import { useEffect, useState } from "react";
@@ -41,6 +42,7 @@ export default function ListaNiveles({
   Titulo,
   AbrirPreguntas,
 }) {
+  const [dataTitlte, setDataTitile] = useState(Titulo);
   const [controller, dispatch] = useMaterialTailwindController();
   const { sidenavColor, sidenavType, openSidenav } = controller;
   const [load, setLoader] = useState(false);
@@ -165,6 +167,78 @@ export default function ListaNiveles({
       console.log(error);
     }
   };
+  //constante para abrir el menu para editar los parametros de la seccion
+  const [openEditarSeccion, setOpenEditarSeccion] = useState(false);
+  const [infoSeccion, setInfoSeccion] = useState([]);
+  //Cuando se abra la opcion de editar cargar el detalle de la seccion a editar skere modo diablo
+  const ObtenerInfoEditable = async () => {
+    setLoader(true);
+    try {
+      const response = await fetch(
+        process.env.NEXT_PUBLIC_ACCESLINK +
+          "secciones/data_editable/" +
+          id_seccion,
+        {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+        }
+      );
+      const data = await response.json();
+      setInfoSeccion(data);
+      setIsChecked(data.r_estado);
+      console.log(data);
+      //console.log(result.data);
+      setLoader(false);
+    } catch (error) {
+      alert("Error");
+      setLoader(false);
+      //colocar una alerta de error cuando no se pueda inciar sesion
+      //setError(true);
+      //setMensajeError(error.response.data.error);
+      console.log(error);
+    }
+  };
+  //fucnion para abrir la opcion de editar y cargar la data para editarla
+  const OpenEditar = () => {
+    setOpenEditarSeccion(true);
+    ObtenerInfoEditable();
+  };
+  const [isChecked, setIsChecked] = useState(false);
+  const handleChange = (event) => {
+    setIsChecked(event.target.checked);
+  };
+  //funcion para eidtar la seccion EditarSeccionOP
+  const EditarSeccionOP = async () => {
+    //process.env.NEXT_PUBLIC_ACCESLINK
+    //Router.push("/Inicio");
+    setLoader(true);
+    try {
+      const result = await axios.post(
+        process.env.NEXT_PUBLIC_ACCESLINK + "secciones/editar_seccion_op",
+        {
+          p_titulo: infoSeccion.r_titulo,
+          p_descripcion: infoSeccion.r_descripcion,
+          p_new_Estado: isChecked,
+          p_id_seccion: id_seccion,
+        },
+
+        {
+          withCredentials: true,
+        }
+      );
+      setLoader(false);
+      //setDeseaEliminarNivel(false);
+      //AbrirSecciones();
+      setOpenEditarSeccion(false);
+      //aqui colocar los nuevos nombres
+      setDataTitile(infoSeccion.r_titulo);
+    } catch (error) {
+      setLoader(false);
+      alert("Error");
+      console.log(error);
+    }
+  };
   return (
     <Card className="h-full w-full rounded-none">
       {load ? <Loader /> : ""}
@@ -264,6 +338,76 @@ export default function ListaNiveles({
         </DialogBody>
         <DialogFooter></DialogFooter>
       </Dialog>
+      {/* DIALOG PARA ABRIR LA Edicion DE LA SECCION   */}
+      <Dialog
+        open={openEditarSeccion}
+        handler={() => setOpenEditarSeccion(false)}
+      >
+        <DialogHeader className="bg-green-50">
+          <Typography variant="h4" color="blue-gray">
+            Editar
+          </Typography>
+          <IconButton
+            className="!absolute top-3 right-3 bg-transparent shadow-none"
+            onClick={() => setOpenEditarSeccion(false)}
+          >
+            <XCircleIcon className="w-11" color="orange" />
+          </IconButton>
+        </DialogHeader>
+
+        <Card className="mx-auto w-full shadow-none">
+          <CardBody className="flex flex-col gap-4 overflow-y-auto h-64 shadow-none">
+            <Input
+              label="Titulo"
+              size="lg"
+              name="p_Titulo"
+              value={infoSeccion.r_titulo}
+              onChange={(e) =>
+                setInfoSeccion({ ...infoSeccion, r_titulo: e.target.value })
+              }
+            />
+
+            <Input
+              label="Descripcion"
+              size="lg"
+              name="p_Descripcion"
+              value={infoSeccion.r_descripcion}
+              onChange={(e) =>
+                setInfoSeccion({
+                  ...infoSeccion,
+                  r_descripcion: e.target.value,
+                })
+              }
+            />
+
+            <div className="flex items-center">
+              <Typography className="text-lg font-bold" color="black">
+                Estado:
+              </Typography>
+              <Checkbox
+                color="green"
+                checked={isChecked}
+                onChange={handleChange}
+              />
+              <Chip
+                value={isChecked ? "Habilitado" : "Deshabilitado"}
+                color={isChecked ? "green" : "red"}
+              />
+            </div>
+          </CardBody>
+          <CardFooter className="pt-0">
+            <Button
+              variant="gradient"
+              onClick={EditarSeccionOP}
+              fullWidth
+              color="green"
+            >
+              Aceptar
+            </Button>
+          </CardFooter>
+        </Card>
+        <DialogFooter></DialogFooter>
+      </Dialog>
       <CardHeader floated={false} shadow={false} className="rounded-none">
         <div className="mb-8 flex items-center justify-between gap-8">
           <div>
@@ -271,7 +415,7 @@ export default function ListaNiveles({
               Lista de niveles
             </Typography>
             <Typography color="gray" className="mt-1 font-normal">
-              Niveles de la seccion {Titulo}
+              Niveles de la seccion {dataTitlte}
             </Typography>
             <Typography color="gray" className="mt-1 font-normal">
               Seleccione un nivel para ir a las preguntas
@@ -304,6 +448,7 @@ export default function ListaNiveles({
                 className="flex items-center gap-3"
                 size="sm"
                 color="cyan"
+                onClick={() => OpenEditar(true)}
               >
                 <PencilIcon strokeWidth={2} className="h-4 w-4" />
               </Button>

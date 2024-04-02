@@ -164,7 +164,6 @@ export default function Lista({ AbrirNiveles }) {
         </div>
       </CardHeader>
       <CardBody className=" px-0">
-
         {secciones.length === 0 && (
           <Typography
             color="gray"
@@ -175,19 +174,35 @@ export default function Lista({ AbrirNiveles }) {
           </Typography>
         )}
         <Typography
-              variant="small"
-              color="blue-gray"
-              className="font-normal leading-none opacity-70 ml-5"
-            >
-              Número de secciones:
-              <span className="font-bold">{secciones.length}</span>
-            </Typography>
+          variant="small"
+          color="blue-gray"
+          className="font-normal leading-none opacity-70 ml-5"
+        >
+          Número de secciones:
+          <span className="font-bold">{secciones.length}</span>
+        </Typography>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3 p-5">
           {secciones.map(
-            ({ r_titulo, r_id_seccion, r_descripcion, r_admin_seccion }) => (
+            ({
+              r_titulo,
+              r_id_seccion,
+              r_descripcion,
+              r_admin_seccion,
+              r_estado,
+              r_erroneo,
+            }) => (
               <div
                 key={r_id_seccion}
-                className={`bg-blue-gray-50 shadow-sm rounded-none cursor-pointer hover:border-4 ${sidenavColors[sidenavColor]}  ${shadows[sidenavColor]}`}
+                className={`${
+                  r_erroneo
+                    ? "bg-red-400"
+                    : r_estado
+                    ? " bg-blue-gray-50"
+                    : "bg-orange-400"
+                }  shadow-sm rounded-none cursor-pointer hover:border-4 ${
+                  sidenavColors[sidenavColor]
+                } 
+                 ${shadows[sidenavColor]}`}
                 onClick={() => AbrirNiveles(r_id_seccion, r_titulo)}
               >
                 <div className="bg-zinc-900 rounded-2xl">
@@ -202,23 +217,56 @@ export default function Lista({ AbrirNiveles }) {
                     </div>
                     <div className="w-full p-4">
                       <input
-                        className="w-full text-lg bg-blue-gray-50 font-semibold	text-blue-gray-800 "
+                        className={`${
+                          r_erroneo
+                            ? "bg-red-400 text-white"
+                            : r_estado
+                            ? "bg-blue-gray-50 text-black"
+                            : "bg-orange-400 text-white"
+                        }  w-full text-lg font-semibold	text-blue-gray-800 `}
                         disabled
                         value={r_titulo}
                       />
                     </div>
-                    {r_admin_seccion ? (
-                      <div className="w-auto flex ml-2 mb-2">
-                        <Chip
-                          variant="ghost"
-                          size="sm"
-                          color="green"
-                          value="Admin"
-                        />
-                      </div>
-                    ) : (
-                      ""
-                    )}
+                    <div className="flex">
+                      {r_admin_seccion && (
+                        <div className="w-auto flex ml-2 mb-2">
+                          <Tooltip content="Es Admin">
+                            <Chip
+                              variant="gradient"
+                              size="sm"
+                              color="green"
+                              value="Admin"
+                            />
+                          </Tooltip>
+                        </div>
+                      )}
+                      {!r_estado && (
+                        <div className="w-auto flex ml-2 mb-2">
+                          <Tooltip content="Esta Deshabilitada la seccion">
+                            <Chip
+                              variant="gradient"
+                              size="sm"
+                              color="yellow"
+                              value={"Deshabilitado"}
+                            />
+                          </Tooltip>
+                        </div>
+                      )}
+                      {r_erroneo && (
+                        <div className="w-auto flex ml-2 mb-2">
+                          <Tooltip content="La seccion se encuentra con errores ">
+                            <Chip
+                              variant="gradient"
+                              size="sm"
+                              color="orange"
+                              value={"Erroneo"}
+                            />
+                          </Tooltip>
+                        </div>
+                      )}
+                    </div>
+
                     {/* 
                     <div className="p-2 flex justify-end">
                       <Tooltip content="Ir a la seccion">

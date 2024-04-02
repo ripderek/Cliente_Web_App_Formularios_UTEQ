@@ -24,6 +24,12 @@ import {
 import alertGradient from "@material-tailwind/react/theme/components/alert/alertGradient";
 import { Dialog_Error, Loader, Notification } from "@/widgets"; //Importar el componente
 import Head from "next/head";
+//not_exist.json   erroneo
+import anim_not_exist from "../../../public/anim/not_exist.json";
+import anim_erroneo from "../../../public/anim/erroneo.json";
+import anim_reloj from "../../../public/anim/reloj.json";
+
+import Lottie from "lottie-react";
 
 export default function Formulario() {
   const router = useRouter();
@@ -41,9 +47,44 @@ export default function Formulario() {
     cookies.remove("myTokenName");
     cookies.remove("token_test");
     if (token) {
+      Consulta_Estado_Token(token);
       Datos_Formulario(token);
     }
   }, [token]);
+  const [EstadoFormulario, SetEstadoFormulario] = useState(-1);
+  //para verificar el estado del formulario segun el token que se ingrese
+  const Consulta_Estado_Token = async (token3) => {
+    setLoader(true);
+    try {
+      const response = await fetch(
+        process.env.NEXT_PUBLIC_ACCESLINK +
+          "auth/estado_formulario_token/" +
+          token3,
+        {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+        }
+      );
+      const data = await response.json();
+      SetEstadoFormulario(data.r_estado);
+      console.log(data);
+      //console.log(result.data);
+      //Verificar si el token es vacio es xq no existe
+      //ACTUALIZACION SI EL ESTADO ES = 0 ETONCES ACTIVAR EL INICIO DE SESION CON GOOGLE SKERE MODOD DIABLO
+      if (data.r_estado === 0) {
+        setNotFound(false);
+        //como si hay data crear un switch para verificar si se puede iniciar sesion
+        //con el switch si una varibale esta en falso deshbilita la funcion de iniicar sesion
+        setEnableGoogle(true);
+      }
+      setLoader(false);
+    } catch (error) {
+      alert("Error");
+      setLoader(false);
+      console.log(error);
+    }
+  };
 
   const Datos_Formulario = async (token3) => {
     setLoader(true);
@@ -65,12 +106,14 @@ export default function Formulario() {
       console.log(data);
       //console.log(result.data);
       //Verificar si el token es vacio es xq no existe
+      /* 
       if (data) {
         setNotFound(false);
         //como si hay data crear un switch para verificar si se puede iniciar sesion
         //con el switch si una varibale esta en falso deshbilita la funcion de iniicar sesion
         setEnableGoogle(true);
       }
+      */
       setLoader(false);
     } catch (error) {
       setLoader(false);
@@ -219,10 +262,10 @@ export default function Formulario() {
       //antes de reenviar primero verificar si este usuario ya se encuentra registrado en el test
       const response = await fetch(
         process.env.NEXT_PUBLIC_ACCESLINK +
-        "test/VerificacionIngresoParticipante/" +
-        result.data.id +
-        "/" +
-        token,
+          "test/VerificacionIngresoParticipante/" +
+          result.data.id +
+          "/" +
+          token,
         {
           method: "GET",
           headers: { "Content-Type": "application/json" },
@@ -237,25 +280,23 @@ export default function Formulario() {
       // setLoader(false);
       console.log("Para Verificar");
       console.log(data);
-      //si el test es abierto entonces verificar si ya esta registrado o para registrarse 
+      //si el test es abierto entonces verificar si ya esta registrado o para registrarse
       if (data.r_abierta) {
-        if (data.r_registrado) //si esta registrado entonces eviarlo  a Hola
+        if (data.r_registrado)
+          //si esta registrado entonces eviarlo  a Hola
           RegistrarIngreso(result.data.id, token); // registrar tabla ingreso
-        else
-          Router.push("/FormulariosOP/Hola");//registrarse 
-
+        else Router.push("/FormulariosOP/Hola"); //registrarse
       }
-      //si el test es cerrado verificar que este dentro de la lista 
+      //si el test es cerrado verificar que este dentro de la lista
       else {
-        if (data.r_registrado) //si esta registrado entonces eviarlo  a Hola
+        if (data.r_registrado)
           if (data.r_accion === "Registrar")
+            //si esta registrado entonces eviarlo  a Hola
             Router.push("/FormulariosOP/Hola"); // registrar tabla ingreso
-          else
-            RegistrarIngreso(result.data.id, token); //registrarse
+          else RegistrarIngreso(result.data.id, token);
+        //registrarse
         //            RegistrarIngreso(result.data.id, token); // registrar tabla ingreso
-
-        else
-          setNoAdmiitido(true);
+        else setNoAdmiitido(true);
       }
     } catch (error) {
       console.log(error);
@@ -279,17 +320,20 @@ export default function Formulario() {
       setLoader(true);
       const result = await axios.post(
         process.env.NEXT_PUBLIC_ACCESLINK + "test/RegistrarIngreso",
-        { user_id_token: tokenid, test_id_token: token, user_age: navigator.userAgent },
+        {
+          user_id_token: tokenid,
+          test_id_token: token,
+          user_age: navigator.userAgent,
+        },
         {
           withCredentials: true,
         }
       );
       //setLoader(false);
       Router.push("/FormulariosOP/Test"); // registrar tabla ingreso
-
     } catch (error) {
       console.log(error);
-      alert("Error")
+      alert("Error");
       setLoader(false);
       //colocar una alerta de error cuando no se pueda inciar sesion
       //setError(true);
@@ -318,11 +362,15 @@ export default function Formulario() {
       <Dialog open={noAdmitido} handler={() => setNoAdmiitido(!noAdmitido)}>
         <DialogHeader>Acceso no permitido</DialogHeader>
         <DialogBody>
-          El Test es cerrado y la cuenta con la cual desea ingresar no se encuentra en la lista. Contactese con un administrador.
+          El Test es cerrado y la cuenta con la cual desea ingresar no se
+          encuentra en la lista. Contactese con un administrador.
         </DialogBody>
         <DialogFooter>
-
-          <Button variant="gradient" color="green" onClick={() => setNoAdmiitido(false)}>
+          <Button
+            variant="gradient"
+            color="green"
+            onClick={() => setNoAdmiitido(false)}
+          >
             <span>Aceptar</span>
           </Button>
         </DialogFooter>
@@ -343,58 +391,129 @@ export default function Formulario() {
       ) : (
         ""
       )}
-      {NotFound ? (
-        <div className="mx-auto items-center text-center font-body text-4xl mt-8">
-          {":(  "}Este formulario no existe{" "}
-        </div>
-      ) : (
+      {EstadoFormulario !== 0 ? (
         <>
-          <Card
-            color="transparent"
-            shadow={false}
-            className="mx-auto w-full max-w-[27rem] mt-3 shadow-xl p-6   text-center bg-white items-center justify-center mb-6  rounded-none shadow-blue-gray-300"
-          >
-            <Typography variant="h4" color="blue-gray">
-              Registrar en el Formulario: {DataForm.r_titulo}
-            </Typography>
-            <Typography color="gray" className="mt-1 font-normal">
-              Para continuar al Formulario complete lo siguiente
-            </Typography>
-            <form className="mt-8 mb-2 w-80 max-w-screen-lg sm:w-96">
-              <div className="mb-1 flex flex-col gap-6">
-                <Input
-                  name="nombresApellidos"
-                  value={formData.nombresApellidos}
-                  onChange={handleChange}
-                  size="lg"
-                  placeholder="Nombres y apellidos"
-                  className=" !border-t-blue-gray-200 focus:!border-t-gray-900 rounded-none"
-                  labelProps={{
-                    className: "before:content-none after:content-none",
-                  }}
-                />
-                <Input
-                  size="lg"
-                  type="email"
-                  name="correoInstitucional"
-                  value={formData.correoInstitucional}
-                  onChange={handleChange}
-                  placeholder="Correo institucional"
-                  className=" !border-t-blue-gray-200 focus:!border-t-gray-900 rounded-none"
-                  labelProps={{
-                    className: "before:content-none after:content-none",
-                  }}
+          {/* ESTADOS
+          -Erroneo     1
+          -Caducado		 2
+          -Proximo		 3	
+          -Suspendido	 4	
+          -No existe 	 5
+          -Default 		 0
+          */}
+          {EstadoFormulario == 1 && (
+            <div className="mx-auto items-center text-center font-body text-4xl mt-8">
+              <Typography variant="h4" color="blue-gray">
+                El formulario esta erroneo
+              </Typography>
+              <div className="mx-auto">
+                <Lottie
+                  animationData={anim_erroneo}
+                  className="w-1/3 mx-auto"
                 />
               </div>
-              <Button
-                className="mt-6 rounded-none bg-light-green-900 hover:bg-orange-600 "
-                fullWidth
-                onClick={loginNormal}
+            </div>
+          )}
+          {EstadoFormulario == 2 && (
+            <div className="mx-auto items-center text-center font-body text-4xl mt-8">
+              <Typography variant="h4" color="blue-gray">
+                El formulario esta caducado
+              </Typography>
+              <div className="mx-auto">
+                <Lottie animationData={anim_reloj} className="w-1/3 mx-auto" />
+              </div>
+            </div>
+          )}
+          {EstadoFormulario == 3 && (
+            <div className="mx-auto items-center text-center font-body text-4xl mt-8">
+              <Typography variant="h4" color="blue-gray">
+                El formulario esta proximo a habilitarse:{" "}
+                {DataForm.r_fecha_hora_inico}
+              </Typography>
+              <div className="mx-auto">
+                <Lottie animationData={anim_reloj} className="w-1/3 mx-auto" />
+              </div>
+            </div>
+          )}
+          {EstadoFormulario == 4 && (
+            <div className="mx-auto items-center text-center font-body text-4xl mt-8">
+              <Typography variant="h4" color="blue-gray">
+                El formulario esta suspendido
+              </Typography>
+              <div className="mx-auto">
+                <Lottie
+                  animationData={anim_erroneo}
+                  className="w-1/3 mx-auto"
+                />
+              </div>
+            </div>
+          )}
+          {EstadoFormulario == 5 && (
+            <div className="mx-auto items-center text-center font-body text-4xl mt-8">
+              <Typography variant="h4" color="blue-gray">
+                El formulario no existe
+              </Typography>
+              <div className="mx-auto">
+                <Lottie
+                  animationData={anim_not_exist}
+                  className="w-1/3 mx-auto"
+                />
+              </div>
+            </div>
+          )}
+        </>
+      ) : (
+        <>
+          {EstadoFormulario === 0 && (
+            <>
+              <Card
+                color="transparent"
+                shadow={false}
+                className="mx-auto w-full max-w-[27rem] mt-3 shadow-xl p-6   text-center bg-white items-center justify-center mb-6  rounded-none shadow-blue-gray-300"
               >
-                Aceptar
-              </Button>
-            </form>
-          </Card>
+                <Typography variant="h4" color="blue-gray">
+                  Registrar en el Formulario: {DataForm.r_titulo}
+                </Typography>
+                <Typography color="gray" className="mt-1 font-normal">
+                  Para continuar al Formulario complete lo siguiente
+                </Typography>
+                <form className="mt-8 mb-2 w-80 max-w-screen-lg sm:w-96">
+                  <div className="mb-1 flex flex-col gap-6">
+                    <Input
+                      name="nombresApellidos"
+                      value={formData.nombresApellidos}
+                      onChange={handleChange}
+                      size="lg"
+                      placeholder="Nombres y apellidos"
+                      className=" !border-t-blue-gray-200 focus:!border-t-gray-900 rounded-none"
+                      labelProps={{
+                        className: "before:content-none after:content-none",
+                      }}
+                    />
+                    <Input
+                      size="lg"
+                      type="email"
+                      name="correoInstitucional"
+                      value={formData.correoInstitucional}
+                      onChange={handleChange}
+                      placeholder="Correo institucional"
+                      className=" !border-t-blue-gray-200 focus:!border-t-gray-900 rounded-none"
+                      labelProps={{
+                        className: "before:content-none after:content-none",
+                      }}
+                    />
+                  </div>
+                  <Button
+                    className="mt-6 rounded-none bg-light-green-900 hover:bg-orange-600 "
+                    fullWidth
+                    onClick={loginNormal}
+                  >
+                    Aceptar
+                  </Button>
+                </form>
+              </Card>
+            </>
+          )}
         </>
       )}
     </>

@@ -12,7 +12,9 @@ import {
   UserPlusIcon,
   PlusIcon,
   ArrowRightCircleIcon,
+  ExclamationTriangleIcon,
 } from "@heroicons/react/24/solid";
+
 import {
   Card,
   CardHeader,
@@ -28,6 +30,7 @@ import {
   Avatar,
   IconButton,
   Tooltip,
+  Alert,
 } from "@material-tailwind/react";
 import { Dialog_Error, Loader, Notification } from "@/widgets"; //Importar el componente
 import Cookies from "universal-cookie";
@@ -52,6 +55,8 @@ export default function ProgresoSecciones({
     else obtener_Progreso();
   }, []);
   //funcion para cargar las secciones que tiene el usuario obteniendo su id de la cookie
+  //r_supero_limite
+  const [superLimite, setSuperoLimite] = useState(false);
   const obtener_Progreso = async () => {
     //auth/ObtenerIP
 
@@ -72,6 +77,7 @@ export default function ProgresoSecciones({
       );
       const data = await response.json();
       setProgreso(data);
+      setSuperoLimite(data[0].r_supero_limite);
       //obtener los datos del test
       const response2 = await fetch(
         process.env.NEXT_PUBLIC_ACCESLINK +
@@ -283,6 +289,17 @@ export default function ProgresoSecciones({
                */}
             </div>
           </div>
+          {superLimite && (
+            <Alert
+              color="amber"
+              className="m-3 w-auto"
+              icon={
+                <ExclamationTriangleIcon color="black" className="h-7 w-7" />
+              }
+            >
+              Se han agotado los intentos de ingreso al test :C
+            </Alert>
+          )}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 p-5 ">
             {progreso.map(
               ({
@@ -294,11 +311,13 @@ export default function ProgresoSecciones({
                 r_porcentaje,
                 r_titulo_seccion,
                 r_descripcion_seccion,
+                r_supero_limite,
               }) => (
                 <div
                   key={r_id_progreso_seccion}
                   className="bg-blue-gray-50 shadow-2xl rounded-none hover:border-green-500  border-orange-500 border-4 border-solid cursor-pointer  hover:shadow-yellow-900"
                   onClick={() =>
+                    !superLimite &&
                     abrir(
                       r_estado_completado,
                       r_id_progreso_seccion,
@@ -356,10 +375,11 @@ export default function ProgresoSecciones({
                       </div>
 
                       <div className="p-2 flex justify-end">
-                        {r_bloqueado ? (
+                        {/* superLimite   r_bloqueado  */}
+                        {superLimite ? (
                           <Tooltip content="Seccion bloqueada">
                             <button
-                              className="bg-zinc-50 p-2 bg-green-700 rounded-none cursor-pointer border-gray-50 border-4"
+                              className="bg-zinc-50 p-2 bg-red-600 rounded-none cursor-pointer border-orange-800 border-4"
                               disabled
                             >
                               <LockClosedIcon className="w-7" color="white" />

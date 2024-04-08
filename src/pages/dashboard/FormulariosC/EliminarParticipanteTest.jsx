@@ -43,7 +43,7 @@ export default function EliminarParticipanteTest({
     } catch (error) {
       setLoader(false);
       console.log(error);
-      Alert("Error");
+      alert("Error");
       //colocar una alerta de error cuando no se pueda inciar sesion
       //setMensajeError(error.response.data.error);
       //alert(error.response.data.error);

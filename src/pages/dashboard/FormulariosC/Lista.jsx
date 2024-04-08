@@ -43,7 +43,6 @@ import {
 } from "@material-tailwind/react";
 import { Crear, Errores_Test } from "@/pages/dashboard/FormulariosC";
 import { Dialog_Error, Loader, Notification } from "@/widgets"; //Importar el componente
-
 import Cookies from "universal-cookie";
 const TABLE_HEAD = ["", "Titulo", "Estado", "Ingreso", "Suspenso", "Obs"];
 const TABS = [
@@ -141,6 +140,7 @@ export default function Lista({
       setSecciones(data);
       //console.log(result.data);
       setLoader(false);
+      pentanas_en_false();
     } catch (error) {
       setLoader(false);
       //colocar una alerta de error cuando no se pueda inciar sesion
@@ -157,6 +157,7 @@ export default function Lista({
   const [openDetalles, setOpenDetalles] = useState(false);
   const handleOpenDetalles = () => {
     setOpenDetalles(!openDetalles);
+    Obtener_Secciones_Usuario();
   };
   //funcion para cargar el detalle del test
   const [detallesTest, setDetallesTest] = useState([]);
@@ -176,6 +177,17 @@ export default function Lista({
       setDetallesTest(data);
       setOpenDetalles(true);
       //console.log(result.data);
+      //Aqui crear una variable para que inserte los detalles a editar skere modo diablo
+      SetDatosAEditar({
+        ...DatosAEditar,
+        Titulo: data.r_titulo_completo,
+        Descripcion: data.r_descripcion,
+        //Acceso: data.r_abierta,
+        //GeneracionPreguntas: data.r_preguntas_aleatorias,
+        Ingresos: data.r_ingresos_permitidos,
+        ID_test: id,
+      });
+      //{ ...data_user, r_enunciado: e.target.value }
       setLoader(false);
     } catch (error) {
       setLoader(false);
@@ -265,7 +277,98 @@ export default function Lista({
     }
   };
   const [DeseaEliminar, setDeseaEliminar] = useState(false);
+  /* FUNCIONES Y ESTADOS PARA PODER EDITAR LAS COSAS DEL TEST*/
+  const [tabs, setTabs] = useState({
+    EditarTitulo: false,
+    EditarDescripcion: false,
+    EditarIntentos: false,
+    EditarFechaInicio: false,
+    EditarFechaFin: false,
+  });
+  // Función para cambiar entre pestañas
+  const cambiarPestañas = (nuevaPestaña) => {
+    setTabs((prevTabs) => ({
+      ...Object.fromEntries(
+        Object.entries(prevTabs).map(([key]) => [key, false])
+      ),
+      [nuevaPestaña]: true,
+    }));
+    ResetearEdicion();
+  };
+  //poner todo en false
+  const pentanas_en_false = () => {
+    setTabs((prevTabs) => ({
+      ...Object.fromEntries(
+        Object.entries(prevTabs).map(([key]) => [key, false])
+      ),
+      //[nuevaPestaña]: true,
+    }));
+  };
+  //guardar los datos a editar
+  const [DatosAEditar, SetDatosAEditar] = useState({
+    Titulo: "",
+    Descripcion: "",
+    Ingresos: "",
+    GeneracionPreguntas: false,
+    Acceso: false,
+    ID_test: 0,
+  });
+  //funcion para guardar los cambios
+  const EditarTest = async (cambiarPregunta, cambiarAcceso) => {
+    //process.env.NEXT_PUBLIC_ACCESLINK
+    //Router.push("/Inicio");
+    setLoader(true);
+    pentanas_en_false();
+    console.log(DatosAEditar);
+    try {
+      //console.log(data_user);
+      //data_user.r_enunciado
+      const result = await axios.post(
+        process.env.NEXT_PUBLIC_ACCESLINK + "test/EditarTestNoFechas",
+        {
+          Titulo: DatosAEditar.Titulo,
+          ID_test: DatosAEditar.ID_test,
+          Descripcion: DatosAEditar.Descripcion,
+          Ingresos: DatosAEditar.Ingresos,
+          Acceso: cambiarAcceso,
+          GeneracionPreguntas: cambiarPregunta,
+        },
 
+        {
+          withCredentials: true,
+        }
+      );
+      setLoader(false);
+      ObtnerDetallesTest(idTes);
+    } catch (error) {
+      setLoader(false);
+      console.log(error);
+      //colocar una alerta de error cuando no se pueda inciar sesion
+      alert("Error");
+    }
+  };
+  //Funcion para resetar los valores cuando se da click en el boton de la basura
+  const ResetearEdicion = () => {
+    //alert("Resetear");
+    SetDatosAEditar({
+      ...DatosAEditar,
+      Titulo: detallesTest.r_titulo_completo,
+      Descripcion: detallesTest.r_descripcion,
+      Acceso: detallesTest.r_abierta,
+      GeneracionPreguntas: detallesTest.r_preguntas_aleatorias,
+      Ingresos: detallesTest.r_ingresos_permitidos,
+      ID_test: idTes,
+    });
+  };
+  const CerrarEdicion = () => {
+    ResetearEdicion();
+    pentanas_en_false();
+  };
+  const ChangePregunta = () => {
+    EditarTest(true);
+  };
+  //para saber si se dio click para enviar a cambiar el estado XD
+  const [CambiarTipoPreguntas, SetCambiarTiposPreguntas] = useState("");
   return (
     <Card className="h-full w-full  rounded-none">
       {load ? <Loader /> : ""}
@@ -302,7 +405,7 @@ export default function Lista({
 
           <IconButton
             className="!absolute top-3 right-3 bg-transparent shadow-none"
-            onClick={() => handleOpenDetalles(false)}
+            onClick={() => (handleOpenDetalles(false), CerrarEdicion())}
           >
             <XCircleIcon className="w-11" color="orange" />
           </IconButton>
@@ -315,10 +418,96 @@ export default function Lista({
               Enlace copiado
             </Alert>
           </div>
+          {/* Hacer una condicion para poder editar el titulo automaticamente xd skere */}
           <div className="font-bold text-black text-xl">
-            {detallesTest.r_titulo_completo}
+            {tabs.EditarTitulo ? (
+              <>
+                <div className="flex w-2/3">
+                  <Input
+                    value={DatosAEditar.Titulo}
+                    variant="standard"
+                    className="font-bold text-black text-xl"
+                    onChange={(e) =>
+                      SetDatosAEditar({
+                        ...DatosAEditar,
+                        Titulo: e.target.value,
+                      })
+                    }
+                  />
+                  <IconButton
+                    variant="text"
+                    onClick={() => EditarTest(false, false)}
+                    color="green"
+                  >
+                    <CheckCircleIcon className="h-7 w-7" />
+                  </IconButton>
+                  <IconButton
+                    variant="text"
+                    onClick={() => CerrarEdicion()}
+                    color="red"
+                  >
+                    <TrashIcon className="h-7 w-7" />
+                  </IconButton>
+                </div>
+              </>
+            ) : (
+              <>
+                {DatosAEditar.Titulo}
+
+                <IconButton
+                  variant="text"
+                  onClick={() => cambiarPestañas("EditarTitulo")}
+                >
+                  <PencilIcon className="h-6 w-6" />
+                </IconButton>
+              </>
+            )}
           </div>
-          {detallesTest.r_descripcion}
+          {/* DESCRIPCION DEL TEST */}
+          <div className="p-2">
+            {tabs.EditarDescripcion ? (
+              <>
+                <div className="flex w-2/3">
+                  <Input
+                    value={DatosAEditar.Descripcion}
+                    variant="standard"
+                    className="font-bold text-black text-xl"
+                    onChange={(e) =>
+                      SetDatosAEditar({
+                        ...DatosAEditar,
+                        Descripcion: e.target.value,
+                      })
+                    }
+                  />
+                  <IconButton
+                    variant="text"
+                    onClick={() => EditarTest(false, false)}
+                    color="green"
+                  >
+                    <CheckCircleIcon className="h-7 w-7" />
+                  </IconButton>
+                  <IconButton
+                    variant="text"
+                    onClick={() => CerrarEdicion()}
+                    color="red"
+                  >
+                    <TrashIcon className="h-7 w-7" />
+                  </IconButton>
+                </div>
+              </>
+            ) : (
+              <>
+                {DatosAEditar.Descripcion}
+
+                <IconButton
+                  variant="text"
+                  onClick={() => cambiarPestañas("EditarDescripcion")}
+                >
+                  <PencilIcon className="h-6 w-6" />
+                </IconButton>
+              </>
+            )}
+          </div>
           <div className="bg-green-100 p-6 rounded-2xl  flex flex-col md:flex-row md:items-center">
             {detallesTest.r_error ? (
               <div>No puede compartir el enlace hasta que corrija el Test</div>
@@ -376,25 +565,37 @@ export default function Lista({
                     <td className={"p-4 border-b border-blue-gray-50"}>
                       <div className="flex items-center gap-3">
                         <div className="flex flex-col">
-                          <div className="flex flex-col">
+                          <div className="flex">
                             <Typography
                               variant="small"
                               color="blue-gray"
-                              className="font-normal"
+                              className="font-bold"
                             >
-                              <span className="font-bold">Inicio:</span>{" "}
-                              {detallesTest.r_fecha_incio}
+                              Inicio:
                             </Typography>
+                            <Chip
+                              className="ml-2 cursor-pointer"
+                              variant="ghost"
+                              size="sm"
+                              color="green"
+                              value={detallesTest.r_fecha_incio}
+                            />
                           </div>
-                          <div className="flex flex-col">
+                          <div className="flex mt-2 ">
                             <Typography
                               variant="small"
                               color="blue-gray"
-                              className="font-normal"
+                              className="font-bold"
                             >
-                              <span className="font-bold">Fin:</span>{" "}
-                              {detallesTest.r_fecha_fin}
+                              Fin:
                             </Typography>
+                            <Chip
+                              className="ml-2 cursor-pointer"
+                              variant="ghost"
+                              size="sm"
+                              color="gray"
+                              value={detallesTest.r_fecha_fin}
+                            />
                           </div>
                         </div>
                       </div>
@@ -426,19 +627,59 @@ export default function Lista({
                         />
                       </div>
                     </td>
-                    <td className={"p-4 border-b border-blue-gray-50"}>
-                      <div className="w-max">
-                        <Chip
-                          variant="ghost"
-                          size="sm"
-                          value={detallesTest.r_ingresos_permitidos}
-                          color="amber"
-                        />
-                      </div>
+                    <td className={"p-4 border-b border-blue-gray-50 w-20"}>
+                      {tabs.EditarIntentos ? (
+                        <div className="flex  ml-0 mr-0 w-auto">
+                          <Input
+                            value={DatosAEditar.Ingresos}
+                            type="number"
+                            variant="standard"
+                            className="font-bold text-black text-xl"
+                            onChange={(e) =>
+                              SetDatosAEditar({
+                                ...DatosAEditar,
+                                Ingresos: e.target.value,
+                              })
+                            }
+                          />
+                          <div className="flex">
+                            <IconButton
+                              variant="text"
+                              onClick={() => EditarTest(false, false)}
+                              color="green"
+                              className="mx-1"
+                            >
+                              <CheckCircleIcon className="h-7 w-7" />
+                            </IconButton>
+                            <IconButton
+                              variant="text"
+                              onClick={() => CerrarEdicion()}
+                              color="red"
+                              className="mx-1"
+                            >
+                              <TrashIcon className="h-7 w-7" />
+                            </IconButton>
+                          </div>
+                        </div>
+                      ) : (
+                        <>
+                          <div className="w-max border-4 border-orange-800 p-2">
+                            <Chip
+                              variant="ghost"
+                              size="sm"
+                              value={DatosAEditar.Ingresos}
+                              color="amber"
+                              className="cursor-pointer"
+                              onClick={() => cambiarPestañas("EditarIntentos")}
+                            />
+                          </div>
+                        </>
+                      )}
                     </td>
                     <td className={"p-4 border-b border-blue-gray-50"}>
-                      <div className="w-max">
+                      <div className="w-max border-4 border-orange-800 p-2">
                         <Chip
+                          className="cursor-pointer"
                           variant="ghost"
                           size="sm"
                           value={
@@ -447,18 +688,21 @@ export default function Lista({
                               : "Secuencial"
                           }
                           color="amber"
+                          onClick={() => EditarTest(true, false)}
                         />
                       </div>
                     </td>
                     <td className={"p-4 border-b border-blue-gray-50"}>
-                      <div className="w-max">
+                      <div className="w-max border-4 border-orange-800 p-2">
                         <Chip
+                          className="cursor-pointer"
                           variant="ghost"
                           size="sm"
                           value={
                             detallesTest.r_abierta ? "Todos" : "Restringido"
                           }
                           color="amber"
+                          onClick={() => EditarTest(false, true)}
                         />
                       </div>
                     </td>
@@ -639,19 +883,7 @@ export default function Lista({
                   </div>
                 </div>
               </div>
-              <div
-                key={1}
-                className={`bg-blue-gray-50  shadow-2xl rounded-none cursor-pointer border-4 border-green-900 hover:border-orange-600  `}
-              >
-                <div className="mx-auto">
-                  <div className="text-center">
-                    <AdjustmentsHorizontalIcon className="h-16 mx-auto" />
-                  </div>
-                  <div className="w-full p-4 text-center font-bold text-black text-xl">
-                    <span>Editar </span>
-                  </div>
-                </div>
-              </div>
+
               <div
                 key={2}
                 className={`bg-blue-gray-50  shadow-2xl rounded-none cursor-pointer border-4 border-green-900 hover:border-orange-600  `}
@@ -740,141 +972,143 @@ export default function Lista({
               Numero de filas:
               <span className="font-bold">{secciones.length}</span>
             </Typography>
-
-            <table className="mt-4 w-full min-w-max table-auto text-left">
-              <thead>
-                <tr>
-                  {TABLE_HEAD.map((head) => (
-                    <th
-                      key={head}
-                      className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4"
-                    >
-                      <Typography
-                        variant="small"
-                        color="blue-gray"
-                        className="font-normal leading-none opacity-70"
+            <div className="overflow-x-auto  h-96">
+              <table className="mt-4 w-full min-w-max table-auto text-left overflow-x-auto">
+                <thead className=" ">
+                  <tr className="sticky top-0 z-10 bg-blue-gray-200">
+                    {TABLE_HEAD.map((head) => (
+                      <th
+                        key={head}
+                        className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4"
                       >
-                        {head}
-                      </Typography>
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {secciones.map(
-                  (
-                    {
-                      r_id_test,
-                      r_titulo,
-                      r_fecha_incio,
-                      r_fecha_fin,
-                      r_estado,
-                      r_suspendido,
-                      r_descripcion,
-                      r_ingresos_permitidos,
-                      r_token,
-                      r_error,
-                      r_abierta,
-                    },
-                    index
-                  ) => {
-                    const isLast = index === secciones.length - 1;
-                    const classes = isLast
-                      ? "p-4"
-                      : "p-4 border-b border-blue-gray-50";
+                        <Typography
+                          variant="small"
+                          color="blue-gray"
+                          className="font-bold leading-none opacity-70"
+                        >
+                          {head}
+                        </Typography>
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {secciones.map(
+                    (
+                      {
+                        r_id_test,
+                        r_titulo,
+                        r_fecha_incio,
+                        r_fecha_fin,
+                        r_estado,
+                        r_suspendido,
+                        r_descripcion,
+                        r_ingresos_permitidos,
+                        r_token,
+                        r_error,
+                        r_abierta,
+                      },
+                      index
+                    ) => {
+                      const isLast = index === secciones.length - 1;
+                      const classes = isLast
+                        ? "p-4"
+                        : "p-4 border-b border-blue-gray-50";
 
-                    return (
-                      <tr
-                        key={r_id_test}
-                        className="hover:bg-orange-100 cursor-pointer"
-                        onClick={() => ObtnerDetallesTest(r_id_test)}
-                      >
-                        <td className={classes}>
-                          <div className="flex flex-col">
-                            <Typography
-                              variant="small"
-                              color="blue-gray"
-                              className="font-normal"
-                            >
-                              {index + 1}
-                            </Typography>
-                          </div>
-                        </td>
-                        <td className={classes}>
-                          <div className="flex items-center gap-3">
+                      return (
+                        <tr
+                          key={r_id_test}
+                          className="hover:bg-orange-100 cursor-pointer"
+                        >
+                          <td className={classes}>
                             <div className="flex flex-col">
                               <Typography
                                 variant="small"
                                 color="blue-gray"
                                 className="font-normal"
                               >
-                                {r_titulo}
+                                {index + 1}
                               </Typography>
+                            </div>
+                          </td>
+                          <td
+                            className={classes}
+                            onClick={() => ObtnerDetallesTest(r_id_test)}
+                          >
+                            <div className="flex items-center gap-3 ">
                               <div className="flex flex-col">
                                 <Typography
                                   variant="small"
                                   color="blue-gray"
                                   className="font-normal"
                                 >
-                                  <span className="font-bold">Inicio:</span>{" "}
-                                  {r_fecha_incio}
+                                  {r_titulo}
                                 </Typography>
-                              </div>
-                              <div className="flex flex-col">
-                                <Typography
-                                  variant="small"
-                                  color="blue-gray"
-                                  className="font-normal"
-                                >
-                                  <span className="font-bold">Fin:</span>{" "}
-                                  {r_fecha_fin}
-                                </Typography>
+                                <div className="flex flex-col">
+                                  <Typography
+                                    variant="small"
+                                    color="blue-gray"
+                                    className="font-normal"
+                                  >
+                                    <span className="font-bold">Inicio:</span>{" "}
+                                    {r_fecha_incio}
+                                  </Typography>
+                                </div>
+                                <div className="flex flex-col">
+                                  <Typography
+                                    variant="small"
+                                    color="blue-gray"
+                                    className="font-normal"
+                                  >
+                                    <span className="font-bold">Fin:</span>{" "}
+                                    {r_fecha_fin}
+                                  </Typography>
+                                </div>
                               </div>
                             </div>
-                          </div>
-                        </td>
+                          </td>
 
-                        <td className={classes}>
-                          <div className="w-max">
-                            <Chip
-                              variant="ghost"
-                              size="sm"
-                              value={r_estado}
-                              color={
-                                r_estado === "Erroneo" ? "red" : "blue-gray"
-                              }
-                            />
-                          </div>
-                        </td>
-                        <td className={classes}>
-                          <div className="w-max">
-                            <Tooltip
-                              content={
-                                r_abierta
-                                  ? "Cualquiera que tenga el enlace puede entrar"
-                                  : "Solo los de la lista pueden ingresar"
-                              }
-                            >
+                          <td className={classes}>
+                            <div className="w-max">
                               <Chip
                                 variant="ghost"
                                 size="sm"
-                                value={r_abierta ? "Todos" : "Restringido"}
-                                color={r_abierta ? "green" : "blue-gray"}
+                                value={r_estado}
+                                color={
+                                  r_estado === "Erroneo" ? "red" : "blue-gray"
+                                }
                               />
-                            </Tooltip>
-                          </div>
-                        </td>
-                        <td className={classes}>
-                          <div className="w-max">
-                            <Chip
-                              variant="ghost"
-                              size="sm"
-                              value={r_suspendido ? "Si" : "No"}
-                              color={r_suspendido ? "red" : "blue-gray"}
-                            />
-                          </div>
-                        </td>
-                        {/* 
+                            </div>
+                          </td>
+                          <td className={classes}>
+                            <div className="w-max">
+                              <Tooltip
+                                content={
+                                  r_abierta
+                                    ? "Cualquiera que tenga el enlace puede entrar"
+                                    : "Solo los de la lista pueden ingresar"
+                                }
+                              >
+                                <Chip
+                                  variant="ghost"
+                                  size="sm"
+                                  value={r_abierta ? "Todos" : "Restringido"}
+                                  color={r_abierta ? "green" : "blue-gray"}
+                                />
+                              </Tooltip>
+                            </div>
+                          </td>
+                          <td className={classes}>
+                            <div className="w-max">
+                              <Chip
+                                variant="ghost"
+                                size="sm"
+                                value={r_suspendido ? "Si" : "No"}
+                                color={r_suspendido ? "red" : "blue-gray"}
+                              />
+                            </div>
+                          </td>
+                          {/* 
                       <td className={classes}>
                         <Tooltip content="Editar test">
                           <IconButton variant="text">
@@ -894,30 +1128,33 @@ export default function Lista({
                         </Tooltip>
                       </td>
                       */}
-                        {r_error ? (
-                          <td className={classes}>
-                            <Tooltip content="El test contiene errores">
-                              <IconButton
-                                variant="outlined"
-                                onClick={() => (
-                                  setError1(true), setIdTes(r_id_test)
-                                )}
-                              >
-                                <XCircleIcon color="red" className="h-8 w-8" />
+                          {r_error ? (
+                            <td className={classes}>
+                              <Tooltip content="El test contiene errores">
+                                <IconButton
+                                  variant="outlined"
+                                  onClick={() => (
+                                    setError1(true), setIdTes(r_id_test)
+                                  )}
+                                >
+                                  <XCircleIcon
+                                    color="red"
+                                    className="h-8 w-8"
+                                  />
+                                </IconButton>
+                              </Tooltip>
+                            </td>
+                          ) : (
+                            <td className={classes}>
+                              <IconButton variant="outlined">
+                                <CheckCircleIcon
+                                  color="green"
+                                  className="h-8 w-8"
+                                />
                               </IconButton>
-                            </Tooltip>
-                          </td>
-                        ) : (
-                          <td className={classes}>
-                            <IconButton variant="outlined">
-                              <CheckCircleIcon
-                                color="green"
-                                className="h-8 w-8"
-                              />
-                            </IconButton>
-                          </td>
-                        )}
-                        {/*
+                            </td>
+                          )}
+                          {/*
                       
                       <td className={classes}>
                         <Typography
@@ -948,12 +1185,13 @@ export default function Lista({
                         </td> 
                       )}
                       */}
-                      </tr>
-                    );
-                  }
-                )}
-              </tbody>
-            </table>
+                        </tr>
+                      );
+                    }
+                  )}
+                </tbody>
+              </table>
+            </div>
           </>
         )}
       </CardBody>

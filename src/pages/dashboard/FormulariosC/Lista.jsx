@@ -92,6 +92,11 @@ const shadows = {
 import { useMaterialTailwindController, setOpenSidenav } from "@/context";
 import axios from "axios";
 import { saveAs } from "file-saver";
+import DateTimePicker from "react-datetime-picker";
+import "react-datetime-picker/dist/DateTimePicker.css";
+import "react-calendar/dist/Calendar.css";
+import "react-clock/dist/Clock.css";
+import { format } from "date-fns";
 
 import { useEffect, useState } from "react";
 export default function Lista({
@@ -151,7 +156,10 @@ export default function Lista({
   const [error1, setError1] = useState(false);
   const [idTes, setIdTes] = useState(0);
   const cerrar1 = (valor) => {
-    setError1(valor);
+    setError1(false);
+  };
+  const cerrar2 = () => {
+    setError(false);
   };
   //ver detalles del test xd
   const [openDetalles, setOpenDetalles] = useState(false);
@@ -367,8 +375,55 @@ export default function Lista({
   const ChangePregunta = () => {
     EditarTest(true);
   };
-  //para saber si se dio click para enviar a cambiar el estado XD
-  const [CambiarTipoPreguntas, SetCambiarTiposPreguntas] = useState("");
+
+  const [fechaHoraInicio, setFechaHoraInicio] = useState(new Date());
+  //Funcion para cambiar la fecha al test skere modo diablo
+  //se envia un bolenado para saber si es fecha de inicio o fin
+  const Editar_Fechas = async (accion) => {
+    //process.env.NEXT_PUBLIC_ACCESLINK
+    //Router.push("/Inicio");
+    setLoader(true);
+    try {
+      //format(fechaHora, 'yyyy-MM-dd HH:mm:ssXXX')
+      //const fechaHoraInicioFormateada = fechaHoraInicio.toISOString();
+      const fechaHoraInicioFormateada = format(
+        fechaHoraInicio,
+        "yyyy-MM-dd HH:mm:ssXXX"
+      );
+      pentanas_en_false();
+
+      //alert(fechaHoraInicioFormateada + "-" + fechaHoraCierreFormateada);
+      console.log({
+        p_fecha_hora_update: fechaHoraInicioFormateada,
+        p_id_test: idTes,
+        cual_fecha_editar: accion,
+      });
+      const result = await axios.post(
+        process.env.NEXT_PUBLIC_ACCESLINK + "test/editar_fechas_test",
+        {
+          p_fecha_hora_update: fechaHoraInicioFormateada,
+          p_id_test: DatosAEditar.ID_test,
+          cual_fecha_editar: accion,
+        },
+        {
+          withCredentials: true,
+        }
+      );
+      setLoader(false);
+      ObtnerDetallesTest(idTes);
+
+      //crear(true);
+      // cerrar(false);
+    } catch (error) {
+      console.log(error);
+      //alert("Error");
+      setLoader(false);
+      //colocar una alerta de error cuando no se pueda inciar sesion
+      setMensajeError(error.response.data.error);
+      //alert(error.response.data.error);
+      setError(true);
+    }
+  };
   return (
     <Card className="h-full w-full  rounded-none">
       {load ? <Loader /> : ""}
@@ -376,6 +431,15 @@ export default function Lista({
       <Crear abrir={openCreate} cerrar={cerrar} crear={crear} />
       {/* Para visualizar los detalles del test y poder seleccionar secciones, niveles y participantes*/}
       <Dialog open={openDetalles} size="xl" handler={handleOpenDetalles}>
+        {error ? (
+          <Dialog_Error
+            mensaje={mensajeError}
+            titulo="Error al llenar el formulario"
+            cerrar={cerrar2}
+          />
+        ) : (
+          ""
+        )}
         <Dialog open={DeseaEliminar}>
           <DialogHeader className="bg-green-50">Eliminar Test</DialogHeader>
           <DialogBody>
@@ -573,13 +637,49 @@ export default function Lista({
                             >
                               Inicio:
                             </Typography>
-                            <Chip
-                              className="ml-2 cursor-pointer"
-                              variant="ghost"
-                              size="sm"
-                              color="green"
-                              value={detallesTest.r_fecha_incio}
-                            />
+                            {tabs.EditarFechaInicio ? (
+                              <div className="flex  ml-0 mr-0 w-auto">
+                                <DateTimePicker
+                                  className="w-auto cursor-pointer z-50"
+                                  onChange={setFechaHoraInicio}
+                                  value={fechaHoraInicio}
+                                  disableClock
+                                />
+                                <div className="flex">
+                                  <IconButton
+                                    variant="text"
+                                    onClick={() => Editar_Fechas(true)}
+                                    color="green"
+                                    className="mx-1"
+                                  >
+                                    <CheckCircleIcon className="h-7 w-7" />
+                                  </IconButton>
+                                  <IconButton
+                                    variant="text"
+                                    onClick={() => CerrarEdicion()}
+                                    color="red"
+                                    className="mx-1"
+                                  >
+                                    <TrashIcon className="h-7 w-7" />
+                                  </IconButton>
+                                </div>
+                              </div>
+                            ) : (
+                              <>
+                                <div className="">
+                                  <Chip
+                                    className="ml-2 cursor-pointer"
+                                    variant="ghost"
+                                    size="sm"
+                                    color="green"
+                                    value={detallesTest.r_fecha_incio}
+                                    onClick={() =>
+                                      cambiarPestañas("EditarFechaInicio")
+                                    }
+                                  />
+                                </div>
+                              </>
+                            )}
                           </div>
                           <div className="flex mt-2 ">
                             <Typography
@@ -589,13 +689,49 @@ export default function Lista({
                             >
                               Fin:
                             </Typography>
-                            <Chip
-                              className="ml-2 cursor-pointer"
-                              variant="ghost"
-                              size="sm"
-                              color="gray"
-                              value={detallesTest.r_fecha_fin}
-                            />
+                            {tabs.EditarFechaFin ? (
+                              <div className="flex  ml-0 mr-0 w-auto">
+                                <DateTimePicker
+                                  className="w-auto cursor-pointer z-50"
+                                  onChange={setFechaHoraInicio}
+                                  value={fechaHoraInicio}
+                                  disableClock
+                                />
+                                <div className="flex">
+                                  <IconButton
+                                    variant="text"
+                                    onClick={() => Editar_Fechas(false)}
+                                    color="green"
+                                    className="mx-1"
+                                  >
+                                    <CheckCircleIcon className="h-7 w-7" />
+                                  </IconButton>
+                                  <IconButton
+                                    variant="text"
+                                    onClick={() => CerrarEdicion()}
+                                    color="red"
+                                    className="mx-1"
+                                  >
+                                    <TrashIcon className="h-7 w-7" />
+                                  </IconButton>
+                                </div>
+                              </div>
+                            ) : (
+                              <>
+                                <div className="">
+                                  <Chip
+                                    className="ml-2 cursor-pointer"
+                                    variant="ghost"
+                                    size="sm"
+                                    color="gray"
+                                    value={detallesTest.r_fecha_fin}
+                                    onClick={() =>
+                                      cambiarPestañas("EditarFechaFin")
+                                    }
+                                  />
+                                </div>
+                              </>
+                            )}
                           </div>
                         </div>
                       </div>

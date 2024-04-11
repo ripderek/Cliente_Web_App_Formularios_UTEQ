@@ -219,11 +219,11 @@ export default function Index() {
                 <title>Inicio Sesion Formularios App</title>
             </Head>
             {/*NAVBAR  */}
-            <nav class="bg-green-900  border-b-8 border-orange-600  rounded-none">
-                <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-2">
+            <nav className="bg-green-900  border-b-8 border-orange-600  rounded-none">
+                <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-2">
                     <img
                         src="/img/Home/uteq_logo3.png"
-                        class="h-12"
+                        className="h-12"
                         alt="Flowbite Logo"
                     />
 

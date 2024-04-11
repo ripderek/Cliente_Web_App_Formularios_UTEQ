@@ -105,6 +105,10 @@ export default function Lista({
   AbrirEstadisticas,
   AbrirProgresos,
 }) {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const formsPerPage = 5; // cantidad de formularios por página
+
   const [load, setLoader] = useState(false);
   const [error, setError] = useState(false);
   const [mensajeError, setMensajeError] = useState("");
@@ -424,6 +428,41 @@ export default function Lista({
       setError(true);
     }
   };
+
+  //Estado para el filtro de busqueda
+  const handleSearchTermChange = (event) => {
+    setSearchTerm(event.target.value);
+    setCurrentPage(1); // Restablecer la página actual cuando se realiza una búsqueda
+  };
+
+  // Obtén el total de formularios después de aplicar el filtro
+  const filteredForms = secciones.filter((seccion) =>
+    seccion.r_titulo.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  // Obtén el total de páginas después de aplicar el filtro
+  const totalForms = filteredForms.length;
+  const totalPages = Math.ceil(totalForms / formsPerPage);
+
+  // Calcula el índice del primer y último formulario en la página actual
+  const indexOfLastForm = currentPage * formsPerPage;
+  const indexOfFirstForm = indexOfLastForm - formsPerPage;
+  const currentForms = filteredForms.slice(indexOfFirstForm, indexOfLastForm);
+
+  // Función para manejar el cambio a la página anterior
+  const handlePreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage((prevPage) => prevPage - 1);
+    }
+  };
+
+  // Función para manejar el cambio a la siguiente página
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage((prevPage) => prevPage + 1);
+    }
+  };
+
   return (
     <Card className="h-full w-full  rounded-none">
       {load ? <Loader /> : ""}
@@ -1089,6 +1128,8 @@ export default function Lista({
             <Input
               label="Buscar"
               icon={<MagnifyingGlassIcon className="h-5 w-5" />}
+              onChange={handleSearchTermChange}
+              value={searchTerm}
             />
           </div>
         </div>
@@ -1098,6 +1139,10 @@ export default function Lista({
           <div className="mx-auto items-center text-center font-bold text-2xl">
             Usted no tiene Formularios creados
           </div>
+        ) : currentForms.length === 0 ? (
+          <div className="mx-auto items-center text-center font-bold text-2xl">
+            No se ha encontrado el formulario
+          </div>
         ) : (
           <>
             <Typography
@@ -1106,7 +1151,7 @@ export default function Lista({
               className="font-normal leading-none opacity-70"
             >
               Numero de filas:
-              <span className="font-bold">{secciones.length}</span>
+              <span className="font-bold">{totalForms}</span>
             </Typography>
             <div className="overflow-x-auto  h-96">
               <table className="mt-4 w-full min-w-max table-auto text-left overflow-x-auto">
@@ -1129,7 +1174,7 @@ export default function Lista({
                   </tr>
                 </thead>
                 <tbody>
-                  {secciones.map(
+                  {currentForms.map(
                     (
                       {
                         r_id_test,
@@ -1146,7 +1191,10 @@ export default function Lista({
                       },
                       index
                     ) => {
-                      const isLast = index === secciones.length - 1;
+                      // Calcula el índice del formulario en la lista total de formularios
+                      const formIndex = indexOfFirstForm + index + 1;
+
+                      const isLast = index === currentForms.length - 1;
                       const classes = isLast
                         ? "p-4"
                         : "p-4 border-b border-blue-gray-50";
@@ -1163,7 +1211,7 @@ export default function Lista({
                                 color="blue-gray"
                                 className="font-normal"
                               >
-                                {index + 1}
+                                {indexOfFirstForm + index + 1}
                               </Typography>
                             </div>
                           </td>
@@ -1333,13 +1381,13 @@ export default function Lista({
       </CardBody>
       <CardFooter className="flex items-center justify-between border-t border-blue-gray-50 p-4">
         <Typography variant="small" color="blue-gray" className="font-normal">
-          Pagina 1 de 10
+          Página {currentPage} de {totalPages}
         </Typography>
         <div className="flex gap-2">
-          <Button variant="outlined" size="sm">
+          <Button variant="outlined" size="sm" onClick={handlePreviousPage}>
             Anterior
           </Button>
-          <Button variant="outlined" size="sm">
+          <Button variant="outlined" size="sm" onClick={handleNextPage}>
             Siguiente
           </Button>
         </div>

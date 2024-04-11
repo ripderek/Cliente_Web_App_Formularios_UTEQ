@@ -37,3 +37,7 @@ next-env.d.ts
 
 #color
 .vscode
+
+#archivos
+.env
+/public

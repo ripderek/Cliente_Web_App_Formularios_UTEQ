@@ -3,6 +3,7 @@ import {
   PlusCircleIcon,
   ExclamationTriangleIcon,
   ArrowLeftOnRectangleIcon,
+  TrashIcon,
 } from "@heroicons/react/24/solid";
 import {
   Card,
@@ -15,6 +16,10 @@ import {
   Avatar,
   Tooltip,
   Alert,
+  Dialog,
+  DialogHeader,
+  DialogBody,
+  DialogFooter,
 } from "@material-tailwind/react";
 
 //cabezera para la tabla de participantes
@@ -62,6 +67,7 @@ export default function SeleccionarSecciones({
   const [infoTest, setInforTest] = useState([]);
   const [controller, dispatch] = useMaterialTailwindController();
   const { sidenavColor, sidenavType, openSidenav } = controller;
+  const [openEliminar, setOpenEliminar] = useState(false);
   useEffect(() => {
     Obtener_Secciones_Usuario();
   }, []);
@@ -111,6 +117,30 @@ export default function SeleccionarSecciones({
     setOpenAlert(value);
     Obtener_Secciones_Usuario();
   };
+  const [id_seccion_eliminar, setid_seccion_eliminar] = useState(0);
+  //peticion fetch para eliminar la seccino del test
+  const Eliminar_Seccion = async () => {
+    setLoader(true);
+    try {
+      const result = await axios.post(
+        process.env.NEXT_PUBLIC_ACCESLINK + "test/eliminar_seccion_test",
+        {
+          p_id_test: idTest_id,
+          p_id_seccion: id_seccion_eliminar,
+        },
+        {
+          withCredentials: true,
+        }
+      );
+      setLoader(false);
+      setOpenEliminar(false);
+      Obtener_Secciones_Usuario();
+    } catch (error) {
+      console.log(error);
+      setLoader(false);
+      alert("Error");
+    }
+  };
   return (
     <Card className="h-full w-full rounded-none">
       <Notification
@@ -130,6 +160,28 @@ export default function SeleccionarSecciones({
       ) : (
         ""
       )}
+      {/* openEliminar */}
+      <Dialog open={openEliminar} handler={() => setOpenEliminar(false)}>
+        <DialogHeader>Eliminar Seccion del test</DialogHeader>
+        <DialogBody>¿Desea eliminar la seccion del test?</DialogBody>
+        <DialogFooter>
+          <Button
+            variant="text"
+            color="red"
+            onClick={() => setOpenEliminar(false)}
+            className="mr-1"
+          >
+            <span>Cancelar</span>
+          </Button>
+          <Button
+            variant="gradient"
+            color="green"
+            onClick={() => Eliminar_Seccion()}
+          >
+            <span>Aceptar</span>
+          </Button>
+        </DialogFooter>
+      </Dialog>
       <CardHeader floated={false} shadow={false} className="rounded-none">
         <div className="mb-8 flex items-center justify-between gap-8">
           <div>
@@ -220,8 +272,14 @@ export default function SeleccionarSecciones({
                   {infoTest.r_is_editable && (
                     <div className="p-2 flex justify-end">
                       <Tooltip content="Editar seccion">
-                        <button className="bg-zinc-50 p-2 bg-green-700 rounded-xl cursor-pointer">
-                          <ArrowRightCircleIcon className="w-7" color="white" />
+                        <button
+                          className="bg-zinc-50 p-2 bg-red-600 rounded-xl cursor-pointer"
+                          onClick={() => (
+                            setid_seccion_eliminar(r_id_seccion),
+                            setOpenEliminar(true)
+                          )}
+                        >
+                          <TrashIcon className="w-7" color="white" />
                         </button>
                       </Tooltip>
                     </div>

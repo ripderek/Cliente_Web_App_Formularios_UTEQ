@@ -210,7 +210,7 @@ export default function Index() {
       setError(true);
       setMensajeError(error.response.data.error);
     }
-  };
+
 
   //funcion para cerrar el dialog del error
   const cerrar = (valor) => {

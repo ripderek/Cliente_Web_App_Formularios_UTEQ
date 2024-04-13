@@ -46,6 +46,10 @@ import { useEffect, useState } from "react";
 import { useMaterialTailwindController, setOpenSidenav } from "@/context";
 
 export default function Lista({ AbrirNiveles }) {
+  const [currentPage, setCurrentPage] = useState(1);
+  const [searchTerm, setSearchTerm] = useState("");
+  const formsPerPage = 6; // Cantidad de secciones por página
+
   const [controller, dispatch] = useMaterialTailwindController();
   const { sidenavColor, sidenavType, openSidenav } = controller;
   const [load, setLoader] = useState(false);
@@ -114,6 +118,41 @@ export default function Lista({ AbrirNiveles }) {
     red: "shadow-red-600",
     pink: "shadow-pink-600",
   };
+
+  const handleSearchTermChange = (event) => {
+    setSearchTerm(event.target.value);
+    setCurrentPage(1); // Restablecer la página actual cuando se realiza una búsqueda
+  };
+
+  // Obtener el total de secciones después de aplicar el filtro
+  const filteredSections = secciones.filter((seccion) =>
+    seccion.r_titulo.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  // Obtener el total de páginas después de aplicar el filtro de búsqueda
+  const totalSections = filteredSections.length;
+  const totalPages = Math.ceil(totalSections / formsPerPage);
+
+  // Calcular el índice del primer y último formulario en la página actual
+  const indexOfLastSection = currentPage * formsPerPage;
+  const indexOfFirstSection = indexOfLastSection - formsPerPage;
+  const currentSections = filteredSections.slice(
+    indexOfFirstSection,
+    indexOfLastSection
+  );
+
+  const handlePreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage((prevPage) => prevPage - 1);
+    }
+  };
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage((prevPage) => prevPage + 1);
+    }
+  };
+
   return (
     <Card className="h-full w-full  rounded-none">
       {load ? <Loader /> : ""}
@@ -159,12 +198,14 @@ export default function Lista({ AbrirNiveles }) {
             <Input
               label="Buscar"
               icon={<MagnifyingGlassIcon className="h-5 w-5" />}
+              onChange={handleSearchTermChange}
+              value={searchTerm}
             />
           </div>
         </div>
       </CardHeader>
       <CardBody className=" px-0">
-        {secciones.length === 0 && (
+        {secciones.length === 0 ? (
           <Typography
             color="gray"
             variant="h4"
@@ -172,17 +213,28 @@ export default function Lista({ AbrirNiveles }) {
           >
             Usted no se encuentra en ninguna sección
           </Typography>
+        ) : (
+          currentSections.length === 0 && (
+            <Typography
+              color="gray"
+              variant="h4"
+              className="mt-1 font-normal mx-auto items-center text-center"
+            >
+              No se ha encontrado la sección
+            </Typography>
+          )
         )}
+
         <Typography
           variant="small"
           color="blue-gray"
           className="font-normal leading-none opacity-70 ml-5"
         >
           Número de secciones:
-          <span className="font-bold">{secciones.length}</span>
+          <span className="font-bold">{totalSections}</span>
         </Typography>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3 p-5">
-          {secciones.map(
+          {currentSections.map(
             ({
               r_titulo,
               r_id_seccion,
@@ -229,7 +281,7 @@ export default function Lista({ AbrirNiveles }) {
                       />
                     </div>
                     <div className="flex">
-                      {r_admin_seccion && (
+                      {r_admin_seccion ? (
                         <div className="w-auto flex ml-2 mb-2">
                           <Tooltip content="Es Admin">
                             <Chip
@@ -237,6 +289,17 @@ export default function Lista({ AbrirNiveles }) {
                               size="sm"
                               color="green"
                               value="Admin"
+                            />
+                          </Tooltip>
+                        </div>
+                      ) : (
+                        <div className="w-auto flex ml-2 mb-2">
+                          <Tooltip content="Es Invitado">
+                            <Chip
+                              variant="gradient"
+                              size="sm"
+                              color="blue"
+                              value="Invitado"
                             />
                           </Tooltip>
                         </div>
@@ -288,13 +351,13 @@ export default function Lista({ AbrirNiveles }) {
       </CardBody>
       <CardFooter className="flex items-center justify-between border-t border-blue-gray-50 p-4">
         <Typography variant="small" color="blue-gray" className="font-normal">
-          Pagina 1 de 10
+          Página {currentPage} de {totalPages}
         </Typography>
         <div className="flex gap-2">
-          <Button variant="outlined" size="sm">
+          <Button variant="outlined" size="sm" onClick={handlePreviousPage}>
             Anterior
           </Button>
-          <Button variant="outlined" size="sm">
+          <Button variant="outlined" size="sm" onClick={handleNextPage}>
             Siguiente
           </Button>
         </div>

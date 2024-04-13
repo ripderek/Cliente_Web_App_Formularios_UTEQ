@@ -44,7 +44,7 @@ import {
 import { Crear, Errores_Test } from "@/pages/dashboard/FormulariosC";
 import { Dialog_Error, Loader, Notification } from "@/widgets"; //Importar el componente
 import Cookies from "universal-cookie";
-const TABLE_HEAD = ["", "Titulo", "Estado", "Ingreso", "Suspenso", "Obs"];
+const TABLE_HEAD = ["", "Titulo", "Estado", "Ingreso", /*"Suspenso",*/ "Obs"];
 const TABS = [
   {
     label: "Todo",
@@ -67,7 +67,7 @@ const TABS = [
 const TABLE_HEAD_Detalles = [
   "Fechas",
   "Estado Actual",
-  "Suspendido",
+  //"Suspendido",
   "Ingresos permitidos",
   "Preguntas",
   "Acceso",
@@ -790,6 +790,7 @@ export default function Lista({
                         />
                       </div>
                     </td>
+                    {/* 
                     <td className={"p-4 border-b border-blue-gray-50"}>
                       <div className="w-max">
                         <Chip
@@ -802,6 +803,8 @@ export default function Lista({
                         />
                       </div>
                     </td>
+*/}
+
                     <td className={"p-4 border-b border-blue-gray-50 w-20"}>
                       {tabs.EditarIntentos ? (
                         <div className="flex  ml-0 mr-0 w-auto">
@@ -1059,6 +1062,7 @@ export default function Lista({
                 </div>
               </div>
 
+              {/*
               <div
                 key={2}
                 className={`bg-blue-gray-50  shadow-2xl rounded-none cursor-pointer border-4 border-green-900 hover:border-orange-600  `}
@@ -1072,6 +1076,7 @@ export default function Lista({
                   </div>
                 </div>
               </div>
+ */}
             </div>
           </div>
         </DialogBody>
@@ -1282,6 +1287,7 @@ export default function Lista({
                               </Tooltip>
                             </div>
                           </td>
+                          {/* 
                           <td className={classes}>
                             <div className="w-max">
                               <Chip
@@ -1292,6 +1298,7 @@ export default function Lista({
                               />
                             </div>
                           </td>
+*/}
                           {/* 
                       <td className={classes}>
                         <Tooltip content="Editar test">

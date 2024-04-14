@@ -5,6 +5,7 @@ import {
   Button,
   Typography,
   Tooltip,
+  Alert,
 } from "@material-tailwind/react";
 import Router from "next/router";
 import axios from "axios";
@@ -17,6 +18,7 @@ import { useGoogleLogin } from "@react-oauth/google";
 import { NavBarFormsLogin } from "@/components/FormsLayout";
 import Head from "next/head";
 import anim2 from "../../public/anim/login2.json";
+import { Register } from "@/pages/UsersControl";
 //paguina para el login desde los administradores --> profesores
 export default function Index() {
   //Borrar cookies en caso de existir alguna
@@ -210,14 +212,19 @@ export default function Index() {
       setError(true);
       setMensajeError(error.response.data.error);
     }
-
+  };
 
   //funcion para cerrar el dialog del error
   const cerrar = (valor) => {
     setError(valor);
   };
+
+  //estados para abrir el dialogo de registrarse en la Appp
+  const [AbrirRegister, setOpenRegister] = useState(false);
+  //Ver la alerta si la cuenta se ha creado
+  const [cuentaCreada, setCuentaCreada] = useState(false);
   return (
-    <div className=" w-full h-full ">
+    <div className=" w-full h-full bg-gray-100">
       <Head>
         <title>Inicio Sesion Formularios App</title>
       </Head>
@@ -236,6 +243,7 @@ export default function Index() {
                   <Button
                     className=" bg-white font-bold text-black rounded-none hover:bg-orange-600"
                     fullWidth
+                    onClick={() => setOpenRegister(true)}
                   >
                     Registrarse
                   </Button>
@@ -245,18 +253,34 @@ export default function Index() {
           </div>
         </div>
       </nav>
-      {load ? <Loader /> : ""}
-      {error ? (
+      <Alert
+        open={cuentaCreada}
+        onClose={() => setCuentaCreada(false)}
+        className="rounded-none border-l-4 border-[#2ec946] bg-[#2ec946]/10 font-bold text-[#2ec946]"
+        animate={{
+          mount: { y: 0 },
+          unmount: { y: 100 },
+        }}
+      >
+        Para continuar revisa tu correo electronico registrado y verifica tu
+        cuenta.
+      </Alert>
+      {/* Etiqueta para registrar un usuario */}
+      <Register
+        FormRegister={AbrirRegister}
+        CerrarFormRegister={() => setOpenRegister(false)}
+        openALertRegister={() => setCuentaCreada(true)}
+      />
+      {load && <Loader />}
+      {error && (
         <Dialog_Error
           mensaje={mensajeError}
           titulo="Error Inicio de sesion"
           cerrar={cerrar}
         />
-      ) : (
-        ""
       )}
       <div className="flex justify-between -p-10 ">
-        <div className="mx-auto -p-2  hidden md:block">
+        <div className="mx-auto -p-5  hidden md:block">
           <Typography variant="h1" className="mt-16" color="black">
             Formularios App
           </Typography>
@@ -267,7 +291,7 @@ export default function Index() {
             />
           </div>
         </div>
-        <div className=" p-9 ">
+        <div className=" p-16 ">
           <Card
             color="transparent"
             shadow={false}

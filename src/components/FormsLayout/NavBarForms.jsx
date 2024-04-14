@@ -31,10 +31,11 @@ export function NavBarForms() {
             class="h-12"
             alt="Flowbite Logo"
           />
-
-          <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">
-            Xtintor
-          </span>
+          {/* 
+            <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">
+              Xtintor
+            </span>
+            */}
         </a>
 
         {/*

@@ -234,6 +234,7 @@ export default function Secciones() {
             AbrirSecciones={AbrirSecciones}
             Titulo={tabInfo.tituloSeccion}
             AbrirPreguntas={AbrirPreguntas}
+           
           />
         );
       case tabs.openPreguntas:

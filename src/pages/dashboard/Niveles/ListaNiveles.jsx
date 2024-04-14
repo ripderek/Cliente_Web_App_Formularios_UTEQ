@@ -36,6 +36,9 @@ import { useEffect, useState } from "react";
 //const TABLE_HEAD = ["Member", "Function", "Status", "Employed", ""];
 import axios from "axios";
 import { useMaterialTailwindController, setOpenSidenav } from "@/context";
+import { Lista } from "@/pages/dashboard/UsuariosSecciones";
+import Cookies from "universal-cookie";
+
 export default function ListaNiveles({
   id_seccion,
   AbrirSecciones,
@@ -53,6 +56,7 @@ export default function ListaNiveles({
   const [openCreateNivel, SetOpenCreateNivel] = useState(false);
   useEffect(() => {
     ObtenerNiveles();
+    ObtenerInfoSeccionUser();
   }, []);
   //funcion para cargar los niveles que tiene una seccion
   const ObtenerNiveles = async () => {
@@ -77,6 +81,35 @@ export default function ListaNiveles({
       //colocar una alerta de error cuando no se pueda inciar sesion
       //setError(true);
       //setMensajeError(error.response.data.error);
+      console.log(error);
+    }
+  };
+  const [infoSeccionUsuario, setInfoSeccionUsuario] = useState([]);
+  //hacer una nuevo funcion para el useEffect que obtenga los datos de que si el usuario es adminsitrador de  la seccion
+  const cookies = new Cookies();
+
+  const ObtenerInfoSeccionUser = async () => {
+    setLoader(true);
+    try {
+      const response = await fetch(
+        process.env.NEXT_PUBLIC_ACCESLINK +
+          "secciones/informacion_participante_test/" +
+          id_seccion +
+          "/" +
+          cookies.get("id_user"),
+        {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+        }
+      );
+      const data = await response.json();
+      setInfoSeccionUsuario(data);
+      //console.log(result.data);
+      setLoader(false);
+    } catch (error) {
+      setLoader(false);
+      alert("Error");
       console.log(error);
     }
   };
@@ -239,8 +272,17 @@ export default function ListaNiveles({
       console.log(error);
     }
   };
+  //para abrir la lista de los participantes de una seccion skere modo diablo
+  const [abrirListaParticipantes, setAbrirListaParticipantes] = useState(false);
   return (
     <Card className="h-full w-full rounded-none">
+      {abrirListaParticipantes && (
+        <Lista
+          cerrar={() => setAbrirListaParticipantes(false)}
+          idSECCION={id_seccion}
+          infoUser={infoSeccionUsuario}
+        />
+      )}
       {load ? <Loader /> : ""}
       {error ? (
         <Dialog_Error
@@ -251,6 +293,7 @@ export default function ListaNiveles({
       ) : (
         ""
       )}
+
       <Notification mensaje="Nivel creado" abrir={openAlert} crear={crear} />
       <Dialog open={openCreateNivel} size={"xs"}>
         <DialogHeader>
@@ -443,37 +486,42 @@ export default function ListaNiveles({
                 nivel
               </Button>
             </Tooltip>
-            <Tooltip content="Editar">
-              <Button
-                className="flex items-center gap-3"
-                size="sm"
-                color="cyan"
-                onClick={() => OpenEditar(true)}
-              >
-                <PencilIcon strokeWidth={2} className="h-4 w-4" />
-              </Button>
-            </Tooltip>
+            {infoSeccionUsuario.isadmin && (
+              <Tooltip content="Editar">
+                <Button
+                  className="flex items-center gap-3"
+                  size="sm"
+                  color="cyan"
+                  onClick={() => OpenEditar(true)}
+                >
+                  <PencilIcon strokeWidth={2} className="h-4 w-4" />
+                </Button>
+              </Tooltip>
+            )}
             <Tooltip content="Participantes">
               <Button
                 className="flex items-center gap-3"
                 size="sm"
                 color="blue-gray"
+                onClick={() => setAbrirListaParticipantes(true)}
               >
                 <UsersIcon strokeWidth={2} className="h-4 w-4" />
               </Button>
             </Tooltip>
-            <Tooltip content="Configuracion">
-              <Button
-                className="flex items-center gap-3"
-                size="sm"
-                color="red"
-                onClick={() => setAbrirConfig(true)}
-                //onClick={() => (handleOpen(), ObtenerTiposPReguntas())}
-                //onClick={() => AbrirPlantilla(1, "", id_nivel)}
-              >
-                <Cog6ToothIcon strokeWidth={2} className="h-4 w-4" />
-              </Button>
-            </Tooltip>
+            {infoSeccionUsuario.isadmin && (
+              <Tooltip content="Configuracion">
+                <Button
+                  className="flex items-center gap-3"
+                  size="sm"
+                  color="red"
+                  onClick={() => setAbrirConfig(true)}
+                  //onClick={() => (handleOpen(), ObtenerTiposPReguntas())}
+                  //onClick={() => AbrirPlantilla(1, "", id_nivel)}
+                >
+                  <Cog6ToothIcon strokeWidth={2} className="h-4 w-4" />
+                </Button>
+              </Tooltip>
+            )}
           </div>
         </div>
         <div className="flex flex-col items-center justify-between gap-4 md:flex-row">

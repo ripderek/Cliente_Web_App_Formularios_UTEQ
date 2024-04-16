@@ -25,6 +25,8 @@ import {
   XCircleIcon,
   PlusCircleIcon,
 } from "@heroicons/react/24/solid";
+import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
+
 import { useMaterialTailwindController, setOpenSidenav } from "@/context";
 
 const TABLE_HEAD = ["Nivel", "Numero de preguntas"];
@@ -43,12 +45,15 @@ export default function SeccionesDisponibles({
   useEffect(() => {
     Obtener_Secciones_Usuario();
   }, []);
+  const cookies = new Cookies();
+  //funcion modificada para que solo aparesca las secciones en la que participa el usuario
   const Obtener_Secciones_Usuario = async () => {
     setLoader(true);
     try {
       const response = await fetch(
         process.env.NEXT_PUBLIC_ACCESLINK +
-          "secciones/Secciones_Disponibles_test",
+          "secciones/Secciones_Disponibles_test/" +
+          cookies.get("id_user"),
         {
           method: "GET",
           headers: { "Content-Type": "application/json" },
@@ -161,6 +166,40 @@ export default function SeccionesDisponibles({
     red: "shadow-red-600",
     pink: "shadow-pink-600",
   };
+  //funcion para buscar seccion publicas
+  const [palabraClave, setPalabraClave] = useState("");
+  //Funcion para buscar skere modo diablo
+  const [busquedaActiva, setBusquedaActiva] = useState(false);
+  const Busqueda = async () => {
+    if (palabraClave.trim().length === 0) Obtener_Secciones_Usuario();
+    else {
+      setBusquedaActiva(true);
+      setLoader(true);
+      try {
+        const response = await fetch(
+          process.env.NEXT_PUBLIC_ACCESLINK +
+            "secciones/search_setcion_with_key/" +
+            palabraClave,
+          {
+            method: "GET",
+            headers: { "Content-Type": "application/json" },
+            credentials: "include",
+          }
+        );
+        const data = await response.json();
+        setSecciones(data);
+        //console.log(result.data);
+        setLoader(false);
+      } catch (error) {
+        alert("Error");
+        setLoader(false);
+        //colocar una alerta de error cuando no se pueda inciar sesion
+        //setError(true);
+        //setMensajeError(error.response.data.error);
+        console.log(error);
+      }
+    }
+  };
   return (
     <>
       {load ? <Loader /> : ""}
@@ -173,7 +212,7 @@ export default function SeccionesDisponibles({
       ) : (
         ""
       )}
-      <Dialog size="xl" open={true} className="bg-transparent shadow-none">
+      <Dialog size="xl" open={true} className="bg-white shadow-none">
         <Card className="mx-auto w-full h-full">
           <CardBody className="flex flex-col gap-4">
             <Typography variant="h4" color="blue-gray">
@@ -194,54 +233,81 @@ export default function SeccionesDisponibles({
               Llene el formulario
             </Typography>
 */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 p-5">
-              {secciones.map(({ r_titulo, r_id_seccion, r_num_niveles }) => (
-                <div
-                  key={r_id_seccion}
-                  className={`bg-blue-gray-50 shadow-2xl rounded-none cursor-pointer hover:border-4 ${sidenavColors[sidenavColor]}  ${shadows[sidenavColor]}`}
-                  onClick={() => (
-                    handlerAgg(), ObtenerPreguntasNiveles(r_id_seccion)
-                  )}
-                >
-                  <div className="mx-auto">
-                    <div className="text-center">
-                      <Avatar
-                        src={"/img/Home/materia_icon.png"}
-                        alt={r_titulo}
-                        size="xl"
-                        className="mt-3"
-                      />
-                    </div>
-                    <div className="w-full p-4">
-                      <input
-                        className="w-full text-lg bg-blue-gray-50 font-semibold	text-blue-gray-800 "
-                        disabled
-                        value={r_titulo}
-                      />
-                    </div>
-                    <div className="w-auto flex ml-2 mb-2">
-                      <Tooltip content="Niveles verificados">
-                        <Chip
-                          variant="ghost"
-                          size="sm"
-                          color="orange"
-                          value={"Niveles: " + r_num_niveles}
-                        />
-                      </Tooltip>
-                    </div>
+            <div className="w-full">
+              <Input
+                label="Buscar"
+                value={palabraClave}
+                onChange={(e) => setPalabraClave(e.target.value)}
+                icon={
+                  <MagnifyingGlassIcon
+                    className="h-5 w-5 cursor-pointer"
+                    onClick={() => Busqueda()}
+                  />
+                }
+              />
+            </div>
+            <div className="h-96 overflow-x-scroll">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3 p-5">
+                {secciones.map(
+                  ({ r_titulo, r_id_seccion, r_num_niveles, r_autor }) => (
+                    <div
+                      key={r_id_seccion}
+                      className={`bg-blue-gray-50 shadow-2xl rounded-none cursor-pointer hover:border-4 ${sidenavColors[sidenavColor]} `}
+                      onClick={() => (
+                        handlerAgg(), ObtenerPreguntasNiveles(r_id_seccion)
+                      )}
+                    >
+                      <div className="mx-auto">
+                        <div className="text-center">
+                          <Avatar
+                            src={"/img/Home/materia_icon.png"}
+                            alt={r_titulo}
+                            size="xl"
+                            className="mt-3"
+                          />
+                        </div>
+                        <div className="w-full p-4">
+                          <input
+                            className="w-full text-lg bg-blue-gray-50 font-semibold	text-blue-gray-800 "
+                            disabled
+                            value={r_titulo}
+                          />
+                        </div>
+                        <div className="w-auto flex ml-2 mb-2">
+                          <Tooltip content="Niveles verificados">
+                            <Chip
+                              variant="ghost"
+                              size="sm"
+                              color="orange"
+                              value={"Niveles: " + r_num_niveles}
+                            />
+                          </Tooltip>
+                        </div>
+                        <div className="w-auto flex ml-2 mb-2">
+                          <Tooltip content="Niveles verificados">
+                            <Chip
+                              variant="ghost"
+                              size="sm"
+                              color="green"
+                              value={r_autor}
+                            />
+                          </Tooltip>
+                        </div>
 
-                    <div className="p-2 flex justify-end">
-                      {/* 
+                        <div className="p-2 flex justify-end">
+                          {/* 
                       <Tooltip content="Agregar al test">
                         <button className="bg-zinc-50 p-2 bg-green-700 rounded-xl cursor-pointer">
                           <PlusCircleIcon className="w-7" color="white" />
                         </button>
                       </Tooltip>
                       */}
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                </div>
-              ))}
+                  )
+                )}
+              </div>
             </div>
           </CardBody>
           <CardFooter className="pt-0">

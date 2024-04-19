@@ -220,6 +220,7 @@ export default function ListaNiveles({
       const data = await response.json();
       setInfoSeccion(data);
       setIsChecked(data.r_estado);
+      setIsChecked2(data.r_publico);
       console.log(data);
       //console.log(result.data);
       setLoader(false);
@@ -241,6 +242,11 @@ export default function ListaNiveles({
   const handleChange = (event) => {
     setIsChecked(event.target.checked);
   };
+  //para saber si es publica o privada
+  const [isChecked2, setIsChecked2] = useState(false);
+  const handleChange2 = (event) => {
+    setIsChecked2(event.target.checked);
+  };
   //funcion para eidtar la seccion EditarSeccionOP
   const EditarSeccionOP = async () => {
     //process.env.NEXT_PUBLIC_ACCESLINK
@@ -254,6 +260,7 @@ export default function ListaNiveles({
           p_descripcion: infoSeccion.r_descripcion,
           p_new_Estado: isChecked,
           p_id_seccion: id_seccion,
+          p_visibilidad: isChecked2,
         },
 
         {
@@ -435,6 +442,21 @@ export default function ListaNiveles({
               <Chip
                 value={isChecked ? "Habilitado" : "Deshabilitado"}
                 color={isChecked ? "green" : "red"}
+              />
+            </div>
+            {/** ESTADO PARA SABER SI LA SECCION ES PUBLICA O PRIVAD */}
+            <div className="flex items-center">
+              <Typography className="text-lg font-bold" color="black">
+                Visibilidad:
+              </Typography>
+              <Checkbox
+                color="green"
+                checked={isChecked2}
+                onChange={handleChange2}
+              />
+              <Chip
+                value={isChecked2 ? "Publico" : "Privado"}
+                color={isChecked2 ? "green" : "red"}
               />
             </div>
           </CardBody>

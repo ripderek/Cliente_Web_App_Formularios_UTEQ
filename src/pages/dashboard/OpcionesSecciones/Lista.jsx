@@ -4,6 +4,8 @@ import {
   UserPlusIcon,
   PlusIcon,
   ArrowRightCircleIcon,
+  EyeSlashIcon,
+  EyeIcon,
 } from "@heroicons/react/24/solid";
 import {
   Card,
@@ -242,6 +244,7 @@ export default function Lista({ AbrirNiveles }) {
               r_admin_seccion,
               r_estado,
               r_erroneo,
+              r_visibilidad,
             }) => (
               <div
                 key={r_id_seccion}
@@ -325,6 +328,25 @@ export default function Lista({ AbrirNiveles }) {
                               color="orange"
                               value={"Erroneo"}
                             />
+                          </Tooltip>
+                        </div>
+                      )}
+                      {r_visibilidad ? (
+                        <div className="w-auto flex ml-2 mb-2">
+                          <Tooltip content="La seccion se encuentra publica ">
+                            <EyeIcon className="h-7" color="black" />
+                          </Tooltip>
+                        </div>
+                      ) : (
+                        <div className="w-auto flex ml-2 mb-2">
+                          <Tooltip content="La seccion se encuentra privada ">
+                            <EyeSlashIcon className="h-7" color="black" />
+                            {/** <Chip
+                              variant="gradient"
+                              size="sm"
+                              color="cyan"
+                              value={"Privado"}
+                            />*/}
                           </Tooltip>
                         </div>
                       )}

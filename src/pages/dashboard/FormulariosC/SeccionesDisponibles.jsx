@@ -29,7 +29,7 @@ import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 
 import { useMaterialTailwindController, setOpenSidenav } from "@/context";
 
-const TABLE_HEAD = ["Nivel", "Numero de preguntas"];
+const TABLE_HEAD = ["Nivel", "Numero de preguntas", ""];
 export default function SeccionesDisponibles({
   cerrar,
   id_seccion,
@@ -321,11 +321,11 @@ export default function SeccionesDisponibles({
       </Dialog>
       {/* Formulario para agregar la cantidad de preguntas para la seccion por niveles */}
       <Dialog
-        size="xs"
+        size="xl"
         open={openAgregarS}
         className="bg-transparent shadow-none"
       >
-        <Card className="mx-auto w-full h-full max-w-[24rem]">
+        <Card className="mx-auto w-full h-full">
           <CardBody className="flex flex-col gap-4">
             <Typography variant="h4" color="blue-gray">
               Numero de preguntas
@@ -345,7 +345,7 @@ export default function SeccionesDisponibles({
               Llene el formulario
             </Typography>
             {/* Tabla con el numero de preguntas segun la seccion y el nivel */}
-            <table className="w-full min-w-max table-auto text-left">
+            <table className="w-auto  table-auto text-left">
               <thead>
                 <tr>
                   {TABLE_HEAD.map((head) => (
@@ -372,8 +372,8 @@ export default function SeccionesDisponibles({
                   ) => {
                     const isLast = index === preguntas.length - 1;
                     const classes = isLast
-                      ? "p-4"
-                      : "p-4 border-b border-blue-gray-50";
+                      ? "p-2"
+                      : "p-2 border-b border-blue-gray-50";
 
                     return (
                       <tr key={r_id_nivel}>
@@ -395,18 +395,27 @@ export default function SeccionesDisponibles({
                             {r_total_preguntas}
                           </Typography>
                         </td>
+                        <td className={classes}>
+                          <Input
+                            label="Numero de preguntas"
+                            name="p_numero_preguntas"
+                            onChange={HandleChange}
+                          />
+                        </td>
                       </tr>
                     );
                   }
                 )}
               </tbody>
             </table>
+            {/*
             <Input
               label="Ingrese cantidad de preguntas"
               size="lg"
               name="p_numero_preguntas"
               onChange={HandleChange}
             />
+             */}
           </CardBody>
           <CardFooter className="pt-0">
             <Button

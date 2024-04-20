@@ -4,6 +4,7 @@ import {
   ExclamationTriangleIcon,
   ArrowLeftOnRectangleIcon,
   TrashIcon,
+  PencilIcon,
 } from "@heroicons/react/24/solid";
 import {
   Card,
@@ -27,7 +28,7 @@ import { Dialog_Error, Loader, Notification } from "@/widgets"; //Importar el co
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useMaterialTailwindController, setOpenSidenav } from "@/context";
-
+import { EditarNivelesSeccion } from "@/pages/dashboard/FormulariosC";
 import {
   AddSeccion,
   SeccionesDisponibles,
@@ -68,6 +69,7 @@ export default function SeleccionarSecciones({
   const [controller, dispatch] = useMaterialTailwindController();
   const { sidenavColor, sidenavType, openSidenav } = controller;
   const [openEliminar, setOpenEliminar] = useState(false);
+  const [openEditar, setOpenEditar] = useState(false);
   useEffect(() => {
     Obtener_Secciones_Usuario();
   }, []);
@@ -148,17 +150,22 @@ export default function SeleccionarSecciones({
         abrir={openAlert}
         crear={crear}
       />
-      {load ? <Loader /> : ""}
-      {openAgregarSeccion ? <AddSeccion cerrar={cerrarAgregar} /> : ""}
-      {openSeccionesDisponibles ? (
+      {load && <Loader />}
+      {openAgregarSeccion && <AddSeccion cerrar={cerrarAgregar} />}
+      {openSeccionesDisponibles && (
         <SeccionesDisponibles
           ID_seccion_p={idTest_id}
           cerrar={cerrar}
           crear={crear}
           idtest={idTest_id}
         />
-      ) : (
-        ""
+      )}
+      {openEditar && (
+        <EditarNivelesSeccion
+          cerrar={() => setOpenEditar(false)}
+          id_test={idTest_id}
+          id_seccion={id_seccion_eliminar}
+        />
       )}
       {/* openEliminar */}
       <Dialog open={openEliminar} handler={() => setOpenEliminar(false)}>
@@ -270,18 +277,33 @@ export default function SeleccionarSecciones({
                     </Tooltip>
                   </div>
                   {infoTest.r_is_editable && (
-                    <div className="p-2 flex justify-end">
-                      <Tooltip content="Editar seccion">
-                        <button
-                          className="bg-zinc-50 p-2 bg-red-600 rounded-xl cursor-pointer"
-                          onClick={() => (
-                            setid_seccion_eliminar(r_id_seccion),
-                            setOpenEliminar(true)
-                          )}
-                        >
-                          <TrashIcon className="w-7" color="white" />
-                        </button>
-                      </Tooltip>
+                    <div className="flex justify-end">
+                      <div className="p-2 flex justify-end">
+                        <Tooltip content="Editar seccion">
+                          <button
+                            className="bg-zinc-50 p-2 bg-orange-500 rounded-xl cursor-pointer"
+                            onClick={() => (
+                              setid_seccion_eliminar(r_id_seccion),
+                              setOpenEditar(true)
+                            )}
+                          >
+                            <PencilIcon className="w-7" color="white" />
+                          </button>
+                        </Tooltip>
+                      </div>
+                      <div className="p-2 flex justify-end">
+                        <Tooltip content="Quitar seccion">
+                          <button
+                            className="bg-zinc-50 p-2 bg-red-600 rounded-xl cursor-pointer"
+                            onClick={() => (
+                              setid_seccion_eliminar(r_id_seccion),
+                              setOpenEliminar(true)
+                            )}
+                          >
+                            <TrashIcon className="w-7" color="white" />
+                          </button>
+                        </Tooltip>
+                      </div>
                     </div>
                   )}
                 </div>

@@ -98,8 +98,9 @@ export default function SeccionesDisponibles({
         }
       );
       const data = await response.json();
+      //añadirle un campo extra parque contenga el numero de preguntas por nivel a ingresar
       setPreguntas(data);
-      //console.log(result.data);
+      console.log(data);
       setLoader(false);
       console.log(data);
     } catch (error) {
@@ -124,9 +125,14 @@ export default function SeccionesDisponibles({
     //Router.push("/Inicio");
     setLoader(true);
     try {
+      //ahora enviar el id del test, id de la seccion y Json con los niveles
       const result = await axios.post(
         process.env.NEXT_PUBLIC_ACCESLINK + "test/AgregarSeccionTest",
-        seccionRegistro,
+        {
+          p_id_test: seccionRegistro.p_id_test,
+          p_id_seccion: seccionRegistro.p_id_seccion,
+          p_numero_preguntas: preguntas,
+        },
         {
           withCredentials: true,
         }
@@ -199,6 +205,21 @@ export default function SeccionesDisponibles({
         console.log(error);
       }
     }
+  };
+  //para cambiar el numero de preguntas por nivel
+  //const handleCambiarNumeroPreguntasNivel = (id_nivel, num_preguntas) => {
+  // Función para actualizar el JSON
+  const actualizarNumPreguntas = (json, idNivel, nuevasPreguntas) => {
+    return json.map((item) => {
+      if (item.r_id_nivel === idNivel) {
+        return { ...item, r_num_preguntas: nuevasPreguntas };
+      }
+      return item;
+    });
+  };
+  const handleCambiarNumeroPreguntasNivel = (id_nivel, num_preguntas) => {
+    const newData = actualizarNumPreguntas(preguntas, id_nivel, num_preguntas);
+    setPreguntas(newData);
   };
   return (
     <>
@@ -321,7 +342,7 @@ export default function SeccionesDisponibles({
       </Dialog>
       {/* Formulario para agregar la cantidad de preguntas para la seccion por niveles */}
       <Dialog
-        size="xl"
+        size="sm"
         open={openAgregarS}
         className="bg-transparent shadow-none"
       >
@@ -342,10 +363,10 @@ export default function SeccionesDisponibles({
               variant="paragraph"
               color="gray"
             >
-              Llene el formulario
+              Ingrese el numero de preguntas por nivel
             </Typography>
             {/* Tabla con el numero de preguntas segun la seccion y el nivel */}
-            <table className="w-auto  table-auto text-left">
+            <table className="w-96 mx-auto  table-auto text-left">
               <thead>
                 <tr>
                   {TABLE_HEAD.map((head) => (
@@ -367,7 +388,13 @@ export default function SeccionesDisponibles({
               <tbody>
                 {preguntas.map(
                   (
-                    { r_id_nivel, r_id_seccion, r_nivel, r_total_preguntas },
+                    {
+                      r_id_nivel,
+                      r_id_seccion,
+                      r_nivel,
+                      r_total_preguntas,
+                      r_num_preguntas,
+                    },
                     index
                   ) => {
                     const isLast = index === preguntas.length - 1;
@@ -399,7 +426,13 @@ export default function SeccionesDisponibles({
                           <Input
                             label="Numero de preguntas"
                             name="p_numero_preguntas"
-                            onChange={HandleChange}
+                            onChange={(e) =>
+                              handleCambiarNumeroPreguntasNivel(
+                                r_id_nivel,
+                                e.target.value
+                              )
+                            }
+                            value={r_num_preguntas}
                           />
                         </td>
                       </tr>

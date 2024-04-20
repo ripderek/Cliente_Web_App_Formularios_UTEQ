@@ -469,7 +469,7 @@ export default function Lista({
       {error1 ? <Errores_Test cerrar={cerrar1} id_test={idTes} /> : ""}
       <Crear abrir={openCreate} cerrar={cerrar} crear={crear} />
       {/* Para visualizar los detalles del test y poder seleccionar secciones, niveles y participantes*/}
-      <Dialog open={openDetalles} size="xl" handler={handleOpenDetalles}>
+      <Dialog open={openDetalles} size="xxl" handler={handleOpenDetalles}>
         {error ? (
           <Dialog_Error
             mensaje={mensajeError}
@@ -522,7 +522,7 @@ export default function Lista({
             </Alert>
           </div>
           {/* Hacer una condicion para poder editar el titulo automaticamente xd skere */}
-          <div className="font-bold text-black text-xl">
+          <div className="   font-bold text-black text-xl">
             {tabs.EditarTitulo ? (
               <>
                 <div className="flex w-2/3">
@@ -554,7 +554,7 @@ export default function Lista({
                 </div>
               </>
             ) : (
-              <>
+              <div className="md:w-auto w-56">
                 {DatosAEditar.Titulo}
 
                 <IconButton
@@ -563,7 +563,7 @@ export default function Lista({
                 >
                   <PencilIcon className="h-6 w-6" />
                 </IconButton>
-              </>
+              </div>
             )}
           </div>
           {/* DESCRIPCION DEL TEST */}
@@ -644,7 +644,7 @@ export default function Lista({
           <div className="overflow-y-scroll h-96">
             {/* TABLA DETALLES DEL TEST  */}
             <div className="overflow-y-auto">
-              <table className="mt-4 w-full min-w-max table-auto text-left">
+              <table className="mt-4 overflow-x-auto w-full min-w-max table-auto text-left">
                 <thead>
                   <tr>
                     {TABLE_HEAD_Detalles.map((head) => (
@@ -683,6 +683,7 @@ export default function Lista({
                                   onChange={setFechaHoraInicio}
                                   value={fechaHoraInicio}
                                   disableClock
+                                  disableCalendar
                                 />
                                 <div className="flex">
                                   <IconButton
@@ -735,6 +736,7 @@ export default function Lista({
                                   onChange={setFechaHoraInicio}
                                   value={fechaHoraInicio}
                                   disableClock
+                                  disableCalendar
                                 />
                                 <div className="flex">
                                   <IconButton

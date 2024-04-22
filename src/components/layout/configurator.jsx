@@ -13,6 +13,9 @@ import {
   setSidenavType,
   setFixedNavbar,
 } from "@/context";
+import axios from "axios";
+import Cookies from "universal-cookie";
+import Router from "next/router";
 
 function formatNumber(number, decPlaces) {
   decPlaces = Math.pow(10, decPlaces);
@@ -39,6 +42,7 @@ function formatNumber(number, decPlaces) {
   return number;
 }
 import { useState, useEffect } from "react";
+import { Dialog_Error, Loader, Notification } from "@/widgets"; //Importar el componente
 
 export function Configurator() {
   const [controller, dispatch] = useMaterialTailwindController();
@@ -54,13 +58,66 @@ export function Configurator() {
     red: "from-red-400 to-red-600",
     pink: "from-pink-400 to-pink-600",
   };
+  //funcion para guardar en la BD la configuracion de los colores skere modo diablo
+  const [load, setLoader] = useState(false);
+  const cookies = new Cookies();
+  const [error, setError] = useState(false);
+  const [mensajeError, setMensajeError] = useState("");
+  const cerrar1 = (valor) => {
+    setError(valor);
+  };
+  const GuardarConfiguracion = async () => {
+    //process.env.NEXT_PUBLIC_ACCESLINK
+    //Router.push("/Inicio");
 
+    try {
+      setLoader(true);
+      //Actualizar la contrasena
+
+      const result = await axios.post(
+        process.env.NEXT_PUBLIC_ACCESLINK +
+          "users/sp_actualizar_interfaz_usuario",
+        {
+          p_id_usuario: cookies.get("id_user"),
+          p_sidenavcolor: sidenavColor,
+          p_sidenavtype: sidenavType,
+        },
+        {
+          withCredentials: true,
+        }
+      );
+      cookies.remove("sidenavcolor");
+      cookies.remove("sidenavtype");
+      cookies.set("sidenavcolor", sidenavColor, { path: "/" }); //enviar cokiee y almacenarla
+      cookies.set("sidenavtype", sidenavType, { path: "/" });
+      setLoader(false);
+      const nuevaRuta = "/dashboard/Home"; //
+      //Router.push(nuevaRuta);
+      //agregar_seccion();
+      //aqui refrescar la paguina y redireccionar hacia el inicio de sesion
+    } catch (error) {
+      setLoader(false);
+      console.log(error);
+      //colocar una alerta de error cuando no se pueda inciar sesion
+      setMensajeError(error.response.data.message);
+      //alert(error.response.data.error);
+      setError(true);
+    }
+  };
   return (
     <aside
       className={`fixed top-0 right-0 z-50 h-screen w-96 overflow-y-scroll bg-white px-2.5 shadow-lg transition-transform duration-300 ${
         openConfigurator ? "translate-x-0" : "translate-x-96"
       }`}
     >
+      {load && <Loader />}
+      {error && (
+        <Dialog_Error
+          mensaje={mensajeError}
+          titulo="Error al llenar el formulario"
+          cerrar={cerrar1}
+        />
+      )}
       <div className="flex items-start justify-between px-6 pt-8 pb-6 ">
         <div>
           <Typography variant="h5" color="blue-gray">
@@ -130,8 +187,10 @@ export function Configurator() {
             </Button>
           </div>
         </div>
+
         <div className="mb-12">
           <hr />
+          {/*
           <div className="flex items-center justify-between py-5">
             <Typography variant="h6" color="blue-gray">
               Barra de navegación fija
@@ -142,13 +201,20 @@ export function Configurator() {
               onChange={() => setFixedNavbar(dispatch, !fixedNavbar)}
             />
           </div>
+ */}
           <hr />
           <div className="my-8 flex flex-col gap-4">
-            <Button variant="gradient" fullWidth>
+            <Button
+              variant="gradient"
+              fullWidth
+              color="green"
+              onClick={() => GuardarConfiguracion()}
+            >
               Guardar configuracion
             </Button>
           </div>
         </div>
+
         <div className="text-center">
           {/*
           <Typography variant="h6" color="blue-gray">

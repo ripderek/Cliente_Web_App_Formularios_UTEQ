@@ -518,7 +518,7 @@ export default function Lista({
               onClose={() => setOpenAlertTexto(false)}
               color="green"
             >
-              Enlace copiado
+              Copiado al portapapeles
             </Alert>
           </div>
           {/* Hacer una condicion para poder editar el titulo automaticamente xd skere */}
@@ -613,17 +613,22 @@ export default function Lista({
           </div>
           <div className="bg-green-100 p-6 rounded-2xl  flex flex-col md:flex-row md:items-center">
             {detallesTest.r_error ? (
-              <div>No puede compartir el enlace hasta que corrija el Test</div>
+              <div className="mx-auto text-black">
+                No puede compartir el codigo ni el enlace hasta que corrija el
+                Test
+              </div>
             ) : (
               <>
+                {/* 
                 <div className="md:w-2/3 mb-2 md:mb-0 ">
                   <div className="overflow-y-auto">
                     https://encuesta.uteq.edu.ec:8000/Forms/
                     {detallesTest.r_token}
                   </div>
                 </div>
+                */}
                 <div
-                  className="md:w-1/3"
+                  className="md:w-1/3 mx-auto"
                   onClick={() =>
                     copiarTextoAlPortapapeles(
                       "https://encuesta.uteq.edu.ec:8000/Forms/" +
@@ -631,8 +636,21 @@ export default function Lista({
                     )
                   }
                 >
-                  <div className="w-auto bg-white rounded-xl mx-auto  text-center cursor-pointer">
+                  <div className="w-auto text-black bg-white rounded-xl mx-auto  text-center cursor-pointer">
                     Copiar enlace
+                    <IconButton variant="text" disabled>
+                      <ClipboardIcon className="h-4 w-4" />
+                    </IconButton>
+                  </div>
+                </div>
+                <div
+                  className="md:w-1/3 ml-4 mx-auto"
+                  onClick={() =>
+                    copiarTextoAlPortapapeles(detallesTest.r_token)
+                  }
+                >
+                  <div className="w-auto text-black bg-white rounded-xl mx-auto  text-center cursor-pointer">
+                    Copiar codigo
                     <IconButton variant="text" disabled>
                       <ClipboardIcon className="h-4 w-4" />
                     </IconButton>

@@ -18,7 +18,20 @@ import {
   Avatar,
   IconButton,
   Tooltip,
+  Timeline,
+  TimelineItem,
+  TimelineConnector,
+  TimelineIcon,
+  TimelineHeader,
 } from "@material-tailwind/react";
+import {
+  BellIcon,
+  ArchiveBoxIcon,
+  CurrencyDollarIcon,
+} from "@heroicons/react/24/solid";
+import { ReportsParticipantes } from "@/Data/ReportsParticipantes";
+import { ReportsSecciones } from "@/Data/ReportsSecciones";
+import { ReportsProgreso } from "@/Data/ReportsProgreso";
 
 const TABLE_HEAD = ["Member", "Function", "Status", "Employed", ""];
 import { Dialog_Error, Loader } from "@/widgets";
@@ -29,6 +42,11 @@ export default function Search() {
   const [error, setError] = useState(false);
   const [mensajeError, setMensajeError] = useState("");
   const [codigoTest, setCodigoTest] = useState("");
+  //Variables para almacenar los indicadores para los reportes
+  const [TieneParticipantes, setTieneParticipantes] = useState(false);
+  const [TieneProgresoRespuestas, setTieneProgresoRespuestas] = useState(false);
+  const [TieneSecciones, setTieneSecciones] = useState(false);
+
   //funcion para buscar en la bd
   const Obtener_Datos_Usuario = async () => {
     setLoader(true);
@@ -45,8 +63,11 @@ export default function Search() {
       );
       const data = await response.json();
       console.log(data);
-
+      setTieneParticipantes(data.resultado.TieneParticipantes);
+      setTieneProgresoRespuestas(data.resultado.TieneProgresoRespuestas);
+      setTieneSecciones(data.resultado.TieneSecciones);
       setLoader(false);
+      console.log(ReportsParticipantes);
     } catch (error) {
       setLoader(false);
       //colocar una alerta de error cuando no se pueda inciar sesion
@@ -94,7 +115,7 @@ export default function Search() {
             label="Codigo del formulario"
             icon={
               <MagnifyingGlassIcon
-                className="h-5 w-5"
+                className="h-5 w-5 cursor-pointer"
                 onClick={Obtener_Datos_Usuario}
               />
             }
@@ -121,113 +142,217 @@ export default function Search() {
         </div>
          */}
       </CardHeader>
-      {/* 
-      <CardBody className="overflow-scroll px-0">
-        <table className="mt-4 w-full min-w-max table-auto text-left">
-          <thead>
-            <tr>
-              {TABLE_HEAD.map((head, index) => (
-                <th
-                  key={head}
-                  className="cursor-pointer border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 transition-colors hover:bg-blue-gray-50"
-                >
-                  <Typography
-                    variant="small"
-                    color="blue-gray"
-                    className="flex items-center justify-between gap-2 font-normal leading-none opacity-70"
-                  >
-                    {head}{" "}
-                    {index !== TABLE_HEAD.length - 1 && (
-                      <ChevronUpDownIcon strokeWidth={2} className="h-4 w-4" />
-                    )}
-                  </Typography>
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {TABLE_ROWS.map(
-              ({ img, name, email, job, org, online, date }, index) => {
-                const isLast = index === TABLE_ROWS.length - 1;
-                const classes = isLast
-                  ? "p-4"
-                  : "p-4 border-b border-blue-gray-50";
 
-                return (
-                  <tr key={name}>
-                    <td className={classes}>
-                      <div className="flex items-center gap-3">
-                        <Avatar src={img} alt={name} size="sm" />
-                        <div className="flex flex-col">
+      <div className=" px-0 mt-0 mb-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 p-5">
+          {/*LISTA DE REPORTES SI TIENE PARTICIPANTES */}
+          {TieneParticipantes === true && (
+            <div key={1} className="shadow-xl rounded-md bg-blue-gray-200 ">
+              <div className=" p-2">
+                <Typography variant="h5" color="blue-gray">
+                  Participantes
+                </Typography>
+                <Timeline className="mx-auto ">
+                  <div className="grid grid-cols-2 gap-3 p-5">
+                    {ReportsParticipantes.map(
+                      ({ id, title, Codigo, TipoDoc }) => (
+                        <TimelineItem className="h-auto   hover:border-4 hover:border-orange-600">
+                          <TimelineConnector className="!w-[78px]" />
+                          <TimelineHeader className="relative rounded-xl border border-blue-gray-50 bg-blue-gray-50 py-3 pl-4 pr-8 shadow-lg shadow-blue-gray-900/5">
+                            {/*
+                    <TimelineIcon className="p-3" variant="ghost">
+                      <BellIcon className="h-5 w-5" />
+                    </TimelineIcon>
+ */}
+                            <div className="flex flex-col gap-1">
+                              <input
+                                type="text"
+                                value={title}
+                                className="bg-blue-gray-50 font-bold w-11/12"
+                                disabled
+                              />
+
+                              {/*
+                               <Typography variant="h6" color="blue-gray">
+                                {title}
+                              </Typography>
+                              <Typography
+                                variant="small"
+                                color="gray"
+                                className="font-normal"
+                              >
+                                {Codigo}
+                              </Typography> */}
+
+                              {/*Mostrar los ICONOS DEL TIPO DE DOCUMENTO */}
+                              <div className="flex items-end gap-1 mx-auto  ">
+                                {TipoDoc.map((doc, index) => (
+                                  <>
+                                    {/*<span key={index}>{doc.tipo}</span>             src="/img/Home/uteq_logo3.png"*/}
+                                    <Tooltip
+                                      content={
+                                        doc.tipo === "PDF" ? "PDF" : "EXCEL"
+                                      }
+                                    >
+                                      <Avatar
+                                        src={
+                                          doc.tipo === "PDF"
+                                            ? "/Icons/PDFICON.png"
+                                            : "/Icons/EXCELICON.png"
+                                        }
+                                        alt="avatar"
+                                        size="sm"
+                                        className="flex cursor-pointer"
+                                      />
+                                    </Tooltip>
+                                  </>
+                                ))}
+                              </div>
+                            </div>
+                          </TimelineHeader>
+                        </TimelineItem>
+                      )
+                    )}
+                  </div>
+                </Timeline>
+              </div>
+            </div>
+          )}
+          {/*LISTA DE REPORTES SI TIENE Secciones */}
+          {TieneSecciones === true && (
+            <div key={2} className="shadow-xl rounded-md bg-blue-gray-200 ">
+              <div className="p-2">
+                <Typography variant="h5" color="blue-gray">
+                  Secciones
+                </Typography>
+                <Timeline className="mx-auto  ">
+                  <div className="grid grid-cols-2 gap-3 p-5">
+                    {ReportsSecciones.map(({ id, title, Codigo, TipoDoc }) => (
+                      <TimelineItem className="h-auto  hover:border-4 hover:border-orange-600">
+                        <TimelineConnector className="!w-[78px]" />
+                        <TimelineHeader className="relative rounded-xl border border-blue-gray-50 bg-blue-gray-50 py-3 pl-4 pr-8 shadow-lg shadow-blue-gray-900/5">
+                          {/*
+                    <TimelineIcon className="p-3" variant="ghost">
+                      <BellIcon className="h-5 w-5" />
+                    </TimelineIcon>
+ */}
+                          <div className="flex flex-col gap-1">
+                            <input
+                              type="text"
+                              value={title}
+                              className="bg-blue-gray-50 font-bold w-11/12"
+                              disabled
+                            />
+                            {/* 
                           <Typography
                             variant="small"
-                            color="blue-gray"
+                            color="gray"
                             className="font-normal"
                           >
-                            {name}
-                          </Typography>
+                            {Codigo}
+                          </Typography>*/}
+                            {/*Mostrar los ICONOS DEL TIPO DE DOCUMENTO */}
+                            <div className="flex items-end gap-1 mx-auto">
+                              {TipoDoc.map((doc, index) => (
+                                <>
+                                  {/*<span key={index}>{doc.tipo}</span>             src="/img/Home/uteq_logo3.png"*/}
+                                  <Tooltip
+                                    content={
+                                      doc.tipo === "PDF" ? "PDF" : "EXCEL"
+                                    }
+                                  >
+                                    <Avatar
+                                      src={
+                                        doc.tipo === "PDF"
+                                          ? "/Icons/PDFICON.png"
+                                          : "/Icons/EXCELICON.png"
+                                      }
+                                      alt="avatar"
+                                      size="sm"
+                                      className="flex cursor-pointer"
+                                    />
+                                  </Tooltip>
+                                </>
+                              ))}
+                            </div>
+                          </div>
+                        </TimelineHeader>
+                      </TimelineItem>
+                    ))}
+                  </div>
+                </Timeline>
+              </div>
+            </div>
+          )}
+          {/*LISTA DE REPORTES SI TIENE Progreso */}
+          {TieneProgresoRespuestas === true && (
+            <div key={3} className="shadow-xl rounded-md bg-blue-gray-200 ">
+              <div className="p-2">
+                <Typography variant="h5" color="blue-gray">
+                  Progreso
+                </Typography>
+                <Timeline className="mx-auto  ">
+                  <div className="grid grid-cols-2 gap-3 p-5">
+                    {ReportsProgreso.map(({ id, title, Codigo, TipoDoc }) => (
+                      <TimelineItem className="h-auto  hover:border-4 hover:border-orange-600">
+                        <TimelineConnector className="!w-[78px]" />
+                        <TimelineHeader className="relative rounded-xl border border-blue-gray-50 bg-blue-gray-50 py-3 pl-4 pr-8 shadow-lg shadow-blue-gray-900/5">
+                          {/*
+                    <TimelineIcon className="p-3" variant="ghost">
+                      <BellIcon className="h-5 w-5" />
+                    </TimelineIcon>
+ */}
+                          <div className="flex flex-col gap-1">
+                            <input
+                              type="text"
+                              value={title}
+                              className="bg-blue-gray-50 font-bold w-11/12"
+                              disabled
+                            />
+                            {/* 
                           <Typography
                             variant="small"
-                            color="blue-gray"
-                            className="font-normal opacity-70"
+                            color="gray"
+                            className="font-normal"
                           >
-                            {email}
-                          </Typography>
-                        </div>
-                      </div>
-                    </td>
-                    <td className={classes}>
-                      <div className="flex flex-col">
-                        <Typography
-                          variant="small"
-                          color="blue-gray"
-                          className="font-normal"
-                        >
-                          {job}
-                        </Typography>
-                        <Typography
-                          variant="small"
-                          color="blue-gray"
-                          className="font-normal opacity-70"
-                        >
-                          {org}
-                        </Typography>
-                      </div>
-                    </td>
-                    <td className={classes}>
-                      <div className="w-max">
-                        <Chip
-                          variant="ghost"
-                          size="sm"
-                          value={online ? "online" : "offline"}
-                          color={online ? "green" : "blue-gray"}
-                        />
-                      </div>
-                    </td>
-                    <td className={classes}>
-                      <Typography
-                        variant="small"
-                        color="blue-gray"
-                        className="font-normal"
-                      >
-                        {date}
-                      </Typography>
-                    </td>
-                    <td className={classes}>
-                      <Tooltip content="Edit User">
-                        <IconButton variant="text">
-                          <PencilIcon className="h-4 w-4" />
-                        </IconButton>
-                      </Tooltip>
-                    </td>
-                  </tr>
-                );
-              }
-            )}
-          </tbody>
-        </table>
-      </CardBody>
-      */}
+                            {Codigo}
+                          </Typography>*/}
+                            {/*Mostrar los ICONOS DEL TIPO DE DOCUMENTO */}
+                            <div className="flex items-end gap-1 mx-auto">
+                              {TipoDoc.map((doc, index) => (
+                                <>
+                                  {/*<span key={index}>{doc.tipo}</span>             src="/img/Home/uteq_logo3.png"*/}
+                                  <Tooltip
+                                    content={
+                                      doc.tipo === "PDF" ? "PDF" : "EXCEL"
+                                    }
+                                  >
+                                    <Avatar
+                                      src={
+                                        doc.tipo === "PDF"
+                                          ? "/Icons/PDFICON.png"
+                                          : "/Icons/EXCELICON.png"
+                                      }
+                                      alt="avatar"
+                                      size="sm"
+                                      className="flex cursor-pointer"
+                                    />
+                                  </Tooltip>
+                                </>
+                              ))}
+                            </div>
+                          </div>
+                        </TimelineHeader>
+                      </TimelineItem>
+                    ))}
+                  </div>
+                </Timeline>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+
       <CardFooter className="flex items-center justify-between border-t border-blue-gray-50 p-4">
         <Typography variant="small" color="blue-gray" className="font-normal">
           Page 1 of 10

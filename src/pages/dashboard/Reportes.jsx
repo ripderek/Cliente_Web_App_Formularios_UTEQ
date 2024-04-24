@@ -96,7 +96,7 @@ export default function Reportes() {
         <Dialog_Error
           mensaje={mensajeError}
           titulo="Error Inicio de sesion"
-          cerrar={cerrar}
+          //cerrar={cerrar}
         />
       ) : (
         ""

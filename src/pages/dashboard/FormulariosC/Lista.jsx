@@ -55,12 +55,12 @@ const TABS = [
     value: "Habilitados",
   },
   {
-    label: "Inhabilitados",
-    value: "Inhabilitados",
+    label: "Desabilitados",
+    value: "Desabilitados",
   },
   {
-    label: "Suspendidos",
-    value: "Suspendidos",
+    label: "Restringidos",
+    value: "Restringidos",
   },
 ];
 //cabezera para la tabla de detalles
@@ -105,6 +105,7 @@ export default function Lista({
   AbrirEstadisticas,
   AbrirProgresos,
 }) {
+  const [activeTab, setActiveTab] = useState("Todo");
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const formsPerPage = 5; // cantidad de formularios por página
@@ -429,16 +430,46 @@ export default function Lista({
     }
   };
 
+  
+  // Función para manejar el cambio de pestaña
+  const handleTabChange = (value) => {
+    setActiveTab(value);
+    setCurrentPage(1); // Restablecer la página actual cuando se cambia de pestaña
+  };
+
+  // Obtener el total de formularios después de aplicar el filtro por pestañas y búsqueda
+  const filteredForms = secciones.filter((seccion) => {
+    // Filtrar por pestaña
+    let filterByTab = true;
+    if (activeTab === "Habilitados") {
+      filterByTab = seccion.r_estado === "Verificado";
+      console.log(!seccion.r_estado)
+    } else if (activeTab === "Desabilitados") {
+      filterByTab = seccion.r_estado === "Erroneo";
+      console.log(!seccion.r_estado)
+    } else if (activeTab === "Restringidos") {
+        filterByTab = !seccion.r_abierta;
+    } 
+
+    // Filtrar por término de búsqueda
+    const matchesSearchTerm = seccion.r_titulo
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase());
+
+    // Devolver true si cumple ambas condiciones
+    return filterByTab && matchesSearchTerm;
+  });
+
   //Estado para el filtro de busqueda
   const handleSearchTermChange = (event) => {
     setSearchTerm(event.target.value);
     setCurrentPage(1); // Restablecer la página actual cuando se realiza una búsqueda
   };
 
-  // Obtén el total de formularios después de aplicar el filtro
+  /*// Obtén el total de formularios después de aplicar el filtro
   const filteredForms = secciones.filter((seccion) =>
     seccion.r_titulo.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  );*/
 
   // Obtén el total de páginas después de aplicar el filtro
   const totalForms = filteredForms.length;
@@ -1140,10 +1171,14 @@ export default function Lista({
         </div>
 
         <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
-          <Tabs value="all" className="w-full md:w-max">
+          <Tabs value={activeTab} className="w-full md:w-max">
             <TabsHeader>
               {TABS.map(({ label, value }) => (
-                <Tab key={value} value={value}>
+                <Tab 
+                    key={value} 
+                    value={value}
+                    onClick={() => handleTabChange(value)}
+                    >
                   &nbsp;&nbsp;{label}&nbsp;&nbsp;
                 </Tab>
               ))}

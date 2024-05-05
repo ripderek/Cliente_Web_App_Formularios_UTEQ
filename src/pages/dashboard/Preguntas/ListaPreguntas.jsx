@@ -34,6 +34,8 @@ import {
   DialogHeader,
   DialogBody,
   DialogFooter,
+  Select,
+  Option,
 } from "@material-tailwind/react";
 
 const TABS = [
@@ -81,6 +83,7 @@ const TABLE_OPCIONES = [
 import { Dialog_Error, Loader, Notification } from "@/widgets"; //Importar el componente
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { ListaPregunta } from "../FormulariosC";
 
 export default function ListaPreguntas({
   id_nivel,
@@ -94,6 +97,14 @@ export default function ListaPreguntas({
   //AbrirEditarSELCIMG,
   //AbrirEditarSELCCLA,
 }) {
+  // Añadir un estado para la pestaña activa
+  const [activeTab, setActiveTab] = useState("Activas");
+  const [searchTerm, setSearchTerm] = useState("");
+  //Paginacion
+  const [currentPage, setCurrentPage] = useState(1);
+  const [value, setValue] = useState("10");
+  const itemsPorPag = value; // Numero de niveles a mostra por pagina
+
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(!open);
 
@@ -233,6 +244,64 @@ export default function ListaPreguntas({
       console.log(error);
     }
   };
+
+  // Función para manejar el cambio de pestaña
+  const handleTabChange = (value) => {
+    setActiveTab(value);
+    setCurrentPage(1); // Restablecer la página actual cuando se cambia de pestaña
+  };
+
+  // Obtener el total de secciones después de aplicar el filtro por pestañas y búsqueda
+  const filtroPreguntas = preguntas.filter((preguntas) => {
+    // Filtrar por pestaña
+    let filterByTab = true;
+    if (activeTab === "Activas") {
+      filterByTab = preguntas.r_estado;
+    } else if (activeTab === "Inactivas") {
+      filterByTab = !preguntas.r_estado;
+    } else if (activeTab === "Incompletas") {
+      filterByTab = preguntas.r_error;
+    } else if (activeTab === "Completas") {
+      filterByTab = !preguntas.r_error;
+    }
+
+    // Filtrar por término de búsqueda
+    const matchesSearchTerm = preguntas.r_enunciado
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase());
+
+    // Devolver true si cumple ambas condiciones
+    return filterByTab && matchesSearchTerm;
+  });
+
+  const handleSearchTermChange = (event) => {
+    setSearchTerm(event.target.value);
+    setCurrentPage(1); // Restablecer la página actual cuando se realiza una búsqueda
+  };
+
+  //Paginacion
+
+  // Obtener el total de páginas
+  const totalNiveles = filtroPreguntas.length;
+  const totalPages = Math.ceil(totalNiveles / itemsPorPag);
+
+  // Calcular el índice del primer y último formulario en la página actual
+  const indexOfLastItem = currentPage * itemsPorPag;
+  const indexOfFirstItem = indexOfLastItem - itemsPorPag;
+  const currentItems = filtroPreguntas.slice(indexOfFirstItem, indexOfLastItem);
+
+  const handlePreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage((prevPage) => prevPage - 1);
+    }
+  };
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage((prevPage) => prevPage + 1);
+    }
+  };
+
   return (
     <Card className="h-full w-full rounded-none">
       {load ? <Loader /> : ""}
@@ -501,10 +570,14 @@ export default function ListaPreguntas({
           </div>
         </div>
         <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
-          <Tabs value="all" className="w-full md:w-max">
+          <Tabs value={activeTab} className="w-full md:w-max">
             <TabsHeader>
               {TABS.map(({ label, value }) => (
-                <Tab key={value} value={value}>
+                <Tab
+                  key={value}
+                  value={value}
+                  onClick={() => handleTabChange(value)}
+                >
                   &nbsp;&nbsp;{label}&nbsp;&nbsp;
                 </Tab>
               ))}
@@ -514,6 +587,8 @@ export default function ListaPreguntas({
             <Input
               label="Buscar pregunta"
               icon={<MagnifyingGlassIcon className="h-5 w-5" />}
+              onChange={handleSearchTermChange}
+              value={searchTerm}
             />
           </div>
         </div>
@@ -554,7 +629,7 @@ export default function ListaPreguntas({
               </thead>
 
               <tbody>
-                {preguntas.map(
+                {currentItems.map(
                   (
                     {
                       r_enunciado,
@@ -590,7 +665,7 @@ export default function ListaPreguntas({
                               color="blue-gray"
                               className="font-normal"
                             >
-                              {index + 1}
+                              {indexOfFirstItem + index + 1}
                             </Typography>
                           </div>
                         </td>
@@ -680,13 +755,24 @@ export default function ListaPreguntas({
       </CardBody>
       <CardFooter className="flex items-center justify-between border-t border-blue-gray-50 p-4">
         <Typography variant="small" color="blue-gray" className="font-normal">
-          Paguina 1 de 10
+          Pagina {currentPage} de {totalPages}
         </Typography>
+        <div className="flex">
+          <Select
+            label="N° Participantes"
+            value={value}
+            onChange={(val) => setValue(val)}
+          >
+            <Option value="10">10</Option>
+            <Option value="20">20</Option>
+            <Option value={preguntas.length}>Todos</Option>
+          </Select>
+        </div>
         <div className="flex gap-2">
-          <Button variant="outlined" size="sm">
+          <Button variant="outlined" size="sm" onClick={handlePreviousPage}>
             Anterior
           </Button>
-          <Button variant="outlined" size="sm">
+          <Button variant="outlined" size="sm" onClick={handleNextPage}>
             Siguiente
           </Button>
         </div>

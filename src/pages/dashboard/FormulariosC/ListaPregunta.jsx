@@ -18,6 +18,8 @@ import {
   DialogBody,
   DialogFooter,
   Alert,
+  Select,
+  Option,
 } from "@material-tailwind/react";
 import { Crear, Errores_Test } from "@/pages/dashboard/FormulariosC";
 import { Dialog_Error, Loader, Notification } from "@/widgets"; //Importar el componente
@@ -61,6 +63,11 @@ export default function ListaPregunta({
   Regresar,
   TituloTest,
 }) {
+  //Paginacion
+  const [currentPage, setCurrentPage] = useState(1);
+  const [value, setValue] = useState("10");
+  const itemsPorPag = value; // Numero de niveles a mostra por pagina
+
   const [load, setLoader] = useState(false);
   const [error, setError] = useState(false);
   const [mensajeError, setMensajeError] = useState("");
@@ -131,6 +138,29 @@ export default function ListaPregunta({
     setpre(pregunta);
   };
   const [pre, setpre] = useState("");
+
+  //Paginacion
+  // Obtener el total de páginas
+  const totalNiveles = secciones.length;
+  const totalPages = Math.ceil(totalNiveles / itemsPorPag);
+
+  // Calcular el índice del primer y último formulario en la página actual
+  const indexOfLastItem = currentPage * itemsPorPag;
+  const indexOfFirstItem = indexOfLastItem - itemsPorPag;
+  const currentItems = secciones.slice(indexOfFirstItem, indexOfLastItem);
+
+  const handlePreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage((prevPage) => prevPage - 1);
+    }
+  };
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage((prevPage) => prevPage + 1);
+    }
+  };
+
   return (
     <Card className="h-full w-full rounded-none">
       {load ? <Loader /> : ""}
@@ -215,7 +245,7 @@ export default function ListaPregunta({
                 </tr>
               </thead>
               <tbody>
-                {secciones.map(({ r_id_pregunta, r_enunciado }, index) => {
+                {currentItems.map(({ r_id_pregunta, r_enunciado }, index) => {
                   const isLast = index === secciones.length - 1;
                   const classes = isLast
                     ? "p-4"
@@ -234,7 +264,7 @@ export default function ListaPregunta({
                             color="blue-gray"
                             className="font-normal"
                           >
-                            {index + 1}
+                            {indexOfFirstItem + index + 1}
                           </Typography>
                         </div>
                       </td>
@@ -290,13 +320,24 @@ export default function ListaPregunta({
       </CardBody>
       <CardFooter className="flex items-center justify-between border-t border-blue-gray-50 p-4">
         <Typography variant="small" color="blue-gray" className="font-normal">
-          Pagina 1 de 10
+          Pagina {currentPage} de {totalPages}
         </Typography>
+        <div className="flex">
+          <Select
+            label="N° Participantes"
+            value={value}
+            onChange={(val) => setValue(val)}
+          >
+            <Option value="10">10</Option>
+            <Option value="20">20</Option>
+            <Option value={secciones.length}>Todos</Option>
+          </Select>
+        </div>
         <div className="flex gap-2">
-          <Button variant="outlined" size="sm">
+          <Button variant="outlined" size="sm" onClick={handlePreviousPage}>
             Anterior
           </Button>
-          <Button variant="outlined" size="sm">
+          <Button variant="outlined" size="sm" onClick={handleNextPage}>
             Siguiente
           </Button>
         </div>

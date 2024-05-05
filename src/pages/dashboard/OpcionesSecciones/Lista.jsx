@@ -48,6 +48,8 @@ import { useEffect, useState } from "react";
 import { useMaterialTailwindController, setOpenSidenav } from "@/context";
 
 export default function Lista({ AbrirNiveles }) {
+  // Añadir un estado para la pestaña activa
+  const [activeTab, setActiveTab] = useState("Todo");
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
   const formsPerPage = 6; // Cantidad de secciones por página
@@ -121,15 +123,35 @@ export default function Lista({ AbrirNiveles }) {
     pink: "shadow-pink-600",
   };
 
+  // Función para manejar el cambio de pestaña
+  const handleTabChange = (value) => {
+    setActiveTab(value);
+    setCurrentPage(1); // Restablecer la página actual cuando se cambia de pestaña
+  };
+
+  // Obtener el total de secciones después de aplicar el filtro por pestañas y búsqueda
+  const filteredSections = secciones.filter((seccion) => {
+    // Filtrar por pestaña
+    let filterByTab = true;
+    if (activeTab === "Admin") {
+      filterByTab = seccion.r_admin_seccion;
+    } else if (activeTab === "Miembro") {
+      filterByTab = !seccion.r_admin_seccion;
+    }
+
+    // Filtrar por término de búsqueda
+    const matchesSearchTerm = seccion.r_titulo
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase());
+
+    // Devolver true si cumple ambas condiciones
+    return filterByTab && matchesSearchTerm;
+  });
+
   const handleSearchTermChange = (event) => {
     setSearchTerm(event.target.value);
     setCurrentPage(1); // Restablecer la página actual cuando se realiza una búsqueda
   };
-
-  // Obtener el total de secciones después de aplicar el filtro
-  const filteredSections = secciones.filter((seccion) =>
-    seccion.r_titulo.toLowerCase().includes(searchTerm.toLowerCase())
-  );
 
   // Obtener el total de páginas después de aplicar el filtro de búsqueda
   const totalSections = filteredSections.length;
@@ -187,10 +209,14 @@ export default function Lista({ AbrirNiveles }) {
         </div>
 
         <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
-          <Tabs value="all" className="w-full md:w-max">
+          <Tabs value={activeTab} className="w-full md:w-max">
             <TabsHeader>
               {TABS.map(({ label, value }) => (
-                <Tab key={value} value={value}>
+                <Tab
+                  key={value}
+                  value={value}
+                  onClick={() => handleTabChange(value)}
+                >
                   &nbsp;&nbsp;{label}&nbsp;&nbsp;
                 </Tab>
               ))}

@@ -21,6 +21,8 @@ import {
   DialogHeader,
   DialogBody,
   DialogFooter,
+  Select,
+  Option,
 } from "@material-tailwind/react";
 
 //cabezera para la tabla de participantes
@@ -54,11 +56,18 @@ const shadows = {
   red: "shadow-red-600",
   pink: "shadow-pink-600",
 };
+
 export default function SeleccionarSecciones({
   idTest_id,
   Regresar,
   TituloTest,
 }) {
+  
+    //Paginacion
+  const [currentPage, setCurrentPage] = useState(1);
+  const [value, setValue] = useState("5");
+  const itemsPorPag = value; // Numero de niveles a mostra por pagina
+
   //funcion que obtenga las secciones disponibles para ser seleccionadas
   const [load, setLoader] = useState(false);
   const [secciones, setSecciones] = useState([]);
@@ -143,6 +152,30 @@ export default function SeleccionarSecciones({
       alert("Error");
     }
   };
+
+  //Paginacion
+
+  // Obtener el total de páginas
+  const totalNiveles = secciones.length;
+  const totalPages = Math.ceil(totalNiveles / itemsPorPag);
+
+  // Calcular el índice del primer y último formulario en la página actual
+  const indexOfLastItem = currentPage * itemsPorPag;
+  const indexOfFirstItem = indexOfLastItem - itemsPorPag;
+  const currentItems = secciones.slice(indexOfFirstItem, indexOfLastItem);
+
+  const handlePreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage((prevPage) => prevPage - 1);
+    }
+  };
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage((prevPage) => prevPage + 1);
+    }
+  };
+
   return (
     <Card className="h-full w-full rounded-none">
       <Notification
@@ -236,7 +269,7 @@ export default function SeleccionarSecciones({
       <CardBody className="overflow-scroll px-0">
         {/* Tarjetas de las secciones disponibles*/}
         <div className="grid grid-cols-2 md:grid-cols-3 gap-3 p-5">
-          {secciones.map(
+          {currentItems.map(
             ({
               r_id_test_secciones,
               r_estad_test_seccion,
@@ -328,13 +361,25 @@ export default function SeleccionarSecciones({
       </CardBody>
       <CardFooter className="flex items-center justify-between border-t border-blue-gray-50 p-4">
         <Typography variant="small" color="blue-gray" className="font-normal">
-          Paguina 1 de 10
+          Paguina {currentPage} de {totalPages}
         </Typography>
+        <div className="flex">
+          <Select
+            label="N° Secciones"
+            value={value}
+            onChange={(val) => setValue(val)}
+          >
+            <Option value="5">5</Option>
+            <Option value="10">10</Option>
+            <Option value="20">20</Option>
+            <Option value={secciones.length}>Todos</Option>
+          </Select>
+        </div>
         <div className="flex gap-2">
-          <Button variant="outlined" size="sm">
+          <Button variant="outlined" size="sm"onClick={handlePreviousPage}>
             Anterior
           </Button>
-          <Button variant="outlined" size="sm">
+          <Button variant="outlined" size="sm" onClick={handleNextPage}>
             Siguiente
           </Button>
         </div>

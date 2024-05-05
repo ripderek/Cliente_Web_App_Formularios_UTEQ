@@ -30,6 +30,8 @@ import {
   DialogBody,
   DialogFooter,
   Checkbox,
+  Select,
+  Option,
 } from "@material-tailwind/react";
 import { Dialog_Error, Loader, Notification } from "@/widgets"; //Importar el componente
 import { useEffect, useState } from "react";
@@ -45,6 +47,11 @@ export default function ListaNiveles({
   Titulo,
   AbrirPreguntas,
 }) {
+  //Paginacion
+  const [currentPage, setCurrentPage] = useState(1);
+  const [value, setValue] = useState("14");
+  const itemsPorPag = value; // Numero de niveles a mostra por pagina
+
   const [dataTitlte, setDataTitile] = useState(Titulo);
   const [controller, dispatch] = useMaterialTailwindController();
   const { sidenavColor, sidenavType, openSidenav } = controller;
@@ -281,6 +288,30 @@ export default function ListaNiveles({
   };
   //para abrir la lista de los participantes de una seccion skere modo diablo
   const [abrirListaParticipantes, setAbrirListaParticipantes] = useState(false);
+
+  //Paginacion
+
+  // Obtener el total de páginas
+  const totalNiveles = niveles.length;
+  const totalPages = Math.ceil(totalNiveles / itemsPorPag);
+
+  // Calcular el índice del primer y último formulario en la página actual
+  const indexOfLastItem = currentPage * itemsPorPag;
+  const indexOfFirstItem = indexOfLastItem - itemsPorPag;
+  const currentItems = niveles.slice(indexOfFirstItem, indexOfLastItem);
+
+  const handlePreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage((prevPage) => prevPage - 1);
+    }
+  };
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage((prevPage) => prevPage + 1);
+    }
+  };
+
   return (
     <Card className="h-full w-full rounded-none">
       {abrirListaParticipantes && (
@@ -583,7 +614,7 @@ export default function ListaNiveles({
           <span className="font-bold">{niveles.length}</span>
         </Typography>
         <div className="grid grid-cols-2 md:grid-cols-7 gap-3 p-5">
-          {niveles.map(
+          {currentItems.map(
             (
               { r_id_nivel, r_id_seccion, r_nivel, r_total_preguntas },
               index
@@ -631,13 +662,26 @@ export default function ListaNiveles({
       </CardBody>
       <CardFooter className="flex items-center justify-between border-t border-blue-gray-50 p-4">
         <Typography variant="small" color="blue-gray" className="font-normal">
-          Pagina 1 de 10
+          Pagina {currentPage} de {totalPages}
         </Typography>
+        <div className="flex">
+          <Select
+            label="N° Niveles"
+            value={value}
+            onChange={(val) => setValue(val)}
+          >
+            <Option value="14">14</Option>
+            <Option value="28">28</Option>
+            <Option value="56">56</Option>
+            <Option value="56">112</Option>
+            <Option value={niveles.length}>Todos</Option>
+          </Select>
+        </div>
         <div className="flex gap-2">
-          <Button variant="outlined" size="sm">
+          <Button variant="outlined" size="sm" onClick={handlePreviousPage}>
             Anterior
           </Button>
-          <Button variant="outlined" size="sm">
+          <Button variant="outlined" size="sm" onClick={handleNextPage}>
             Siguiente
           </Button>
         </div>

@@ -7,6 +7,8 @@ import {
   CardFooter,
   Tooltip,
   Chip,
+  Select,
+  Option,
 } from "@material-tailwind/react";
 import { Dialog_Error, Loader, Notification } from "@/widgets"; //Importar el componente
 import {
@@ -28,6 +30,11 @@ export default function ListaProgreso({
   Regresar,
   TituloTest,
 }) {
+  //Paginacion
+  const [currentPage, setCurrentPage] = useState(1);
+  const [value, setValue] = useState("10");
+  const itemsPorPag = value; // Numero de niveles a mostra por pagina
+
   const [load, setLoader] = useState(false);
   const [error, setError] = useState(false);
   const [mensajeError, setMensajeError] = useState("");
@@ -66,6 +73,32 @@ export default function ListaProgreso({
       //colocar una alerta de error cuando no se pueda inciar sesion
       setError(true);
       setMensajeError(error.response.data.error);
+    }
+  };
+
+  //Paginacion
+
+  // Obtener el total de páginas
+  const totalNiveles = secciones.length;
+  const totalPages = Math.ceil(totalNiveles / itemsPorPag);
+
+  // Calcular el índice del primer y último formulario en la página actual
+  const indexOfLastItem = currentPage * itemsPorPag;
+  const indexOfFirstItem = indexOfLastItem - itemsPorPag;
+  const currentItems = secciones.slice(
+    indexOfFirstItem,
+    indexOfLastItem
+  );
+
+  const handlePreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage((prevPage) => prevPage - 1);
+    }
+  };
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage((prevPage) => prevPage + 1);
     }
   };
 
@@ -153,7 +186,7 @@ export default function ListaProgreso({
                 </tr>
               </thead>
               <tbody>
-                {secciones.map(
+                {currentItems.map(
                   ({ correo, nombre, porcentaje, progresos }, index) => {
                     const isLast = index === secciones.length - 1;
                     const classes = isLast
@@ -173,7 +206,7 @@ export default function ListaProgreso({
                               color="blue-gray"
                               className="font-normal"
                             >
-                              {index + 1}
+                              {indexOfFirstItem + index + 1}
                             </Typography>
                           </div>
                         </td>
@@ -265,13 +298,24 @@ export default function ListaProgreso({
       </CardBody>
       <CardFooter className="flex items-center justify-between border-t border-blue-gray-50 p-4">
         <Typography variant="small" color="blue-gray" className="font-normal">
-          Pagina 1 de 10
+          Pagina {currentPage} de {totalPages}
         </Typography>
+        <div className="flex">
+          <Select
+            label="N° Participantes"
+            value={value}
+            onChange={(val) => setValue(val)}
+          >
+            <Option value="10">10</Option>
+            <Option value="20">20</Option>
+            <Option value={secciones.length}>Todos</Option>
+          </Select>
+        </div>
         <div className="flex gap-2">
-          <Button variant="outlined" size="sm">
+          <Button variant="outlined" size="sm" onClick={handlePreviousPage}>
             Anterior
           </Button>
-          <Button variant="outlined" size="sm">
+          <Button variant="outlined" size="sm" onClick={handleNextPage}>
             Siguiente
           </Button>
         </div>

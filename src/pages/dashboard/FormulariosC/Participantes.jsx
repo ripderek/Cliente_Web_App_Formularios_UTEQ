@@ -41,6 +41,8 @@ import {
   DialogHeader,
   DialogBody,
   DialogFooter,
+  Select,
+  Option,
 } from "@material-tailwind/react";
 
 const TABS = [
@@ -99,6 +101,11 @@ const sidenavColors = {
   pink: "border-pink-600",
 };
 export default function Participantes({ idTest_id, Regresar, TituloTest }) {
+  //Paginacion
+  const [currentPage, setCurrentPage] = useState(1);
+  const [value, setValue] = useState("10");
+  const itemsPorPag = value; // Numero de niveles a mostra por pagina
+
   const [controller, dispatch] = useMaterialTailwindController();
   const { sidenavType, sidenavColor } = controller;
   //funcion para listar los participantes de un test mediante el id test
@@ -270,6 +277,33 @@ export default function Participantes({ idTest_id, Regresar, TituloTest }) {
     setAbrirOpciones(false);
     ObtenerListaParticipantes();
   };
+
+  //Paginacion
+
+  // Obtener el total de páginas
+  const totalNiveles = ListaParticipantes.length;
+  const totalPages = Math.ceil(totalNiveles / itemsPorPag);
+
+  // Calcular el índice del primer y último formulario en la página actual
+  const indexOfLastItem = currentPage * itemsPorPag;
+  const indexOfFirstItem = indexOfLastItem - itemsPorPag;
+  const currentItems = ListaParticipantes.slice(
+    indexOfFirstItem,
+    indexOfLastItem
+  );
+
+  const handlePreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage((prevPage) => prevPage - 1);
+    }
+  };
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage((prevPage) => prevPage + 1);
+    }
+  };
+
   return (
     <Card className="h-full w-full rounded-none">
       {abrirOpciones && (
@@ -528,7 +562,7 @@ export default function Participantes({ idTest_id, Regresar, TituloTest }) {
                 </tr>
               </thead>
               <tbody>
-                {ListaParticipantes.map(
+                {currentItems.map(
                   (
                     {
                       r_id_participante_test,
@@ -544,7 +578,7 @@ export default function Participantes({ idTest_id, Regresar, TituloTest }) {
                     },
                     index
                   ) => {
-                    const isLast = index === ListaParticipantes.length - 1;
+                    const isLast = index === currentItems.length - 1;
                     const classes = isLast
                       ? "p-4"
                       : "p-4 border-b border-blue-gray-50";
@@ -565,7 +599,7 @@ export default function Participantes({ idTest_id, Regresar, TituloTest }) {
                               color="blue-gray"
                               className="font-normal"
                             >
-                              {index + 1}
+                              {indexOfFirstItem + index + 1}
                             </Typography>
                           </div>
                         </td>
@@ -651,13 +685,24 @@ export default function Participantes({ idTest_id, Regresar, TituloTest }) {
 
       <CardFooter className="flex items-center justify-between border-t border-blue-gray-50 p-4">
         <Typography variant="small" color="blue-gray" className="font-normal">
-          Paguina 1 de 10
+          Pagina {currentPage} de {totalPages}
         </Typography>
+        <div className="flex">
+          <Select
+            label="N° Participantes"
+            value={value}
+            onChange={(val) => setValue(val)}
+          >
+            <Option value="10">10</Option>
+            <Option value="20">20</Option>
+            <Option value={ListaParticipantes.length}>Todos</Option>
+          </Select>
+        </div>
         <div className="flex gap-2">
-          <Button variant="outlined" size="sm">
+          <Button variant="outlined" size="sm" onClick={handlePreviousPage}>
             Anterior
           </Button>
-          <Button variant="outlined" size="sm">
+          <Button variant="outlined" size="sm" onClick={handleNextPage}>
             Siguiente
           </Button>
         </div>

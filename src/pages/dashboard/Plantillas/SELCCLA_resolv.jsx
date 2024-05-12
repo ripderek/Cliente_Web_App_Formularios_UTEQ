@@ -22,6 +22,9 @@ export default function SELCCLA_resolv({
   const [IDPregunta, setIdPregunta] = useState(null);
   //funcion para buscar los datos de una pregunta como la foto, el enunciado.
   //si se envia a buscar entonces hay que devolver la ultima pregunta creada.
+  //estados para controlar si la pregunta y las respuestas se han cargado completamente
+  const [preguntaCargada, setPreguntaCargada] = useState(false);
+  const [respuestasCargadas, setRespuestasCargadas] = useState(false);
   useEffect(() => {
     obtener_datos_pregunta();
     //else buscar_por_id
@@ -48,6 +51,8 @@ export default function SELCCLA_resolv({
       setIdPregunta(data.r_id_pregunta);
       cargarRespuestas(data.r_id_pregunta);
       setSegundos(data.r_tiempo_segundo);
+      setPreguntaCargada(true); // Marca la pregunta como cargada
+      setLoader(false);
     } catch (error) {
       setLoader(false);
       console.log(error);
@@ -58,6 +63,7 @@ export default function SELCCLA_resolv({
 
   const [segundos, setSegundos] = useState(0);
   useEffect(() => {
+    if (preguntaCargada && respuestasCargadas) {
     const intervalId = setInterval(() => {
       setSegundos((prevSegundos) => {
         if (prevSegundos === 1) {
@@ -72,7 +78,8 @@ export default function SELCCLA_resolv({
 
     // Limpieza del temporizador cuando el componente se desmonta o cuando la variable cambia
     return () => clearInterval(intervalId);
-  }, [VerRespuestas]); // el segundo argumento vacío garantiza que el efecto se ejecute solo una vez al montar el componente
+    }
+  }, [VerRespuestas, preguntaCargada, respuestasCargadas]); // el segundo argumento vacío garantiza que el efecto se ejecute solo una vez al montar el componente
 
   const [respuestas, setRespuestas] = useState([]);
   //funcion para cargar todas las respuestas de una pregunta MEMRZAR
@@ -90,6 +97,7 @@ export default function SELCCLA_resolv({
     );
     const data = await response.json();
     setRespuestas(data);
+    setRespuestasCargadas(true); // Marca las respuestas como cargadas
     setLoader(false);
   };
   //Si el tiempo termino registrar respuesta por default con el id del progreso_pregunta

@@ -22,7 +22,9 @@ export default function MULIMGT_resolv({
   const [data_user, setData_User] = useState([]);
   const [IDPregunta, setIdPregunta] = useState(null);
   const [numeroColumnas, setNumeroColumnas] = useState(1);
-
+  //estados para controlar si la pregunta y las respuestas se han cargado completamente
+  const [preguntaCargada, setPreguntaCargada] = useState(false);
+  const [respuestasCargadas, setRespuestasCargadas] = useState(false);
   //funcion para buscar los datos de una pregunta como la foto, el enunciado.
   //si se envia a buscar entonces hay que devolver la ultima pregunta creada.
   useEffect(() => {
@@ -53,6 +55,8 @@ export default function MULIMGT_resolv({
       setSegundosRespuestas(data.r_tiempo_respuesta);
       setSegundos(data.r_tiempo_enunciado);
       setNumeroColumnas(data.r_columnas_pc);
+      setPreguntaCargada(true); // Marca la pregunta como cargada
+      setLoader(false);
     } catch (error) {
       setLoader(false);
       console.log(error);
@@ -62,6 +66,7 @@ export default function MULIMGT_resolv({
   const [segundos, setSegundos] = useState(0);
   const [VerPregunta, SetVerPregunta] = useState(true);
   useEffect(() => {
+    if (preguntaCargada && respuestasCargadas) {
     const intervalId = setInterval(() => {
       setSegundos((prevSegundos) => {
         if (prevSegundos === 1) {
@@ -76,7 +81,8 @@ export default function MULIMGT_resolv({
 
     // Limpieza del temporizador cuando el componente se desmonta o cuando la variable cambia
     return () => clearInterval(intervalId);
-  }, [IDPregunta]); // el segundo argumento vacío garantiza que el efecto se ejecute solo una vez al montar el componente
+  }
+  }, [IDPregunta, preguntaCargada, respuestasCargadas]); // el segundo argumento vacío garantiza que el efecto se ejecute solo una vez al montar el componente
   //timer para ver las respuestas
   const [VerRespuestas, setVerRespuestas] = useState(null);
 
@@ -136,6 +142,7 @@ export default function MULIMGT_resolv({
     }));
 
     setRespuestas(respuestasConSeleccionado);
+    setRespuestasCargadas(true); // Marca las respuestas como cargadas
     setLoader(false);
   };
   //Si el tiempo termino registrar respuesta por default con el id del progreso_pregunta

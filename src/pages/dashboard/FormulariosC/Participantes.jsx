@@ -88,7 +88,7 @@ const TABLE_OPCIONES = [
 //cabezera para la tabla de participantes
 const TABLE_HEAD_Detalles = ["", "Nombres", "Correo Institucional", "Agregar"];
 import { Dialog_Error, Loader, Notification } from "@/widgets"; //Importar el componente
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { CrearParticipantes } from "@/pages/dashboard/Participantes";
 import axios from "axios";
 import { OpcionesParticipantes } from "@/pages/dashboard/FormulariosC";
@@ -100,6 +100,10 @@ const sidenavColors = {
   red: "border-red-600",
   pink: "border-pink-600",
 };
+/* PARA EL PDF  */
+import { jsPDF } from "jspdf";
+import html2canvas from "html2canvas";
+/** */
 export default function Participantes({ idTest_id, Regresar, TituloTest }) {
   //Paginacion
   const [currentPage, setCurrentPage] = useState(1);
@@ -303,9 +307,30 @@ export default function Participantes({ idTest_id, Regresar, TituloTest }) {
       setCurrentPage((prevPage) => prevPage + 1);
     }
   };
+  //FUNCION PARA GENERAR EL PDF
+  const ConvertirAPDF = useRef(null);
+  const GenerarPDF = async () => {
+    const data = ConvertirAPDF.current;
+    try {
+      const canvas = await html2canvas(data);
+      const imgData = canvas.toDataURL("image/png");
+      const pdf = new jsPDF({
+        orientation: "portrait",
+        unit: "px",
+        format: "a4",
+      });
+      const width = pdf.internal.pageSize.getWidth();
+      const height = (canvas.height * width) / canvas.width;
 
+      pdf.addImage(imgData, "PNG", 6, 6, width, height);
+      pdf.save("Resultado.pdf");
+    } catch (error) {
+      alert("Error al convertir el PDF");
+      console.log(error);
+    }
+  };
   return (
-    <Card className="h-full w-full rounded-none">
+    <Card className="h-full w-full rounded-none" ref={ConvertirAPDF}>
       {abrirOpciones && (
         <OpcionesParticipantes
           cerrar={cerrar}
@@ -508,7 +533,8 @@ export default function Participantes({ idTest_id, Regresar, TituloTest }) {
               className="flex items-center gap-3"
               size="sm"
               color="blue"
-              onClick={ObtenerListaParticipantes_creados}
+              //onClick={ObtenerListaParticipantes_creados}
+              onClick={GenerarPDF}
             >
               <ChartBarSquareIcon strokeWidth={2} className="h-6 w-6" />{" "}
               Reportes

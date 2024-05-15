@@ -19,7 +19,9 @@ export default function SELCCMA_resolv({
   const [data_user, setData_User] = useState([]);
   const [IDPregunta, setIdPregunta] = useState(null);
   const [segundos, setSegundos] = useState(100);
-
+  //estados para controlar si la pregunta y las respuestas se han cargado completamente
+  const [preguntaCargada, setPreguntaCargada] = useState(false);
+  const [respuestasCargadas, setRespuestasCargadas] = useState(false);
   //funcion para buscar los datos de una pregunta como la foto, el enunciado.
   //si se envia a buscar entonces hay que devolver la ultima pregunta creada.
   useEffect(() => {
@@ -48,6 +50,8 @@ export default function SELCCMA_resolv({
       setIdPregunta(data.r_id_pregunta);
       cargarRespuestas(data.r_id_pregunta);
       //setSegundos(data.r_tiempo_segundo);
+      setPreguntaCargada(true); // Marca la pregunta como cargada
+      setLoader(false);
     } catch (error) {
       setLoader(false);
       console.log(error);
@@ -92,6 +96,7 @@ export default function SELCCMA_resolv({
     );
     const data = await response.json();
     setRespuestas(data);
+    setRespuestasCargadas(true); // Marca las respuestas como cargadas
     setLoader(false);
   };
 

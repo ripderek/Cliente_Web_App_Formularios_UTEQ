@@ -275,7 +275,7 @@ export default function Lista({
       //setOpenDetalles(false);
       //setDeseaEliminar(false);
       //Obtener_Secciones_Usuario();
-      alert("Excel generado");
+      //alert("Excel generado");
       const blob = new Blob([result.data], {
         type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
       });

@@ -40,6 +40,8 @@ import { useState, useEffect } from "react";
 
 import { generarPDF, generarExcel } from "@/Data/GenerarPDF_EXEL";
 
+import axios from "axios";
+
 export default function Search() {
   const [load, setLoader] = useState(false);
   const [error, setError] = useState(false);
@@ -86,37 +88,48 @@ export default function Search() {
 
   //funcion para crear el reporte en la api
   const Obtener_Reporte = async (codigo, tipo) => {
-    setLoader(true);
+    //setLoader(true);
     try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_ACCESLINK}reportes/Crear_Reporte`,
+        
+      const response = await axios.post(
+        process.env.NEXT_PUBLIC_ACCESLINK + "reportes/Crear_Reporte",
         {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-          body: JSON.stringify({
-            codigoFormulario: codigoTest,
-            codigoReporte: codigo,
-            codigoTipo: tipo,
-          }),
+          codigoFormulario: codigoTest,
+          codigoReporte: codigo,
+          codigoTipo: tipo,
+        },
+        {
+          withCredentials: true,
+          responseType: "arraybuffer", // Indicar que la respuesta es un array de bytes
         }
       );
 
       console.log(response);
-      const ListaParticipantes = await response.json();
-      //setListaParticipantes(data);
-      tipo === "PDF" ? 
-      generarPDF(ListaParticipantes)
-      : 
-      generarExcel(ListaParticipantes)
+      // Crear un objeto Blob desde el buffer de bytes recibido
+      const blob = new Blob([new Uint8Array(response.data)], { type: "application/pdf" });
+      //const blob = new Blob([response.data], { type: "application/pdf" });
 
-      setLoader(false);
+      // Crear una URL para el objeto Blob
+      const url = window.URL.createObjectURL(blob);
+
+      // Crear un enlace para descargar el PDF
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", "Reporte.pdf");
+      document.body.appendChild(link);
+
+      // Simular un clic en el enlace para iniciar la descarga
+      link.click();
+
+      // Eliminar el enlace del DOM después de la descarga
+      document.body.removeChild(link);
+
+      //setLoader(false);
     } catch (error) {
-      setLoader(false);
+      //setLoader(false);
       //colocar una alerta de error cuando no se pueda inciar sesion
-      console.log(error.response.data.error);
+      //alert(error);
+      console.log(error);
       setError(true);
       setMensajeError(error.response.data.error);
     }
@@ -248,7 +261,7 @@ export default function Search() {
                                         size="sm"
                                         className="flex cursor-pointer"
                                         onClick={() =>
-                                            Obtener_Reporte(Codigo, doc.tipo)
+                                          Obtener_Reporte(Codigo, doc.tipo)
                                         }
                                       />
                                     </Tooltip>

@@ -45,6 +45,10 @@ import {
   Option,
 } from "@material-tailwind/react";
 
+import pdfMake from "pdfmake/build/pdfmake";
+import pdfFonts from "pdfmake/build/vfs_fonts";
+import ExcelJS from "exceljs";
+
 const TABS = [
   {
     label: "Activas",
@@ -329,6 +333,118 @@ export default function Participantes({ idTest_id, Regresar, TituloTest }) {
       console.log(error);
     }
   };
+
+  //PDF
+
+  pdfMake.vfs = pdfFonts.pdfMake.vfs;
+
+  const generarPDF = () => {
+    let contador = 1; // Inicializar contador
+    const participantes = ListaParticipantes.map((participante) => [
+      contador++,
+      participante.r_nombres_apellidos,
+      participante.r_correo_institucional,
+      participante.r_supero_limite ? "Si" : "No",
+      participante.r_fecha_add,
+    ]);
+
+    const docDefinition = {
+      content: [
+        { text: `${TituloTest}`, style: "test" },
+        { text: "Lista de Participantes del test", style: "header" },
+        { text: " ", style: "subheader" },
+        {
+          table: {
+            headerRows: 1,
+            //widths: ["auto", "auto", "auto", "auto", "auto"],
+            body: [
+              [
+                "Num",
+                "Nombres y Apellidos",
+                "Correo Institucional",
+                "Superó Límite",
+                "Fecha Agregado",
+              ],
+              ...participantes,
+            ],
+            layout: "noBorders", // Establecer el diseño de la tabla
+            minCellHeight: 100, // Establecer la altura mínima de la celda
+          },
+        },
+      ],
+      styles: {
+        test: {
+          fontSize: 20,
+          bold: true,
+          alignment: "center",
+          margin: [0, 0, 0, 10],
+        },
+        header: {
+          fontSize: 16,
+          bold: true,
+          alignment: "center",
+        },
+        subheader: {
+          fontSize: 12,
+          alignment: "center",
+        },
+      },
+    };
+
+    console.log("descargar pdf");
+    pdfMake.createPdf(docDefinition).download("Reporte_Participantes.pdf");
+  };
+
+  //Exel
+
+  const generarExcel = () => {
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet("Participantes");
+
+    // Definir las columnas de la tabla
+    worksheet.columns = [
+      { header: "Num", key: "num", width: 10 },
+      { header: "Nombres y Apellidos", key: "nombresApellidos", width: 30 },
+      { header: "Correo Institucional", key: "correoInstitucional", width: 30 },
+      { header: "Superó Límite", key: "superoLimite", width: 15 },
+      { header: "Fecha Agregado", key: "fechaAgregado", width: 20 },
+    ];
+
+    // Agregar datos de participantes
+    ListaParticipantes.forEach((participante, index) => {
+      worksheet.addRow({
+        num: index + 1,
+        nombresApellidos: participante.r_nombres_apellidos,
+        correoInstitucional: participante.r_correo_institucional,
+        superoLimite: participante.r_supero_limite ? "Si" : "No",
+        fechaAgregado: participante.r_fecha_add,
+      });
+    });
+
+    // Escribir el archivo Excel
+    workbook.xlsx
+      .writeBuffer()
+      .then((buffer) => {
+        const blob = new Blob([buffer], {
+          type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "Reporte_Participantes.xlsx";
+        a.click();
+        window.URL.revokeObjectURL(url);
+      })
+      .catch((error) => {
+        console.error("Error al generar el archivo Excel:", error);
+      });
+  };
+
+  const [abrirReportes, setAbrirReportes] = useState(false);
+  const handlerAbrirReportes = () => {
+    setAbrirReportes(!abrirReportes);
+  };
+
   return (
     <Card className="h-full w-full rounded-none" ref={ConvertirAPDF}>
       {abrirOpciones && (
@@ -494,6 +610,52 @@ export default function Participantes({ idTest_id, Regresar, TituloTest }) {
           </Button>
         </DialogFooter>
       </Dialog>
+      <Dialog open={abrirReportes} size="xl">
+        <DialogHeader> Reportes</DialogHeader>
+        <DialogBody className="font-semibold w-full mx-auto text-center mt-4">
+          {/*Detalles del test: {detallesTest.r_descripcion}*/}
+          {/* */}
+          <Tooltip content="PDF">
+              <Button
+                variant="outlined"
+                size="sm"
+                color="red"
+                onClick={generarPDF}
+              >
+                <Avatar
+                  src={"/Icons/PDFICON.png"}
+                  alt="avatar"
+                  size="sm"
+                  className="flex cursor-pointer"
+                />
+              </Button>
+            </Tooltip>
+            <Tooltip content="Excel">
+              <Button
+                variant="outlined"
+                size="sm"
+                color="green"
+                onClick={generarExcel}
+              >
+                <Avatar
+                  src={"/Icons/ExcelICON.png"}
+                  alt="avatar"
+                  size="sm"
+                  className="flex cursor-pointer"
+                />
+              </Button>
+            </Tooltip>
+        </DialogBody>
+        <DialogFooter>
+          <Button
+            variant="gradient"
+            color="yellow"
+            onClick={handlerAbrirReportes}
+          >
+            <span>Cerrar</span>
+          </Button>
+        </DialogFooter>
+      </Dialog>
       <CardHeader floated={false} shadow={false} className="rounded-none">
         <div className=" flex items-center justify-between gap-8">
           <div>
@@ -533,8 +695,8 @@ export default function Participantes({ idTest_id, Regresar, TituloTest }) {
               className="flex items-center gap-3"
               size="sm"
               color="blue"
-              //onClick={ObtenerListaParticipantes_creados}
-              onClick={GenerarPDF}
+
+              onClick={handlerAbrirReportes}
             >
               <ChartBarSquareIcon strokeWidth={2} className="h-6 w-6" />{" "}
               Reportes

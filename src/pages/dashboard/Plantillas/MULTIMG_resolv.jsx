@@ -21,6 +21,9 @@ export default function MULTIMG_resolv({
   const [load, setLoader] = useState(false);
   const [data_user, setData_User] = useState([]);
   const [IDPregunta, setIdPregunta] = useState(null);
+  //estados para controlar si la pregunta y las respuestas se han cargado completamente
+  const [preguntaCargada, setPreguntaCargada] = useState(false);
+  const [respuestasCargadas, setRespuestasCargadas] = useState(false);
   //funcion para buscar los datos de una pregunta como la foto, el enunciado.
   //si se envia a buscar entonces hay que devolver la ultima pregunta creada.
   useEffect(() => {
@@ -49,6 +52,8 @@ export default function MULTIMG_resolv({
       setIdPregunta(data.r_id_pregunta);
       cargarRespuestas(data.r_id_pregunta);
       setSegundos(data.r_tiempo_segundo);
+      setPreguntaCargada(true); // Marca la pregunta como cargada
+      setLoader(false);
     } catch (error) {
       setLoader(false);
       console.log(error);
@@ -57,6 +62,7 @@ export default function MULTIMG_resolv({
   //{PARA LOS SEGUNDOS DE LA PREGUNTA}
   const [segundos, setSegundos] = useState(0);
   useEffect(() => {
+    if (preguntaCargada && respuestasCargadas) {
     const intervalId = setInterval(() => {
       setSegundos((prevSegundos) => {
         if (prevSegundos === 1) {
@@ -70,7 +76,8 @@ export default function MULTIMG_resolv({
 
     // Limpieza del temporizador cuando el componente se desmonta o cuando la variable cambia
     return () => clearInterval(intervalId);
-  }, [IDPregunta]); // el segundo argumento vacío garantiza que el efecto se ejecute solo una vez al montar el componente
+    }
+  }, [IDPregunta, preguntaCargada, respuestasCargadas]); // el segundo argumento vacío garantiza que el efecto se ejecute solo una vez al montar el componente
 
   const [respuestas, setRespuestas] = useState([]);
   //funcion para cargar todas las respuestas de una pregunta MEMRZAR
@@ -88,6 +95,7 @@ export default function MULTIMG_resolv({
     );
     const data = await response.json();
     //setRespuestas(data);
+    setRespuestasCargadas(true); // Marca las respuestas como cargadas
 
     // Añadir el campo 'seleccionado' a cada respuesta con valor inicial 'false'
     const respuestasConSeleccionado = data.map((respuesta) => ({
@@ -96,6 +104,7 @@ export default function MULTIMG_resolv({
     }));
 
     setRespuestas(respuestasConSeleccionado);
+    setRespuestasCargadas(true); // Marca las respuestas como cargadas
     setLoader(false);
   };
   //Si el tiempo termino registrar respuesta por default con el id del progreso_pregunta

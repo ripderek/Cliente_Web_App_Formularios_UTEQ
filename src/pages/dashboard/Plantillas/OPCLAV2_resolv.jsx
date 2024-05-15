@@ -22,6 +22,9 @@ export default function OPCLAV2_resolv({
   const [load, setLoader] = useState(false);
   const [data_user, setData_User] = useState([]);
   const [IDPregunta, setIdPregunta] = useState(null);
+  //estados para controlar si la pregunta y las respuestas se han cargado completamente
+  const [preguntaCargada, setPreguntaCargada] = useState(false);
+  const [respuestasCargadas, setRespuestasCargadas] = useState(false);
   //funcion para buscar los datos de una pregunta como la foto, el enunciado.
   //si se envia a buscar entonces hay que devolver la ultima pregunta creada.
   useEffect(() => {
@@ -52,6 +55,8 @@ export default function OPCLAV2_resolv({
       setSegundosRespuestas(data.r_tiempo_respuesta);
       setSegundos(data.r_tiempo_enunciado);
       cargarCLaves(id_pregunta);
+      setPreguntaCargada(true); // Marca la pregunta como cargada
+      setLoader(false);
     } catch (error) {
       setLoader(false);
       console.log(error);
@@ -95,6 +100,7 @@ export default function OPCLAV2_resolv({
   const [segundos, setSegundos] = useState(0);
   const [VerPregunta, SetVerPregunta] = useState(true);
   useEffect(() => {
+    if (preguntaCargada && respuestasCargadas) {
     const intervalId = setInterval(() => {
       setSegundos((prevSegundos) => {
         if (prevSegundos === 1) {
@@ -109,7 +115,8 @@ export default function OPCLAV2_resolv({
 
     // Limpieza del temporizador cuando el componente se desmonta o cuando la variable cambia
     return () => clearInterval(intervalId);
-  }, [IDPregunta]); // el segundo argumento vacío garantiza que el efecto se ejecute solo una vez al montar el componente
+    }
+  }, [IDPregunta,preguntaCargada, respuestasCargadas]); // el segundo argumento vacío garantiza que el efecto se ejecute solo una vez al montar el componente
   //timer para ver las respuestas
   const [VerRespuestas, setVerRespuestas] = useState(null);
 
@@ -117,6 +124,7 @@ export default function OPCLAV2_resolv({
   const intervalRef1 = useRef(null);
   //{USEEFECT PARA VER LAS RESPUESTAS}
   useEffect(() => {
+    if (preguntaCargada && respuestasCargadas) {
     // Iniciar el temporizador solo cuando IDPregunta cambia
     if (VerRespuestas) {
       intervalRef1.current = setInterval(() => {
@@ -135,7 +143,8 @@ export default function OPCLAV2_resolv({
 
     // Limpiar el temporizador cuando IDPregunta cambia o cuando el componente se desmonta
     return () => clearInterval(intervalRef1.current);
-  }, [VerRespuestas]);
+    }
+  }, [VerRespuestas, preguntaCargada, respuestasCargadas]);
 
   //useffect para detener el timer de ver respuestas y enviar la repuesta xd
   useEffect(() => {
@@ -164,6 +173,7 @@ export default function OPCLAV2_resolv({
     );
     const data = await response.json();
     setRespuestas(data);
+    setRespuestasCargadas(true); // Marca las respuestas como cargadas
     setLoader(false);
   };
   //Si el tiempo termino registrar respuesta por default con el id del progreso_pregunta

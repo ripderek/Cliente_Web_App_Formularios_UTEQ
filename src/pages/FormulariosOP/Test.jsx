@@ -14,6 +14,7 @@ import {
   OPCLAV2_resolv,
   MULIMGT_resolv,
   SELCCMA_resolv,
+  ENSEMUL_resolv,
 } from "@/pages/dashboard/Plantillas";
 import Cookies from "universal-cookie";
 import { Dialog_Error, Loader, Notification } from "@/widgets"; //Importar el componente
@@ -82,6 +83,9 @@ export default function Test() {
       case "SELCCMA":
         handlerSELCCMA();
         break;
+      case "ENSEMUL":
+        handlerENSEMUL();
+        break;
       default:
         RegresarProgresoSeccion(true);
         break;
@@ -105,6 +109,7 @@ export default function Test() {
     setOpenOPCLAV2(false);
     setOpenMULIMGT(false);
     setOpenSELCCMA(false);
+    setOpenENSEMUL(false);
   };
   //Funcion para abrir una pregunta de tipo SELCIMG
   const [openSELCIMG, setOpenSELCIMG] = useState(false);
@@ -120,6 +125,7 @@ export default function Test() {
     setOpenOPCLAV2(false);
     setOpenMULIMGT(false);
     setOpenSELCCMA(false);
+    setOpenENSEMUL(false);
   };
 
   const [openSELCCLA, setOpenSELCCLA] = useState(false);
@@ -135,6 +141,7 @@ export default function Test() {
     setOpenOPCLAV2(false);
     setOpenMULIMGT(false);
     setOpenSELCCMA(false);
+    setOpenENSEMUL(false);
   };
   const [openLOCIMG, setOpenLOCIMG] = useState(false);
 
@@ -150,6 +157,7 @@ export default function Test() {
     setOpenOPCLAV2(false);
     setOpenMULIMGT(false);
     setOpenSELCCMA(false);
+    setOpenENSEMUL(false);
   };
   //        handlerMULTIMG();
   const [openMULTIMG, setOpenMULTIMG] = useState(false);
@@ -166,6 +174,7 @@ export default function Test() {
     setOpenOPCLAV2(false);
     setOpenMULIMGT(false);
     setOpenSELCCMA(false);
+    setOpenENSEMUL(false);
   };
   //funcion para resolver la pregunta de ingresar numero
   //INGRNUM_resp
@@ -182,6 +191,7 @@ export default function Test() {
     setOpenOPCLAV2(false);
     setOpenMULIMGT(false);
     setOpenSELCCMA(false);
+    setOpenENSEMUL(false);
   };
   //OPCLAVA_resolv
   const [openOPCLAVA, setOpenOPCLAVA] = useState(false);
@@ -197,6 +207,7 @@ export default function Test() {
     setOpenOPCLAV2(false);
     setOpenMULIMGT(false);
     setOpenSELCCMA(false);
+    setOpenENSEMUL(false);
   };
   //  OPCLAV2_resolv,
   const [openOPCLAV2, setOpenOPCLAV2] = useState(false);
@@ -212,6 +223,7 @@ export default function Test() {
     setOpenProgresoSecciones(false);
     setOpenMULIMGT(false);
     setOpenSELCCMA(false);
+    setOpenENSEMUL(false);
   };
   //MULIMGT_resolv
   const [openMULIMGT, setOpenMULIMGT] = useState(false);
@@ -227,8 +239,10 @@ export default function Test() {
     setOpenOPCLAVA(false);
     setOpenProgresoSecciones(false);
     setOpenSELCCMA(false);
+    setOpenENSEMUL(false);
   };
 
+  //SELCCMA
   const [openSELCCMA, setOpenSELCCMA] = useState(false);
   const handlerSELCCMA = () => {
     setOpenSELCCLA(false);
@@ -241,8 +255,27 @@ export default function Test() {
     setOpenOPCLAVA(false);
     setOpenOPCLAV2(false);
     setOpenMULIMGT(false);
+    setOpenENSEMUL(false);
     setOpenSELCCMA(true);
   };
+
+ //ENSEMUL
+ const [openENSEMUL, setOpenENSEMUL] = useState(false);
+ const handlerENSEMUL = () => {
+   setOpenSELCCLA(false);
+   setOpenSELCIMG(false);
+   setOpenMEMRZAR(false);
+   setOpenProgresoSecciones(false);
+   setOpenLOCIMG(false);
+   setOpenMULTIMG(false);
+   setOpenINGRNUM(false);
+   setOpenOPCLAVA(false);
+   setOpenOPCLAV2(false);
+   setOpenMULIMGT(false);
+   setOpenSELCCMA(false);
+   setOpenENSEMUL(true);
+ };
+
 
   //funcion regresar a un progreso seccion
   //necesita el id del progreso_seccion para abrirse xd
@@ -258,6 +291,7 @@ export default function Test() {
     setOpenINGRNUM(false);
     setOpenOPCLAVA(false);
     setOpenSELCCMA(false);
+    setOpenENSEMUL(false);
   };
 
   const [load, setLoader] = useState(false);
@@ -368,6 +402,16 @@ export default function Test() {
       case openSELCCMA:
         return (
           <SELCCMA_resolv
+            id_pregunta={idPregunta}
+            id_progreso_sec={idProgresoSeccion}
+            RegresarProgresoSeccion={RegresarProgresoSeccion}
+            ProgresoPregunta={id_progrso_pregunta}
+          />
+        );
+        //openENSEMUL
+      case openENSEMUL:
+        return (
+          <ENSEMUL_resolv
             id_pregunta={idPregunta}
             id_progreso_sec={idProgresoSeccion}
             RegresarProgresoSeccion={RegresarProgresoSeccion}

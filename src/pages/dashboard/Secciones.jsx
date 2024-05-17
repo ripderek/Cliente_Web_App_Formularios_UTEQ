@@ -43,6 +43,8 @@ import {
   MULIMGT_resp,
   SELCCMA,
   SELCCMA_resp,
+  ENSEMUL,
+  ENSEMUL_resp,
 } from "@/pages/dashboard/Plantillas";
 import {
   ListaPreguntas,
@@ -122,6 +124,8 @@ export default function Secciones() {
     openEditMULIMGT: false,
     openSELCCMA: false,
     openEditSELCCMA: false,
+    openENSEMUL: false,
+    openEditENSEMUL: false,
   });
 
   const [tabInfo, setTabInfo] = useState({
@@ -144,6 +148,7 @@ export default function Secciones() {
     buscarEditOPCLAV2: true,
     buscarEditMULIMGT: true,
     buscarEditSELCCMA: true,
+    buscarEditENSEMUL: true,
     //OPCLAV2
   });
 
@@ -457,6 +462,29 @@ export default function Secciones() {
           <SELCCMA_resp
             id_pregunta={tabInfo.idPregunta}
             buscar={tabInfo.buscarEditSELCCMA}
+            id_nivel={tabInfo.IDNivel}
+            AbrirPreguntas={AbrirPreguntas}
+            idni={tabInfo.IDNivel}
+            nombrenivel={tabInfo.nombre_nivel}
+            //
+          />
+        );
+        //ENSEMUL
+      case tabs.openENSEMUL:
+        return (
+          <ENSEMUL
+            cambiarPestañas={cambiarPestañas}
+            tipo_preg={tabInfo.IDTIPOPRE}
+            id_nivel={tabInfo.IDNivel}
+            icono={tabInfo.r_icono}
+            AbrirEditor={AbrirEditor}
+          />
+        );
+      case tabs.openEditENSEMUL:
+        return (
+          <ENSEMUL_resp
+            id_pregunta={tabInfo.idPregunta}
+            buscar={tabInfo.buscarEditENSEMUL}
             id_nivel={tabInfo.IDNivel}
             AbrirPreguntas={AbrirPreguntas}
             idni={tabInfo.IDNivel}

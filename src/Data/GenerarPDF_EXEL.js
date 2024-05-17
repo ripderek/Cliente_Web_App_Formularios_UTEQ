@@ -88,7 +88,6 @@ const generarPDF = (ListaParticipantes) => {
         },
       },
     };
-
     pdfMake.createPdf(docDefinition).download("Reporte_Participantes.pdf");
   } catch (error) {
     console.log(error);

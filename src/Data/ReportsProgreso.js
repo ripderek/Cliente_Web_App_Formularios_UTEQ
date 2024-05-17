@@ -5,10 +5,4 @@ export const ReportsProgreso = [
     Codigo: `ListProgresoPreg`,
     TipoDoc: [{ tipo: "PDF" }, { tipo: "EXCEL" }],
   },
-  {
-    id: 2,
-    title: "Lista de progreso Participantes",
-    Codigo: `ListProgresoPart`,
-    TipoDoc: [{ tipo: "PDF" }, { tipo: "EXCEL" }],
-  },
 ];

@@ -346,7 +346,7 @@ export default function SeccionesDisponibles({
         open={openAgregarS}
         className="bg-transparent shadow-none"
       >
-        <Card className="mx-auto w-full h-full">
+        <Card className="mx-auto w-full h-full ">
           <CardBody className="flex flex-col gap-4">
             <Typography variant="h4" color="blue-gray">
               Numero de preguntas
@@ -366,81 +366,83 @@ export default function SeccionesDisponibles({
               Ingrese el numero de preguntas por nivel
             </Typography>
             {/* Tabla con el numero de preguntas segun la seccion y el nivel */}
-            <table className="w-96 mx-auto  table-auto text-left">
-              <thead>
-                <tr>
-                  {TABLE_HEAD.map((head) => (
-                    <th
-                      key={head}
-                      className="border-b border-blue-gray-100 bg-blue-gray-50 p-4"
-                    >
-                      <Typography
-                        variant="small"
-                        color="blue-gray"
-                        className="font-normal leading-none opacity-70"
+            <div className="h-96 overflow-y-auto">
+              <table className="w-96 mx-auto  table-auto text-left">
+                <thead>
+                  <tr>
+                    {TABLE_HEAD.map((head) => (
+                      <th
+                        key={head}
+                        className="border-b border-blue-gray-100 bg-blue-gray-50 p-4"
                       >
-                        {head}
-                      </Typography>
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {preguntas.map(
-                  (
-                    {
-                      r_id_nivel,
-                      r_id_seccion,
-                      r_nivel,
-                      r_total_preguntas,
-                      r_num_preguntas,
-                    },
-                    index
-                  ) => {
-                    const isLast = index === preguntas.length - 1;
-                    const classes = isLast
-                      ? "p-2"
-                      : "p-2 border-b border-blue-gray-50";
+                        <Typography
+                          variant="small"
+                          color="blue-gray"
+                          className="font-normal leading-none opacity-70"
+                        >
+                          {head}
+                        </Typography>
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {preguntas.map(
+                    (
+                      {
+                        r_id_nivel,
+                        r_id_seccion,
+                        r_nivel,
+                        r_total_preguntas,
+                        r_num_preguntas,
+                      },
+                      index
+                    ) => {
+                      const isLast = index === preguntas.length - 1;
+                      const classes = isLast
+                        ? "p-2"
+                        : "p-2 border-b border-blue-gray-50";
 
-                    return (
-                      <tr key={r_id_nivel}>
-                        <td className={classes}>
-                          <Typography
-                            variant="small"
-                            color="blue-gray"
-                            className="font-normal"
-                          >
-                            {r_nivel}
-                          </Typography>
-                        </td>
-                        <td className={classes}>
-                          <Typography
-                            variant="small"
-                            color="blue-gray"
-                            className="font-normal"
-                          >
-                            {r_total_preguntas}
-                          </Typography>
-                        </td>
-                        <td className={classes}>
-                          <Input
-                            label="Numero de preguntas"
-                            name="p_numero_preguntas"
-                            onChange={(e) =>
-                              handleCambiarNumeroPreguntasNivel(
-                                r_id_nivel,
-                                e.target.value
-                              )
-                            }
-                            value={r_num_preguntas}
-                          />
-                        </td>
-                      </tr>
-                    );
-                  }
-                )}
-              </tbody>
-            </table>
+                      return (
+                        <tr key={r_id_nivel}>
+                          <td className={classes}>
+                            <Typography
+                              variant="small"
+                              color="blue-gray"
+                              className="font-normal"
+                            >
+                              {r_nivel}
+                            </Typography>
+                          </td>
+                          <td className={classes}>
+                            <Typography
+                              variant="small"
+                              color="blue-gray"
+                              className="font-normal"
+                            >
+                              {r_total_preguntas}
+                            </Typography>
+                          </td>
+                          <td className={classes}>
+                            <Input
+                              label="Numero de preguntas"
+                              name="p_numero_preguntas"
+                              onChange={(e) =>
+                                handleCambiarNumeroPreguntasNivel(
+                                  r_id_nivel,
+                                  e.target.value
+                                )
+                              }
+                              value={r_num_preguntas}
+                            />
+                          </td>
+                        </tr>
+                      );
+                    }
+                  )}
+                </tbody>
+              </table>
+            </div>
             {/*
             <Input
               label="Ingrese cantidad de preguntas"

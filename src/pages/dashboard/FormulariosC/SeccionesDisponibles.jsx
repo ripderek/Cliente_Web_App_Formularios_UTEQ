@@ -366,7 +366,7 @@ export default function SeccionesDisponibles({
               Ingrese el numero de preguntas por nivel
             </Typography>
             {/* Tabla con el numero de preguntas segun la seccion y el nivel */}
-            <table className="w-96 mx-auto  table-auto text-left">
+            <table className="w-96 h-96 mx-auto  table-auto text-left">
               <thead>
                 <tr>
                   {TABLE_HEAD.map((head) => (

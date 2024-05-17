@@ -14,5 +14,8 @@ export { default as ProgresoPregunta } from "@/pages/dashboard/FormulariosC/Prog
 export { default as EliminarParticipanteTest } from "@/pages/dashboard/FormulariosC/EliminarParticipanteTest";
 export { default as ListaProgreso } from "@/pages/dashboard/FormulariosC/ListaProgreso";
 export { default as EditarNivelesSeccion } from "@/pages/dashboard/FormulariosC/EditarNivelesSeccion";
+export { default as SaltosNivel } from "@/pages/dashboard/FormulariosC/SaltosNivel";
+export { default as VerDetalleSalto } from "@/pages/dashboard/FormulariosC/VerDetalleSalto";
+export { default as CrearSalto } from "@/pages/dashboard/FormulariosC/CrearSalto";
 
-//EditarNivelesSeccion
+//CrearSalto

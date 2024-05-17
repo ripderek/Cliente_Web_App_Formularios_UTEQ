@@ -5,6 +5,7 @@ import {
   ArrowLeftOnRectangleIcon,
   TrashIcon,
   PencilIcon,
+  BarsArrowUpIcon,
 } from "@heroicons/react/24/solid";
 import {
   Card,
@@ -34,6 +35,7 @@ import { EditarNivelesSeccion } from "@/pages/dashboard/FormulariosC";
 import {
   AddSeccion,
   SeccionesDisponibles,
+  SaltosNivel,
 } from "@/pages/dashboard/FormulariosC";
 const sidenavTypes = {
   dark: "bg-green-900 ",
@@ -62,8 +64,7 @@ export default function SeleccionarSecciones({
   Regresar,
   TituloTest,
 }) {
-  
-    //Paginacion
+  //Paginacion
   const [currentPage, setCurrentPage] = useState(1);
   const [value, setValue] = useState("5");
   const itemsPorPag = value; // Numero de niveles a mostra por pagina
@@ -175,7 +176,9 @@ export default function SeleccionarSecciones({
       setCurrentPage((prevPage) => prevPage + 1);
     }
   };
-
+  //para abrir la opcion para de los saltos
+  const [openSaltos, setOpenSaltos] = useState(false);
+  const [seccion, setseccion] = useState(0);
   return (
     <Card className="h-full w-full rounded-none">
       <Notification
@@ -198,6 +201,13 @@ export default function SeleccionarSecciones({
           cerrar={() => setOpenEditar(false)}
           id_test={idTest_id}
           id_seccion={id_seccion_eliminar}
+        />
+      )}
+      {openSaltos && (
+        <SaltosNivel
+          cerrar={() => setOpenSaltos(false)}
+          id_test={idTest_id}
+          id_seccion={seccion}
         />
       )}
       {/* openEliminar */}
@@ -312,6 +322,18 @@ export default function SeleccionarSecciones({
                   {infoTest.r_is_editable && (
                     <div className="flex justify-end">
                       <div className="p-2 flex justify-end">
+                        <Tooltip content="Saltos de nivel">
+                          <button
+                            className="bg-zinc-50 p-2 bg-blue-700 rounded-xl cursor-pointer"
+                            onClick={() => (
+                              setseccion(r_id_seccion), setOpenSaltos(true)
+                            )}
+                          >
+                            <BarsArrowUpIcon className="w-7" color="white" />
+                          </button>
+                        </Tooltip>
+                      </div>
+                      <div className="p-2 flex justify-end">
                         <Tooltip content="Editar seccion">
                           <button
                             className="bg-zinc-50 p-2 bg-orange-500 rounded-xl cursor-pointer"
@@ -376,7 +398,7 @@ export default function SeleccionarSecciones({
           </Select>
         </div>
         <div className="flex gap-2">
-          <Button variant="outlined" size="sm"onClick={handlePreviousPage}>
+          <Button variant="outlined" size="sm" onClick={handlePreviousPage}>
             Anterior
           </Button>
           <Button variant="outlined" size="sm" onClick={handleNextPage}>

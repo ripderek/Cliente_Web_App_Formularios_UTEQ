@@ -100,7 +100,7 @@ export default function OpcionesParticipantes({
           </div>
         </DialogHeader>
         <DialogBody>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 p-5">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3 p-5">
             <div
               key={0}
               className={`bg-blue-gray-50  shadow-2xl rounded-none cursor-pointer border-4 border-green-900 hover:border-orange-600  `}
@@ -154,6 +154,7 @@ export default function OpcionesParticipantes({
                 </div>
               </div>
             </div>
+            {/* 
             <div
               key={3}
               className={`bg-blue-gray-50  shadow-2xl rounded-none cursor-pointer border-4 border-green-900 hover:border-orange-600  `}
@@ -171,6 +172,7 @@ export default function OpcionesParticipantes({
                 </div>
               </div>
             </div>
+*/}
           </div>
         </DialogBody>
         <DialogFooter>{/*  AQUI VA EL FOOTER SI ES NECESARIO */}</DialogFooter>

@@ -366,6 +366,7 @@ export default function SeccionesDisponibles({
               Ingrese el numero de preguntas por nivel
             </Typography>
             {/* Tabla con el numero de preguntas segun la seccion y el nivel */}
+<<<<<<< HEAD
             <div className="h-96 overflow-y-auto">
               <table className="w-96 mx-auto  table-auto text-left">
                 <thead>
@@ -374,6 +375,20 @@ export default function SeccionesDisponibles({
                       <th
                         key={head}
                         className="border-b border-blue-gray-100 bg-blue-gray-50 p-4"
+=======
+            <table className="w-96 h-96 mx-auto  table-auto text-left">
+              <thead>
+                <tr>
+                  {TABLE_HEAD.map((head) => (
+                    <th
+                      key={head}
+                      className="border-b border-blue-gray-100 bg-blue-gray-50 p-4"
+                    >
+                      <Typography
+                        variant="small"
+                        color="blue-gray"
+                        className="font-normal leading-none opacity-70"
+>>>>>>> 0be01f4972979dda28718d28822711f310efff38
                       >
                         <Typography
                           variant="small"

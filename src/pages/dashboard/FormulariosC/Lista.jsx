@@ -430,7 +430,6 @@ export default function Lista({
     }
   };
 
-  
   // Función para manejar el cambio de pestaña
   const handleTabChange = (value) => {
     setActiveTab(value);
@@ -443,13 +442,13 @@ export default function Lista({
     let filterByTab = true;
     if (activeTab === "Habilitados") {
       filterByTab = seccion.r_estado === "Verificado";
-      console.log(!seccion.r_estado)
+      console.log(!seccion.r_estado);
     } else if (activeTab === "Desabilitados") {
       filterByTab = seccion.r_estado === "Erroneo";
-      console.log(!seccion.r_estado)
+      console.log(!seccion.r_estado);
     } else if (activeTab === "Restringidos") {
-        filterByTab = !seccion.r_abierta;
-    } 
+      filterByTab = !seccion.r_abierta;
+    }
 
     // Filtrar por término de búsqueda
     const matchesSearchTerm = seccion.r_titulo
@@ -500,7 +499,12 @@ export default function Lista({
       {error1 ? <Errores_Test cerrar={cerrar1} id_test={idTes} /> : ""}
       <Crear abrir={openCreate} cerrar={cerrar} crear={crear} />
       {/* Para visualizar los detalles del test y poder seleccionar secciones, niveles y participantes*/}
-      <Dialog open={openDetalles} size="xxl" handler={handleOpenDetalles}>
+      <Dialog
+        open={openDetalles}
+        size="xxl"
+        handler={handleOpenDetalles}
+        className="bg-white"
+      >
         {error ? (
           <Dialog_Error
             mensaje={mensajeError}
@@ -534,7 +538,7 @@ export default function Lista({
             </Button>
           </DialogFooter>
         </Dialog>
-        <DialogBody className="font-semibold">
+        <DialogBody className="font-semibold bg-white">
           {/*Detalles del test: {detallesTest.r_descripcion}  idTes*/}
 
           <IconButton
@@ -690,10 +694,10 @@ export default function Lista({
               </>
             )}
           </div>
-          <div className="overflow-y-scroll h-96">
+          <div className="overflow-y-scroll h-auto bg-white">
             {/* TABLA DETALLES DEL TEST  */}
-            <div className="overflow-y-auto">
-              <table className="mt-4 overflow-x-auto w-full min-w-max table-auto text-left">
+            <div className="overflow-y-auto bg-white">
+              <table className="mt-4 overflow-x-auto w-full min-w-max table-auto text-left bg-white">
                 <thead>
                   <tr>
                     {TABLE_HEAD_Detalles.map((head) => (
@@ -1174,11 +1178,11 @@ export default function Lista({
           <Tabs value={activeTab} className="w-full md:w-max">
             <TabsHeader>
               {TABS.map(({ label, value }) => (
-                <Tab 
-                    key={value} 
-                    value={value}
-                    onClick={() => handleTabChange(value)}
-                    >
+                <Tab
+                  key={value}
+                  value={value}
+                  onClick={() => handleTabChange(value)}
+                >
                   &nbsp;&nbsp;{label}&nbsp;&nbsp;
                 </Tab>
               ))}

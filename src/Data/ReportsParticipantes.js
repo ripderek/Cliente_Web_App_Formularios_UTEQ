@@ -5,10 +5,4 @@ export const ReportsParticipantes = [
     Codigo: `ListParticipantes`,
     TipoDoc: [{ tipo: "PDF" }, { tipo: "EXCEL" }],
   },
-  {
-    id: 2,
-    title: "Lista de participantes 2",
-    Codigo: `ListParticipantes2 `,
-    TipoDoc: [{ tipo: "PDF" }],
-  },
 ];

@@ -33,6 +33,12 @@ export { default as Editar_Respuestas_imagenes } from "@/pages/dashboard/Plantil
 export { default as SELCCLA_edit_resp } from "@/pages/dashboard/Plantillas/SELCCLA_edit_resp";
 export { default as Editar_Respuestas_OPCLAVA } from "@/pages/dashboard/Plantillas/Editar_Respuestas_OPCLAVA";
 
+export { default as ENSEMUL } from "@/pages/dashboard/Plantillas/ENSEMUL";
+export { default as ENSEMUL_resp } from "@/pages/dashboard/Plantillas/ENSEMUL_resp";
+export { default as ENSEMUL_resolv } from "@/pages/dashboard/Plantillas/ENSEMUL_resolv";
+export { default as ENSEMUL_edit } from "@/pages/dashboard/Plantillas/ENSEMUL_edit";
+export { default as ENSEMUL_edit_resp } from "@/pages/dashboard/Plantillas/ENSEMUL_edit_resp";
+
 //Editar_Respuestas_OPCLAVA
 //SELCCLA_edit_resp
 //MULIMGT

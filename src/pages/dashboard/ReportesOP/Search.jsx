@@ -38,7 +38,12 @@ import { Dialog_Error, Loader } from "@/widgets";
 
 import { useState, useEffect } from "react";
 
-import { generarPDF, generarExcel } from "@/Data/GenerarPDF_EXEL";
+import {
+  generarPDF,
+  generarExcel,
+  generarPDF_Progreso_Pre,
+  generarExcel_Progreso_Pre,
+} from "@/Data/GenerarPDF_EXEL";
 
 export default function Search() {
   const [load, setLoader] = useState(false);
@@ -84,8 +89,8 @@ export default function Search() {
 
   //const [ListaParticipantes, setListaParticipantes] = useState([]);
 
-  //funcion para crear el reporte en la api
-  const Obtener_Reporte = async (codigo, tipo) => {
+  //funcion para crear el reporte para participantes
+  const Obtener_Reporte_Participantes = async (codigo, tipo) => {
     setLoader(true);
     try {
       const response = await fetch(
@@ -104,19 +109,58 @@ export default function Search() {
         }
       );
 
-      console.log(response);
+      //console.log(response);
       const ListaParticipantes = await response.json();
       //setListaParticipantes(data);
-      tipo === "PDF" ? 
-      generarPDF(ListaParticipantes)
-      : 
-      generarExcel(ListaParticipantes)
+      tipo === "PDF"
+        ? generarPDF(ListaParticipantes)
+        : generarExcel(ListaParticipantes);
 
       setLoader(false);
     } catch (error) {
       setLoader(false);
       //colocar una alerta de error cuando no se pueda inciar sesion
       console.log(error.response.data.error);
+      setError(true);
+      setMensajeError(error.response.data.error);
+    }
+  };
+
+  //funcion para crear el reporte progreso por preguntas,con graficos
+  const Obtener_Reporte_Progreso_Pre = async (codigo, tipo) => {
+    setLoader(true);
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_ACCESLINK}reportes/Reporte_Progreso_Preg`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify({
+            codigoFormulario: codigoTest,
+            codigoReporte: codigo,
+          }),
+        }
+      );
+
+      const ListaProgresoPreguntas = await response.json();
+      //console.log(ListaProgresoPreguntas);
+      
+      //setListaParticipantes(data);
+      
+      tipo === "PDF"
+        ? generarPDF_Progreso_Pre(ListaProgresoPreguntas)
+        : generarExcel_Progreso_Pre(ListaProgresoPreguntas);
+
+        console.log("hoalsdas")
+
+      setLoader(false);
+    } catch (error) {
+      setLoader(false);
+      //colocar una alerta de error cuando no se pueda inciar sesion
+      console.log(error);
       setError(true);
       setMensajeError(error.response.data.error);
     }
@@ -248,7 +292,10 @@ export default function Search() {
                                         size="sm"
                                         className="flex cursor-pointer"
                                         onClick={() =>
-                                            Obtener_Reporte(Codigo, doc.tipo)
+                                          Obtener_Reporte_Participantes(
+                                            Codigo,
+                                            doc.tipo
+                                          )
                                         }
                                       />
                                     </Tooltip>
@@ -383,6 +430,12 @@ export default function Search() {
                                       alt="avatar"
                                       size="sm"
                                       className="flex cursor-pointer"
+                                      onClick={() =>
+                                        Obtener_Reporte_Progreso_Pre(
+                                          Codigo,
+                                          doc.tipo
+                                        )
+                                      }
                                     />
                                   </Tooltip>
                                 </>

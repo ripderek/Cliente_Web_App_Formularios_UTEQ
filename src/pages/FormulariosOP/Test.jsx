@@ -15,6 +15,7 @@ import {
   MULIMGT_resolv,
   SELCCMA_resolv,
   ENSEMUL_resolv,
+  ENINMAN_resolv,
 } from "@/pages/dashboard/Plantillas";
 import Cookies from "universal-cookie";
 import { Dialog_Error, Loader, Notification } from "@/widgets"; //Importar el componente
@@ -86,6 +87,9 @@ export default function Test() {
       case "ENSEMUL":
         handlerENSEMUL();
         break;
+      case "ENINMAN":
+        handlerENINMAN();
+        break;
       default:
         RegresarProgresoSeccion(true);
         break;
@@ -110,6 +114,7 @@ export default function Test() {
     setOpenMULIMGT(false);
     setOpenSELCCMA(false);
     setOpenENSEMUL(false);
+    setOpenENINMAN(false);
   };
   //Funcion para abrir una pregunta de tipo SELCIMG
   const [openSELCIMG, setOpenSELCIMG] = useState(false);
@@ -126,6 +131,7 @@ export default function Test() {
     setOpenMULIMGT(false);
     setOpenSELCCMA(false);
     setOpenENSEMUL(false);
+    setOpenENINMAN(false);
   };
 
   const [openSELCCLA, setOpenSELCCLA] = useState(false);
@@ -142,6 +148,7 @@ export default function Test() {
     setOpenMULIMGT(false);
     setOpenSELCCMA(false);
     setOpenENSEMUL(false);
+    setOpenENINMAN(false);
   };
   const [openLOCIMG, setOpenLOCIMG] = useState(false);
 
@@ -158,6 +165,7 @@ export default function Test() {
     setOpenMULIMGT(false);
     setOpenSELCCMA(false);
     setOpenENSEMUL(false);
+    setOpenENINMAN(false);
   };
   //        handlerMULTIMG();
   const [openMULTIMG, setOpenMULTIMG] = useState(false);
@@ -175,6 +183,7 @@ export default function Test() {
     setOpenMULIMGT(false);
     setOpenSELCCMA(false);
     setOpenENSEMUL(false);
+    setOpenENINMAN(false);
   };
   //funcion para resolver la pregunta de ingresar numero
   //INGRNUM_resp
@@ -192,6 +201,7 @@ export default function Test() {
     setOpenMULIMGT(false);
     setOpenSELCCMA(false);
     setOpenENSEMUL(false);
+    setOpenENINMAN(false);
   };
   //OPCLAVA_resolv
   const [openOPCLAVA, setOpenOPCLAVA] = useState(false);
@@ -208,6 +218,7 @@ export default function Test() {
     setOpenMULIMGT(false);
     setOpenSELCCMA(false);
     setOpenENSEMUL(false);
+    setOpenENINMAN(false);
   };
   //  OPCLAV2_resolv,
   const [openOPCLAV2, setOpenOPCLAV2] = useState(false);
@@ -224,6 +235,7 @@ export default function Test() {
     setOpenMULIMGT(false);
     setOpenSELCCMA(false);
     setOpenENSEMUL(false);
+    setOpenENINMAN(false);
   };
   //MULIMGT_resolv
   const [openMULIMGT, setOpenMULIMGT] = useState(false);
@@ -240,6 +252,7 @@ export default function Test() {
     setOpenProgresoSecciones(false);
     setOpenSELCCMA(false);
     setOpenENSEMUL(false);
+    setOpenENINMAN(false);
   };
 
   //SELCCMA
@@ -256,26 +269,45 @@ export default function Test() {
     setOpenOPCLAV2(false);
     setOpenMULIMGT(false);
     setOpenENSEMUL(false);
+    setOpenENINMAN(false);
     setOpenSELCCMA(true);
   };
 
- //ENSEMUL
- const [openENSEMUL, setOpenENSEMUL] = useState(false);
- const handlerENSEMUL = () => {
-   setOpenSELCCLA(false);
-   setOpenSELCIMG(false);
-   setOpenMEMRZAR(false);
-   setOpenProgresoSecciones(false);
-   setOpenLOCIMG(false);
-   setOpenMULTIMG(false);
-   setOpenINGRNUM(false);
-   setOpenOPCLAVA(false);
-   setOpenOPCLAV2(false);
-   setOpenMULIMGT(false);
-   setOpenSELCCMA(false);
-   setOpenENSEMUL(true);
- };
+  //ENSEMUL
+  const [openENSEMUL, setOpenENSEMUL] = useState(false);
+  const handlerENSEMUL = () => {
+    setOpenSELCCLA(false);
+    setOpenSELCIMG(false);
+    setOpenMEMRZAR(false);
+    setOpenProgresoSecciones(false);
+    setOpenLOCIMG(false);
+    setOpenMULTIMG(false);
+    setOpenINGRNUM(false);
+    setOpenOPCLAVA(false);
+    setOpenOPCLAV2(false);
+    setOpenMULIMGT(false);
+    setOpenSELCCMA(false);
+    setOpenENINMAN(false);
+    setOpenENSEMUL(true);
+  };
 
+  //ENINMAN
+  const [openENINMAN, setOpenENINMAN] = useState(false);
+  const handlerENINMAN = () => {
+    setOpenSELCCLA(false);
+    setOpenSELCIMG(false);
+    setOpenMEMRZAR(false);
+    setOpenProgresoSecciones(false);
+    setOpenLOCIMG(false);
+    setOpenMULTIMG(false);
+    setOpenINGRNUM(false);
+    setOpenOPCLAVA(false);
+    setOpenOPCLAV2(false);
+    setOpenMULIMGT(false);
+    setOpenSELCCMA(false);
+    setOpenENSEMUL(false);
+    setOpenENINMAN(true);
+  };
 
   //funcion regresar a un progreso seccion
   //necesita el id del progreso_seccion para abrirse xd
@@ -292,6 +324,7 @@ export default function Test() {
     setOpenOPCLAVA(false);
     setOpenSELCCMA(false);
     setOpenENSEMUL(false);
+    setOpenENINMAN(false);
   };
 
   const [load, setLoader] = useState(false);
@@ -408,10 +441,20 @@ export default function Test() {
             ProgresoPregunta={id_progrso_pregunta}
           />
         );
-        //openENSEMUL
+      //openENSEMUL
       case openENSEMUL:
         return (
           <ENSEMUL_resolv
+            id_pregunta={idPregunta}
+            id_progreso_sec={idProgresoSeccion}
+            RegresarProgresoSeccion={RegresarProgresoSeccion}
+            ProgresoPregunta={id_progrso_pregunta}
+          />
+        );
+      //openENINMAN
+      case openENINMAN:
+        return (
+          <ENINMAN_resolv
             id_pregunta={idPregunta}
             id_progreso_sec={idProgresoSeccion}
             RegresarProgresoSeccion={RegresarProgresoSeccion}

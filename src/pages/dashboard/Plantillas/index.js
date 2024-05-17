@@ -39,6 +39,12 @@ export { default as ENSEMUL_resolv } from "@/pages/dashboard/Plantillas/ENSEMUL_
 export { default as ENSEMUL_edit } from "@/pages/dashboard/Plantillas/ENSEMUL_edit";
 export { default as ENSEMUL_edit_resp } from "@/pages/dashboard/Plantillas/ENSEMUL_edit_resp";
 
+export { default as ENINMAN } from "@/pages/dashboard/Plantillas/ENINMAN";
+export { default as ENINMAN_resp } from "@/pages/dashboard/Plantillas/ENINMAN_resp";
+export { default as ENINMAN_resolv } from "@/pages/dashboard/Plantillas/ENINMAN_resolv";
+export { default as ENINMAN_edit } from "@/pages/dashboard/Plantillas/ENINMAN_edit";
+export { default as ENINMAN_edit_resp } from "@/pages/dashboard/Plantillas/ENINMAN_edit_resp";
+
 //Editar_Respuestas_OPCLAVA
 //SELCCLA_edit_resp
 //MULIMGT

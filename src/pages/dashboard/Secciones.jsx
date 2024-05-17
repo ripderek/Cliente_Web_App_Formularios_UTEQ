@@ -45,6 +45,8 @@ import {
   SELCCMA_resp,
   ENSEMUL,
   ENSEMUL_resp,
+  ENINMAN,
+  ENINMAN_resp,
 } from "@/pages/dashboard/Plantillas";
 import {
   ListaPreguntas,
@@ -126,6 +128,8 @@ export default function Secciones() {
     openEditSELCCMA: false,
     openENSEMUL: false,
     openEditENSEMUL: false,
+    openENINMAN: false,
+    openEditENINMAN: false,
   });
 
   const [tabInfo, setTabInfo] = useState({
@@ -149,6 +153,7 @@ export default function Secciones() {
     buscarEditMULIMGT: true,
     buscarEditSELCCMA: true,
     buscarEditENSEMUL: true,
+    buscarEditENINMAN: true,
     //OPCLAV2
   });
 
@@ -239,7 +244,6 @@ export default function Secciones() {
             AbrirSecciones={AbrirSecciones}
             Titulo={tabInfo.tituloSeccion}
             AbrirPreguntas={AbrirPreguntas}
-           
           />
         );
       case tabs.openPreguntas:
@@ -469,7 +473,7 @@ export default function Secciones() {
             //
           />
         );
-        //ENSEMUL
+      //ENSEMUL
       case tabs.openENSEMUL:
         return (
           <ENSEMUL
@@ -485,6 +489,29 @@ export default function Secciones() {
           <ENSEMUL_resp
             id_pregunta={tabInfo.idPregunta}
             buscar={tabInfo.buscarEditENSEMUL}
+            id_nivel={tabInfo.IDNivel}
+            AbrirPreguntas={AbrirPreguntas}
+            idni={tabInfo.IDNivel}
+            nombrenivel={tabInfo.nombre_nivel}
+            //
+          />
+        );
+      //ENINMAN
+      case tabs.openENINMAN:
+        return (
+          <ENINMAN
+            cambiarPestañas={cambiarPestañas}
+            tipo_preg={tabInfo.IDTIPOPRE}
+            id_nivel={tabInfo.IDNivel}
+            icono={tabInfo.r_icono}
+            AbrirEditor={AbrirEditor}
+          />
+        );
+      case tabs.openEditENINMAN:
+        return (
+          <ENINMAN_resp
+            id_pregunta={tabInfo.idPregunta}
+            buscar={tabInfo.buscarEditENINMAN}
             id_nivel={tabInfo.IDNivel}
             AbrirPreguntas={AbrirPreguntas}
             idni={tabInfo.IDNivel}

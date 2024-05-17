@@ -49,7 +49,7 @@ export default function FormDatos() {
   const [registro_usuario_test, SetRegistro] = useState({
     p_token_id_participante: cookies.get("id_user"),
     p_token_id_test: cookies.get("token_test"),
-    p_facultad: "",
+    p_facultad: "NA",
     p_carrera: "Software",
     p_semestre: "7",
   });
@@ -184,6 +184,7 @@ export default function FormDatos() {
               Your Email
             </Typography>
             */}
+            {/* 
             <div className="flex w-75 flex-col gap-6">
               <Select
                 color="green"
@@ -218,6 +219,7 @@ export default function FormDatos() {
                 </Option>
               </Select>
             </div>
+            */}
 
             {/*
             <Input
